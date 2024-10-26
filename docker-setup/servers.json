@@ -1,0 +1,14 @@
+﻿{
+  "Servers": {
+    "1": {
+      "Name": "my-local-database",
+      "Group": "Servers",
+      "Host": "postgres",
+      "Port": 5432,
+      "MaintenanceDB": "postgres",
+      "SSLMode": "prefer",
+      "Username": "nextstop",
+      "PassFile": "/pgpass"
+    }
+  }
+}
