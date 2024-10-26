@@ -1,0 +1,112 @@
+﻿name: Build
+
+on:
+  push:
+    branch: 
+    tag: 
+  pull_request:
+  workflow_dispatch:
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+
+jobs:
+  build:
+    name: Build application
+    runs-on: ubuntu-latest
+    strategy:
+      max-parallel: 2
+      matrix:
+        dotnet-version: ['8.x']
+  
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      
+      - name: Setup dotnet
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ matrix.dotnet-version }}
+        
+      - name: Install dependencies
+        run: dotnet restore
+        
+      - name: Build
+        run: dotnet build
+        
+      - name: Test
+        run: dotnet test --logger trx --results-directory "TestResults-${{ matrix.dotnet-version }}"
+        
+      - name: Upload dotnet test results
+        uses: actions/upload-artifact@v4
+        if: ${{ always() }}
+        with:
+          name: dotnet-results-${{ matrix.dotnet-version }}
+          path: TestResults-${{ matrix.dotnet-version }}
+
+  build-container:
+    name: Build container
+    # Only build on source repo
+    if: github.repository == 'astraljaeger/nextstop-swk-2024'
+    runs-on: ubuntu-latest
+    strategy:
+      max-parallel: 2
+      matrix:
+        dotnet-version: [ '8.x' ]
+    needs: build
+    permissions:
+      contents: read
+      packages: write
+      attestations: write
+      id-token: write
+    steps:
+
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup QEMU
+        uses: docker/setup-qemu-action@v3.2.0
+        with:
+          platforms: arm64,amd64
+
+      - name: Setup Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Authenticate
+        if: github.event_name != 'pull_request'
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Tag
+        id: meta_tags
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: |
+            type=ref,event=branch
+            type=semver,pattern={{version}}
+            type=edge
+            type=sha
+      
+      - name: Build & Push
+        id: push
+        uses: docker/build-push-action@v6
+        with:
+          context: NextStop.Client
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ${{ steps.meta_tags.outputs.tags }}
+          labels: ${{ steps.meta_tags.outputs.labels }}
+
+      - name: Attest
+        id: attest
+        uses: actions/attest-build-provenance@v1
+        with:
+          subject-name: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          subject-digest: ${{ steps.push.outputs.digest }}
+          push-to-registry: true
