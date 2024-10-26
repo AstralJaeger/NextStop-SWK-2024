@@ -13,7 +13,7 @@ on:
 jobs:
   sync-repos:
     # Only run if PR was merged or direct push to master/main
-    if: github.event.pull_request.merged == true || github.event_name == 'push'
+    if: github.repository == 'astraljaeger/nextstop-swk-2024' && github.event.pull_request.merged == true || github.event_name == 'push'
     runs-on: ubuntu-latest
     
     steps:
