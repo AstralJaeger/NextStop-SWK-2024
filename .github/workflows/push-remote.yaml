@@ -1,0 +1,39 @@
+﻿name: Sync Repositories
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    types:
+      - closed
+    branches:
+      - master
+
+jobs:
+  sync-repos:
+    # Only run if PR was merged or direct push to master/main
+    if: github.event.pull_request.merged == true || github.event_name == 'push'
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout source repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Fetch all history for all branches and tags
+
+      - name: Push to destination repository
+        env:
+          SOURCE_REPO: ${{ github.repository }}
+          DESTINATION_REPO: "swk5-2024ws/nextstop-bb-g1-kamarauli-g2-hillebrand"
+          GH_PAT: ${{ secrets.SYNC_REPO_PAT }}
+        run: |
+          echo "Setting up git configuration..."
+          git config --global user.name "GitHub Action"
+          git config --global user.email "action@github.com"
+          
+          echo "Adding destination remote..."
+          git remote add destination https://$GH_PAT@github.com/$DESTINATION_REPO.git
+          
+          echo "Pushing to destination repository..."
+          git push destination master:master --force
