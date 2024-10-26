@@ -31,9 +31,10 @@ jobs:
           echo "Setting up git configuration..."
           git config --global user.name "GitHub Action"
           git config --global user.email "action@github.com"
+          git config --unset-all http.https://github.com/.extraheader
           
           echo "Adding destination remote..."
           git remote add destination https://$GH_PAT@github.com/$DESTINATION_REPO.git
           
           echo "Pushing to destination repository..."
-          git push destination master:master --force
+          git push destination master:main --force
