@@ -14,6 +14,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NextStop.Routing", "NextSto
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NextStop.Test", "NextStop.Test\NextStop.Test.csproj", "{2C31B624-6146-476E-83E1-19BFFA6E91DB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NextStop.Client", "NextStop.Client\NextStop.Client.csproj", "{2AEF88DE-2C82-48FD-BFB8-A58DFDC4F227}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -48,5 +50,9 @@ Global
 		{2C31B624-6146-476E-83E1-19BFFA6E91DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2C31B624-6146-476E-83E1-19BFFA6E91DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2C31B624-6146-476E-83E1-19BFFA6E91DB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2AEF88DE-2C82-48FD-BFB8-A58DFDC4F227}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2AEF88DE-2C82-48FD-BFB8-A58DFDC4F227}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2AEF88DE-2C82-48FD-BFB8-A58DFDC4F227}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2AEF88DE-2C82-48FD-BFB8-A58DFDC4F227}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
