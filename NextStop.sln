@@ -12,6 +12,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NextStop.Dal.Simple", "Next
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NextStop.Routing", "NextStop.Routing\NextStop.Routing.csproj", "{6A3BD4BB-94BB-4BDB-960F-4B7171B46CF3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NextStop.Test", "NextStop.Test\NextStop.Test.csproj", "{2C31B624-6146-476E-83E1-19BFFA6E91DB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -42,5 +44,9 @@ Global
 		{6A3BD4BB-94BB-4BDB-960F-4B7171B46CF3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6A3BD4BB-94BB-4BDB-960F-4B7171B46CF3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6A3BD4BB-94BB-4BDB-960F-4B7171B46CF3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2C31B624-6146-476E-83E1-19BFFA6E91DB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2C31B624-6146-476E-83E1-19BFFA6E91DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2C31B624-6146-476E-83E1-19BFFA6E91DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2C31B624-6146-476E-83E1-19BFFA6E91DB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
