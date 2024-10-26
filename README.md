@@ -2,7 +2,9 @@
 
 ## Das Projekt
 
-Die guten, alten Fahrplanaushänge in den Bushaltestellen haben langsam ausgedient: Apps, APIs und digitale Anzeigetafeln übernehmen. Sie entwickeln in diesem Projekt einen Fahrplan für öffentliche Verkehrsmittel und benachrichtigen die wartenden Fahrga ste über etwaige Verspätungen.
+Die guten, alten Fahrplanaushänge in den Bushaltestellen haben langsam ausgedient: 
+Apps, APIs und digitale Anzeigetafeln übernehmen. 
+Sie entwickeln in diesem Projekt einen Fahrplan für öffentliche Verkehrsmittel und benachrichtigen die wartenden Fahrgäste über etwaige Verspätungen.
 
 ## Setup
 
