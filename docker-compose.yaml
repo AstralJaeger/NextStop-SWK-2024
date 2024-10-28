@@ -1,5 +1,21 @@
 ﻿services:
 
+  nextstop:
+    build:
+      context: .
+      dockerfile: NextStop.Client/Dockerfile
+    environment:
+      - HOSTNAME=localhost
+      - HOSTNAME_PORT=8080
+      - DB_URL=postgresql://postgres/keycloak
+    ports:
+      - "8080:8080"
+    restart: unless-stopped
+    depends_on:
+      - postgres
+    networks:
+      - nextstop_net
+
   postgres:
     image: kartoza/postgis:17-3.5
     volumes:
@@ -11,7 +27,7 @@
       - ALLOW_IP_RANGE=0.0.0.0/0
       - POSTGRES_MULTIPLE_EXTENSIONS="postgis,hstore,postgis_topology,postgis_raster,pgrouting"
     ports:
-      - 25432:5432
+      - "25432:5432"
     restart: unless-stopped
     healthcheck:
       test: "PGPASSWORD=postgres pg_isready -h 127.0.0.1 -U postgres -d gis"
@@ -23,7 +39,7 @@
     command: start-dev
     environment:
       KC_HOSTNAME: localhost
-      KC_HOSTNAME_PORT: 8080
+      KC_HOSTNAME_PORT: 8090
       KC_HOSTNAME_STRICT_BACKCHANNEL: false
       KC_HTTP_ENABLED: true
       KC_HOSTNAME_STRICT_HTTPS: false
@@ -35,7 +51,7 @@
       KC_DB_USERNAME: postgres
       KC_DB_PASSWORD: postgres
     ports:
-      - 8080:8080
+      - "8090:8090"
     restart: unless-stopped
     depends_on:
       - postgres
