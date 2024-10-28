@@ -1,0 +1,51 @@
+﻿services:
+
+  postgres:
+    image: kartoza/postgis:17-3.5
+    volumes:
+      - database_vol:/var/lib/postgresql
+    environment:
+      - POSTGRES_DBNAME=nextstop,keycloak
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASS=postgres
+      - ALLOW_IP_RANGE=0.0.0.0/0
+      - POSTGRES_MULTIPLE_EXTENSIONS="postgis,hstore,postgis_topology,postgis_raster,pgrouting"
+    ports:
+      - 25432:5432
+    restart: unless-stopped
+    healthcheck:
+      test: "PGPASSWORD=postgres pg_isready -h 127.0.0.1 -U postgres -d gis"
+    networks:
+      - nextstop_net
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:26.0.2
+    command: start-dev
+    environment:
+      KC_HOSTNAME: localhost
+      KC_HOSTNAME_PORT: 8080
+      KC_HOSTNAME_STRICT_BACKCHANNEL: false
+      KC_HTTP_ENABLED: true
+      KC_HOSTNAME_STRICT_HTTPS: false
+      KC_HEALTH_ENABLED: true
+      KC_BOOTSTRAP_ADMIN_USERNAME: admin
+      KC_BOOTSTRAP_ADMIN_PASSWORD: admin
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://postgres/keycloak
+      KC_DB_USERNAME: postgres
+      KC_DB_PASSWORD: postgres
+    ports:
+      - 8080:8080
+    restart: unless-stopped
+    depends_on:
+      - postgres
+    networks:
+      - nextstop_net
+
+volumes:
+  database_vol:
+    name: nextstop_postgres_volume
+
+networks:
+  nextstop_net:
+    driver: bridge
