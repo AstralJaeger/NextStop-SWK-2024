@@ -29,4 +29,18 @@ public class Holiday
     /// Gets or sets the type of the holiday (e.g., "BankHoliday", "SchoolVacation").
     /// </summary>
     public HolidayType Type { get; set; }
+    
+    /// <summary>
+    /// Constructor method for Holiday
+    /// </summary>
+    public Holiday(int id, string name, DateTime start, DateTime end, HolidayType type)
+    {
+        Id = id;
+        Name = name;
+        Start = start;
+        End = end;
+        Type = type;
+    }
+    
+    
 }
