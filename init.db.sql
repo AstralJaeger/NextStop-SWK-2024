@@ -88,7 +88,8 @@ DO $$
         INSERT INTO stoppoint (name, short_name, latitude, longitude) VALUES
             ('Hauptbahnhof', 'Hbf', 40.748817, -73.985428),
             ('Uferpromenade', 'UPN', 34.052235, -118.243683),
-            ('Eastside Park', 'ESP', 51.507351, -0.127758)
+            ('Ostpark', 'OPK', 51.507351, -0.127758),
+            ('Industriezeile', 'IDZ', 40.712776, -74.005974)
         ON CONFLICT DO NOTHING;
 
 -- Insert sample data into routestoppoint table
