@@ -1,47 +1,63 @@
-﻿using NextStop.Dal.Interface;
+﻿using System.Data;
+using NextStop.Common;
+using NextStop.Dal.Interface;
 using NextStop.Domain;
 
 namespace NextStop.Dal.Ado;
 
-public class TripDAO : ITripDAO
+public class TripDAO(IConnectionFactory connectionFactory) : ITripDAO
 {
-    public Task<int> InsertTripAsync(Trip trip)
+    private readonly AdoTemplate template = new AdoTemplate(connectionFactory);
+
+    
+    private Trip MapRowToTrip(IDataRecord row)
+        => new Trip(
+            id: (int)row["id"],
+            routeId: (int)row["route_id"],
+            vehicleId: (int)row["vehicle_id"]
+        );
+    
+    
+    public async Task<int> InsertTripAsync(Trip trip)
     {
-        throw new NotImplementedException();
+        return await template.ExecuteAsync(
+            "insert into trip (route_id, vehicle_id) values (@routeid, @vehicleid)",
+            new QueryParameter("@routeid", trip.RouteId),
+            new QueryParameter("@vehicleid", trip.VehicleId));
     }
 
-    public Task<bool> UpdateTripAsync(Trip trip)
+    public async Task<bool> UpdateTripAsync(Trip trip)
     {
-        throw new NotImplementedException();
+        return await template.ExecuteAsync(
+            "update trip set route_id = @routeid, vehicle_id = @vehicleid where id = @id",
+            new QueryParameter("@routeid", trip.RouteId),
+            new QueryParameter("@vehicleid", trip.VehicleId),
+            new QueryParameter("@id", trip.Id) ) == 1;
     }
 
-    public Task<bool> DeleteTripAsync(int tripId)
+    public async Task<bool> DeleteTripAsync(int tripId)
     {
-        throw new NotImplementedException();
+        return await template.ExecuteAsync(
+            "delete from trip where id=@tripId",
+            new QueryParameter("@tripId", tripId)) == 1;
     }
 
-    public Task<Trip?> GetTripByIdAsync(int tripId)
+    public async Task<Trip?> GetTripByIdAsync(int tripId)
     {
-        throw new NotImplementedException();
+        return await template.QuerySingleAsync("select * from trip where id=@id", MapRowToTrip, new QueryParameter("@id", tripId));
+
     }
 
-    public Task<IEnumerable<Trip>> GetAllTripsAsync()
+    public async Task<IEnumerable<Trip>> GetAllTripsAsync()
     {
-        throw new NotImplementedException();
+        return await template.QueryAsync("select * from trip", MapRowToTrip);
+
     }
 
-    public Task<IEnumerable<Trip>> GetTripsByDateAsync(DateTime date)
-    {
-        throw new NotImplementedException();
-    }
 
-    public Task<IEnumerable<Trip>> GetOngoingTripsAsync()
+    public async Task<IEnumerable<Trip?>> GetTripsByRouteIdAsync(int routeId)
     {
-        throw new NotImplementedException();
-    }
+        return await template.QueryAsync("select * from trip where route_id = @routeid", MapRowToTrip, new QueryParameter("@routeid", routeId));
 
-    public Task<IEnumerable<Trip>> GetTripsByRouteIdAsync(int routeId)
-    {
-        throw new NotImplementedException();
     }
 }

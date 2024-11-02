@@ -52,14 +52,14 @@ public interface ITripDAO
     /// </summary>
     /// <param name="date">The date for which to retrieve trips.</param>
     /// <returns>A list of trip objects scheduled on the specified date.</returns>
-    Task<IEnumerable<Trip>> GetTripsByDateAsync(DateTime date);
+    //Task<IEnumerable<Trip>> GetTripsByDateAsync(DateTime date);
 
     
     /// <summary>
     /// Retrieves all ongoing trips at the current date and time.
     /// </summary>
     /// <returns>A list of trip objects that are currently ongoing.</returns>
-    Task<IEnumerable<Trip>> GetOngoingTripsAsync();
+    //Task<IEnumerable<Trip>> GetOngoingTripsAsync();
 
     
     /// <summary>
