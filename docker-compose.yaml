@@ -20,6 +20,7 @@
     image: kartoza/postgis:17-3.5
     volumes:
       - database_vol:/var/lib/postgresql
+      - ./init.db.sql:/docker-entrypoint-initdb.d/init.db.sql  # initial sql skript
     environment:
       - POSTGRES_DBNAME=nextstop,keycloak
       - POSTGRES_USER=postgres
