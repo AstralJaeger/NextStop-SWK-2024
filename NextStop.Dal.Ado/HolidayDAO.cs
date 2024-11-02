@@ -32,19 +32,33 @@ public class HolidayDAO (IConnectionFactory connectionFactory) : IHolidayDAO
 
     }
 
-    public Task<bool> UpdateHolidayAsync(Holiday holiday)
+    public async Task<bool> UpdateHolidayAsync(Holiday holiday)
     {
-        throw new NotImplementedException();
+        return await template.ExecuteAsync(
+            "update holiday set name = @name, start_date = @start_date, end_date = @end_date, typ = @type::holiday_type where id = @id",
+            new QueryParameter("@name", holiday.Name),
+            new QueryParameter("@start_date", holiday.Start),
+            new QueryParameter("@end_date", holiday.End),
+            new QueryParameter("@type", holiday.Type.ToString()),
+            new QueryParameter("@id", holiday.Id) ) == 1;
     }
 
-    public Task<bool> DeleteHolidayAsync(int holidayId)
+    public async Task<bool> DeleteHolidayAsync(int holidayId)
     {
-        throw new NotImplementedException();
+        return await template.ExecuteAsync(
+            "delete from holiday where id=@holidayId",
+            new QueryParameter("@holidayId", holidayId)) == 1;
     }
 
-    public Task<bool> IsHolidayAsync(DateTime date)
+    public async Task<bool> IsHolidayAsync(DateTime date)
     {
-        throw new NotImplementedException();
+        var result = await template.QuerySingleAsync<long>(
+            "select count(1) from holiday where @date between start_date and end_date",
+            row => (long)row[0], 
+            new QueryParameter("@date", date.Date)
+        );
+
+        return result > 0;
     }
 
     public async Task<Holiday?> GetHolidayByIdAsync(int holidayId)
@@ -58,8 +72,9 @@ public class HolidayDAO (IConnectionFactory connectionFactory) : IHolidayDAO
 
     }
 
-    public Task<IEnumerable<Holiday>> GetHolidaysByYearAsync(int year)
+    public async Task<IEnumerable<Holiday>> GetHolidaysByYearAsync(int year)
     {
-        throw new NotImplementedException();
+        return await template.QueryAsync("select * from holiday where  EXTRACT(YEAR FROM start_date) =@year", MapRowToHoliday, new QueryParameter("@year", year));
+
     }
 }
