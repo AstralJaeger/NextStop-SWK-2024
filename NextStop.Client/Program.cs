@@ -23,6 +23,28 @@ class Program
         {
             Console.WriteLine($"ID: {holiday.Id}, Name: {holiday.Name}, Start: {holiday.Start}, End: {holiday.End}, Type: {holiday.Type}");
         }
+        
+        // Neuen Feiertag erstellen
+        var newHoliday = new Holiday
+        (
+            id: 0,
+            name: "Test Holiday",
+            start: new DateTime(2025, 1, 1),
+            end: new DateTime(2025, 1, 1),
+            type: HolidayType.Other
+        );
+
+        // Feiertag in die Datenbank einfügen
+        int result = await holidayDao.InsertHolidayAsync(newHoliday);
+
+        if (result > 0)
+        {
+            Console.WriteLine("Holiday inserted successfully!");
+        }
+        else
+        {
+            Console.WriteLine("Failed to insert holiday.");
+        }
     }
 }
 

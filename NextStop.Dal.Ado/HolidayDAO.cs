@@ -21,9 +21,15 @@ public class HolidayDAO (IConnectionFactory connectionFactory) : IHolidayDAO
         );
     
     
-    public Task<int> InsertHolidayAsync(Holiday holiday)
+    public async Task<int> InsertHolidayAsync(Holiday holiday)
     {
-        throw new NotImplementedException();
+        return await template.ExecuteAsync(
+            "insert into holiday (name, start_date, end_date, typ) values (@name, @start_date, @end_date, @type::holiday_type)",
+            new QueryParameter("@name", holiday.Name),
+            new QueryParameter("@start_date", holiday.Start),
+            new QueryParameter("@end_date", holiday.End),
+            new QueryParameter("@type", holiday.Type.ToString()));
+
     }
 
     public Task<bool> UpdateHolidayAsync(Holiday holiday)

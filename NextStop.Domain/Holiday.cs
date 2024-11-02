@@ -42,6 +42,8 @@ public class Holiday
         Type = type;
     }
     
+    public Holiday() { }
+    
     public override string ToString() => $" ID: {Id},  Name: {Name} ({Start} - {End}), Type: {Type}";
     
 }

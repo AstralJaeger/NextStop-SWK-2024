@@ -36,4 +36,7 @@ public class Route
     public List<RouteStopPoint> RouteStopPoints { get; set; } = new List<RouteStopPoint>();
     //public List<StopPoint> RouteStopPoints { get; set; } = new List<StopPoint>();
 
+    public override string ToString() => $"ID: {Id}, Name: {Name}, Validity: ({ValidFrom} - {ValidTo}), ValidOn: {ValidOn}";
+    
+    public string getRouteStopPoints() => string.Join("\n", RouteStopPoints);
 }

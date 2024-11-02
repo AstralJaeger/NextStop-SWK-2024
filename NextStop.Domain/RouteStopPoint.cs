@@ -44,4 +44,6 @@ public class RouteStopPoint
     /// Navigation property for accessing the associated route.
     /// </summary>
     public Route Route { get; set; }
+
+    public override string ToString() => $"ID: {Id}, StopPointId: {StopPointId}, RouteId: {RouteId}, Order {Order}, ArrivalTime: {ArrivalTime}, DepartureTime: {DepartureTime}";
 }
