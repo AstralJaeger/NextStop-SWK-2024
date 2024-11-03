@@ -3,9 +3,10 @@ using NextStop.Common;
 using NextStop.Dal.Ado;
 using NextStop.Domain;
 
+namespace NextStop.Client;
 class Program
 {
-    public static async Task testHolidayDao( IConnectionFactory connectionFactory)
+    public static async Task TestHolidayDao( IConnectionFactory connectionFactory)
     {
         // DAO-Instanz erstellen
         var holidayDao = new HolidayDAO(connectionFactory);
@@ -187,6 +188,80 @@ class Program
     
     
     
+    public static async Task TestStopPointDao(IConnectionFactory connectionFactory)
+    {
+        // DAO-Instanz erstellen
+        var stopPointDao = new StopPointDAO(connectionFactory);
+
+        // Alle StopPoints abrufen und ausgeben
+        var stopPoints = await stopPointDao.GetAllAsync();
+
+        Console.WriteLine("StopPoints in der Datenbank:");
+        foreach (var stopPoint in stopPoints)
+        {
+            Console.WriteLine(stopPoint.ToString());
+        }
+
+        // Neuen StopPoint erstellen
+        var newStopPoint = new StopPoint
+        (
+            id: 9,
+            name: "Marktplatz",
+            shortName: "MTP",
+            location: new Coordinates
+            {
+                Latitude = 40.712776,
+                Longitude = -74.005374
+            }
+        );
+
+        // StopPoint in die Datenbank einfügen
+        int insertResult = await stopPointDao.InsertAsync(newStopPoint);
+        if (insertResult > 0)
+        {
+            Console.WriteLine("StopPoint inserted successfully!");
+        }
+        else
+        {
+            Console.WriteLine("Failed to insert StopPoint.");
+        }
+
+        // Update des StopPoints
+        newStopPoint.Name = "Rathaus";
+        newStopPoint.ShortName = "RTH";
+        bool updateResult = await stopPointDao.UpdateAsync(newStopPoint);
+        if (updateResult)
+        {
+            Console.WriteLine("StopPoint updated successfully!");
+        }
+        else
+        {
+            Console.WriteLine("Failed to update StopPoint.");
+        }
+
+        // StopPoint nach ID abrufen
+        var stopPointById = await stopPointDao.GetByIdAsync(newStopPoint.Id);
+        if (stopPointById != null)
+        {
+            Console.WriteLine($"Retrieved StopPoint by ID: {stopPointById.ToString()}");
+        }
+        else
+        {
+            Console.WriteLine("Failed to retrieve StopPoint by ID.");
+        }
+
+        // StopPoint löschen
+        bool deleteResult = await stopPointDao.DeleteAsync(newStopPoint.Id);
+        if (deleteResult)
+        {
+            Console.WriteLine("StopPoint deleted successfully!");
+        }
+        else
+        {
+            Console.WriteLine("Failed to delete StopPoint.");
+        }
+    }
+    
     static async Task Main(string[] args)
     {
         IConfiguration configuration = ConfigurationUtil.GetConfiguration();
@@ -196,7 +271,9 @@ class Program
         
         //await testHolidayDao(connectionFactory);
         
-       await TestTripDao(connectionFactory);
+       //await TestTripDao(connectionFactory);
+       
+       await TestStopPointDao(connectionFactory);
 
     }
 }
