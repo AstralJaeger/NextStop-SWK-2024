@@ -5,7 +5,7 @@ namespace NextStop.Common;
 /// <summary>
 /// Data Access Object interface for handling Trip Check-In operations.
 /// </summary>
-public interface ITripCheckinDAO
+public interface ITripCheckinDao
 {
     /// <summary>
     /// Adds a new Trip Check-In record to the database.

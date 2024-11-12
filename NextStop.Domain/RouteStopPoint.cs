@@ -38,12 +38,12 @@ public class RouteStopPoint
     /// <summary>
     /// Navigation property for accessing the associated stop point.
     /// </summary>
-    public StopPoint StopPoint { get; set; }
+    public required StopPoint? StopPoint { get; set; }
 
     /// <summary>
     /// Navigation property for accessing the associated route.
     /// </summary>
-    public Route Route { get; set; }
+    public required Route Route { get; set; }
 
     public override string ToString() => $"ID: {Id}, StopPointId: {StopPointId}, RouteId: {RouteId}, Order {Order}, ArrivalTime: {ArrivalTime}, DepartureTime: {DepartureTime}";
 }

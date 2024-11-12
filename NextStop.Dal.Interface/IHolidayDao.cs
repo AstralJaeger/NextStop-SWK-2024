@@ -5,7 +5,7 @@ namespace NextStop.Dal.Interface;
 /// <summary>
 /// Data Access Object interface for handling holiday-related operations.
 /// </summary>
-public interface IHolidayDAO
+public interface IHolidayDao
 {
     /// <summary>
     /// Adds a new holiday to the database.

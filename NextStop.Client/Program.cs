@@ -4,12 +4,13 @@ using NextStop.Dal.Ado;
 using NextStop.Domain;
 
 namespace NextStop.Client;
-class Program
+
+static class Program
 {
     public static async Task TestHolidayDao( IConnectionFactory connectionFactory)
     {
         // DAO-Instanz erstellen
-        var holidayDao = new HolidayDAO(connectionFactory);
+        var holidayDao = new HolidayDao(connectionFactory);
 
         // Alle Feiertage abrufen und ausgeben
         var holidays = await holidayDao.GetAllHolidaysAsync();
@@ -18,7 +19,7 @@ class Program
         foreach (var holiday in holidays)
         {
             Console.WriteLine(holiday.ToString());
-            //Console.WriteLine($"ID: {holiday.Id}, Name: {holiday.Name}, Start: {holiday.Start}, End: {holiday.End}, Type: {holiday.Type}");
+            
         }
         
         // Neuen Feiertag erstellen
@@ -30,7 +31,7 @@ class Program
             end: new DateTime(2025, 1, 1),
             type: HolidayType.Other
         );
-
+        
         // Feiertag in die Datenbank einfügen
         int insertResult = await holidayDao.InsertHolidayAsync(newHoliday);
 
@@ -59,35 +60,43 @@ class Program
         if (holidayFromDb != null)
         {
             Console.WriteLine("Fetched holiday: " + holidayFromDb);
+
+            // Update nur, wenn holidayFromDb nicht null ist
+            holidayFromDb.Name = "Updated Test Holiday";
+            bool updateResult = await holidayDao.UpdateHolidayAsync(holidayFromDb);
+            Console.WriteLine(updateResult ? "Holiday updated successfully!" : "Failed to update holiday.");
+
+            var updatedHoliday = await holidayDao.GetHolidayByIdAsync(holidayFromDb.Id);
+            if (updatedHoliday != null)
+            {
+                Console.WriteLine("Updated holiday: " + updatedHoliday);
+            }
+
+            if (updatedHoliday != null)
+            {
+                bool deleteResult = await holidayDao.DeleteHolidayAsync(updatedHoliday.Id);
+                Console.WriteLine(deleteResult ? "Holiday deleted successfully!" : "Failed to delete holiday.");
+
+                var deletedHoliday = await holidayDao.GetHolidayByIdAsync(updatedHoliday.Id);
+                if (deletedHoliday == null)
+                {
+                    Console.WriteLine("Holiday was deleted successfully and is no longer in the database.");
+                }
+                else
+                {
+                    Console.WriteLine("Holiday deletion failed. Holiday still exists in the database.");
+                }
+            }
+            else
+            {
+                Console.WriteLine("Cannot delete holiday because it was not found or updated.");
+            }
         }
         else
         {
             Console.WriteLine("Failed to fetch holiday by ID.");
         }
-        
-        holidayFromDb.Name = "Updated Test Holiday";
-        bool updateResult = await holidayDao.UpdateHolidayAsync(holidayFromDb);
-        Console.WriteLine(updateResult ? "Holiday updated successfully!" : "Failed to update holiday.");
 
-        var updatedHoliday = await holidayDao.GetHolidayByIdAsync(holidayFromDb.Id);
-        if (updatedHoliday != null)
-        {
-            Console.WriteLine("Updated holiday: " + updatedHoliday);
-        }
-
-        
-        bool deleteResult = await holidayDao.DeleteHolidayAsync(updatedHoliday.Id);
-        Console.WriteLine(deleteResult ? "Holiday deleted successfully!" : "Failed to delete holiday.");
-     
-        var deletedHoliday = await holidayDao.GetHolidayByIdAsync(updatedHoliday.Id);
-        if (deletedHoliday == null)
-        {
-            Console.WriteLine("Holiday was deleted successfully and is no longer in the database.");
-        }
-        else
-        {
-            Console.WriteLine("Holiday deletion failed. Holiday still exists in the database.");
-        }
         
         int yearToCheck = 2025;
         var holidaysInYear = await holidayDao.GetHolidaysByYearAsync(yearToCheck);
@@ -103,7 +112,7 @@ class Program
     public static async Task TestTripDao(IConnectionFactory connectionFactory)
     {
         // DAO-Instanz erstellen
-        var tripDao = new TripDAO(connectionFactory);
+        var tripDao = new TripDao(connectionFactory);
 
         // Alle Trips abrufen und ausgeben
         var trips = await tripDao.GetAllTripsAsync();
@@ -117,7 +126,7 @@ class Program
         // Neuen Trip erstellen
         var newTrip = new Trip
         (
-            id: 3, // Id wird von der Datenbank generiert //todo max id abrufen 
+            id: 0, // Die ID wird von der Datenbank generiert
             routeId: 1, // Beispiel-Routen-ID (stellen Sie sicher, dass diese Route in der Datenbank existiert)
             vehicleId: 103 // Beispiel-Fahrzeug-ID
         );
@@ -137,16 +146,9 @@ class Program
         var tripById = await tripDao.GetTripByIdAsync(newTrip.Id);
         if (tripById != null)
         {
-            Console.WriteLine($"Fetched Trip by ID: {newTrip.ToString()}");
-        }
-        else
-        {
-            Console.WriteLine("Failed to fetch trip by ID.");
-        }
+            Console.WriteLine($"Fetched Trip by ID: {tripById.ToString()}");
 
-        // Trip aktualisieren
-        if (tripById != null)
-        {
+            // Trip aktualisieren
             tripById.VehicleId = 203; // Beispiel-Update für das Fahrzeug
             bool updateResult = await tripDao.UpdateTripAsync(tripById);
 
@@ -158,21 +160,18 @@ class Program
             {
                 Console.WriteLine("Failed to update trip.");
             }
-        }
 
-        // Trips nach Routen-ID abrufen
-        int testRouteId = 1; // Beispiel-Routen-ID
-        var tripsByRouteId = await tripDao.GetTripsByRouteIdAsync(testRouteId);
+            // Trips nach Routen-ID abrufen
+            int testRouteId = 1; // Beispiel-Routen-ID
+            var tripsByRouteId = await tripDao.GetTripsByRouteIdAsync(testRouteId);
 
-        Console.WriteLine($"Trips für Route ID {testRouteId}:");
-        foreach (var trip in tripsByRouteId)
-        {
-            Console.WriteLine(trip.ToString());
-        }
+            Console.WriteLine($"Trips für Route ID {testRouteId}:");
+            foreach (var trip in tripsByRouteId)
+            {
+                Console.WriteLine(trip.ToString());
+            }
 
-        // Trip löschen
-        if (tripById != null)
-        {
+            // Trip löschen
             bool deleteResult = await tripDao.DeleteTripAsync(tripById.Id);
 
             if (deleteResult)
@@ -183,6 +182,21 @@ class Program
             {
                 Console.WriteLine("Failed to delete trip.");
             }
+
+            // Überprüfen, ob Trip wirklich gelöscht wurde
+            var deletedTrip = await tripDao.GetTripByIdAsync(tripById.Id);
+            if (deletedTrip == null)
+            {
+                Console.WriteLine("Trip was deleted successfully and is no longer in the database.");
+            }
+            else
+            {
+                Console.WriteLine("Trip deletion failed. Trip still exists in the database.");
+            }
+        }
+        else
+        {
+            Console.WriteLine("Failed to fetch trip by ID after insertion. Aborting further operations.");
         }
     }
     
@@ -191,7 +205,7 @@ class Program
     public static async Task TestStopPointDao(IConnectionFactory connectionFactory)
     {
         // DAO-Instanz erstellen
-        var stopPointDao = new StopPointDAO(connectionFactory);
+        var stopPointDao = new StopPointDao(connectionFactory);
 
         // Alle StopPoints abrufen und ausgeben
         var stopPoints = await stopPointDao.GetAllAsync();
@@ -205,7 +219,7 @@ class Program
         // Neuen StopPoint erstellen
         var newStopPoint = new StopPoint
         (
-            id: 9,
+            id: 0, // Die ID wird von der Datenbank generiert
             name: "Marktplatz",
             shortName: "MTP",
             location: new Coordinates
@@ -220,45 +234,67 @@ class Program
         if (insertResult > 0)
         {
             Console.WriteLine("StopPoint inserted successfully!");
+
+            // StopPoint nach ID abrufen, um den generierten ID-Wert zu verwenden
+            var stopPointById = await stopPointDao.GetByIdAsync(newStopPoint.Id);
+            if (stopPointById != null)
+            {
+                Console.WriteLine($"Retrieved StopPoint by ID: {stopPointById.ToString()}");
+
+                // Update des StopPoints
+                stopPointById.Name = "Rathaus";
+                stopPointById.ShortName = "RTH";
+                bool updateResult = await stopPointDao.UpdateAsync(stopPointById);
+                if (updateResult)
+                {
+                    Console.WriteLine("StopPoint updated successfully!");
+
+                    // StopPoint erneut nach ID abrufen, um die Änderung zu überprüfen
+                    var updatedStopPoint = await stopPointDao.GetByIdAsync(stopPointById.Id);
+                    if (updatedStopPoint != null)
+                    {
+                        Console.WriteLine($"Updated StopPoint: {updatedStopPoint.ToString()}");
+
+                        // StopPoint löschen
+                        bool deleteResult = await stopPointDao.DeleteAsync(updatedStopPoint.Id);
+                        if (deleteResult)
+                        {
+                            Console.WriteLine("StopPoint deleted successfully!");
+
+                            // Überprüfen, ob StopPoint wirklich gelöscht wurde
+                            var deletedStopPoint = await stopPointDao.GetByIdAsync(updatedStopPoint.Id);
+                            if (deletedStopPoint == null)
+                            {
+                                Console.WriteLine("StopPoint was deleted successfully and is no longer in the database.");
+                            }
+                            else
+                            {
+                                Console.WriteLine("StopPoint deletion failed. StopPoint still exists in the database.");
+                            }
+                        }
+                        else
+                        {
+                            Console.WriteLine("Failed to delete StopPoint.");
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("Failed to retrieve updated StopPoint by ID.");
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Failed to update StopPoint.");
+                }
+            }
+            else
+            {
+                Console.WriteLine("Failed to retrieve StopPoint by ID after insertion.");
+            }
         }
         else
         {
             Console.WriteLine("Failed to insert StopPoint.");
-        }
-
-        // Update des StopPoints
-        newStopPoint.Name = "Rathaus";
-        newStopPoint.ShortName = "RTH";
-        bool updateResult = await stopPointDao.UpdateAsync(newStopPoint);
-        if (updateResult)
-        {
-            Console.WriteLine("StopPoint updated successfully!");
-        }
-        else
-        {
-            Console.WriteLine("Failed to update StopPoint.");
-        }
-
-        // StopPoint nach ID abrufen
-        var stopPointById = await stopPointDao.GetByIdAsync(newStopPoint.Id);
-        if (stopPointById != null)
-        {
-            Console.WriteLine($"Retrieved StopPoint by ID: {stopPointById.ToString()}");
-        }
-        else
-        {
-            Console.WriteLine("Failed to retrieve StopPoint by ID.");
-        }
-
-        // StopPoint löschen
-        bool deleteResult = await stopPointDao.DeleteAsync(newStopPoint.Id);
-        if (deleteResult)
-        {
-            Console.WriteLine("StopPoint deleted successfully!");
-        }
-        else
-        {
-            Console.WriteLine("Failed to delete StopPoint.");
         }
     }
     

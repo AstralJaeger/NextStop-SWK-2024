@@ -6,7 +6,7 @@ namespace NextStop.Common;
 /// <summary>
 /// Utility class for registering ADO.NET providers.
 /// </summary>
-public class DbUtil
+public static class DbUtil
 {
     /// <summary>
     /// Registers ADO.NET providers for database connections.

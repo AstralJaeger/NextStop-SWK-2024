@@ -5,13 +5,13 @@ using NextStop.Domain;
 
 namespace NextStop.Dal.Ado;
 
-public class StopPointDAO (IConnectionFactory connectionFactory): IStopPointDAO
+public class StopPointDao (IConnectionFactory connectionFactory): IStopPointDao
 {
     
     private readonly AdoTemplate template = new AdoTemplate(connectionFactory);
 
     
-    private StopPoint MapRowToStopPoint(IDataRecord row)
+    private static StopPoint MapRowToStopPoint(IDataRecord row)
         => new StopPoint(
             id: (int)row["id"],
             name: (string)row["name"],
@@ -44,16 +44,16 @@ public class StopPointDAO (IConnectionFactory connectionFactory): IStopPointDAO
             new QueryParameter("@id", stopPoint.Id) ) == 1;
     }
 
-    public async Task<bool> DeleteAsync(int stopPointId)
+    public async Task<bool> DeleteAsync(int id)
     {
         return await template.ExecuteAsync(
             "delete from stoppoint where id=@spId",
-            new QueryParameter("@spId", stopPointId)) == 1;
+            new QueryParameter("@spId", id)) == 1;
     }
 
-    public async Task<StopPoint?> GetByIdAsync(int stopPointId)
+    public async Task<StopPoint?> GetByIdAsync(int id)
     {
-        return await template.QuerySingleAsync("select * from stoppoint where id=@spId", MapRowToStopPoint, new QueryParameter("@spId", stopPointId));
+        return await template.QuerySingleAsync("select * from stoppoint where id=@spId", MapRowToStopPoint, new QueryParameter("@spId", id));
 
     }
 

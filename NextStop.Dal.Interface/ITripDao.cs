@@ -5,7 +5,7 @@ namespace NextStop.Dal.Interface;
 /// <summary>
 /// Data Access Object interface for handling Trip-related operations.
 /// </summary>
-public interface ITripDAO
+public interface ITripDao
 {
     /// <summary>
     /// Adds a new trip to the database.

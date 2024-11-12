@@ -13,7 +13,7 @@ public class Holiday
     /// <summary>
     /// Gets or sets the name of the holiday.
     /// </summary>
-    public string Name { get; set; }
+    public string? Name { get; set; }
 
     /// <summary>
     /// Gets or sets the start date and time of the holiday.

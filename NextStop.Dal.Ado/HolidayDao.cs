@@ -5,13 +5,13 @@ using NextStop.Domain;
 
 namespace NextStop.Dal.Ado;
 
-public class HolidayDAO (IConnectionFactory connectionFactory) : IHolidayDAO
+public class HolidayDao (IConnectionFactory connectionFactory) : IHolidayDao
 {
     
     private readonly AdoTemplate template = new AdoTemplate(connectionFactory);
 
     
-    private Holiday MapRowToHoliday(IDataRecord row)
+    private static Holiday MapRowToHoliday(IDataRecord row)
         => new Holiday(
             id: (int)row["id"],
             name: (string)row["name"],

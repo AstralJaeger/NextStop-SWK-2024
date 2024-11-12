@@ -3,7 +3,7 @@ using NextStop.Domain;
 
 namespace NextStop.Dal.Ado;
 
-public class RouteDAO : IRouteDAO
+public class RouteDao : IRouteDao
 {
     public Task InsertAsync(Route route)
     {

@@ -5,7 +5,7 @@ namespace NextStop.Dal.Interface;
 /// <summary>
 /// Data Access Object interface for managing StopPoint-related operations.
 /// </summary>
-public interface IStopPointDAO
+public interface IStopPointDao
 {
     /// <summary>
     /// Asynchronously inserts a new stop point into the database.

@@ -5,12 +5,12 @@ using NextStop.Domain;
 
 namespace NextStop.Dal.Ado;
 
-public class TripDAO(IConnectionFactory connectionFactory) : ITripDAO
+public class TripDao(IConnectionFactory connectionFactory) : ITripDao
 {
     private readonly AdoTemplate template = new AdoTemplate(connectionFactory);
 
     
-    private Trip MapRowToTrip(IDataRecord row)
+    private static Trip MapRowToTrip(IDataRecord row)
         => new Trip(
             id: (int)row["id"],
             routeId: (int)row["route_id"],
@@ -55,7 +55,7 @@ public class TripDAO(IConnectionFactory connectionFactory) : ITripDAO
     }
 
 
-    public async Task<IEnumerable<Trip?>> GetTripsByRouteIdAsync(int routeId)
+    public async Task<IEnumerable<Trip>> GetTripsByRouteIdAsync(int routeId)
     {
         return await template.QueryAsync("select * from trip where route_id = @routeid", MapRowToTrip, new QueryParameter("@routeid", routeId));
 

@@ -13,7 +13,7 @@ public class Route
     /// <summary>
     /// Gets or sets the name of the route.
     /// </summary>
-    public string Name { get; set; }
+    public required string Name { get; set; }
 
     /// <summary>
     /// Gets or sets the start date of the route's validity period.
@@ -38,5 +38,5 @@ public class Route
 
     public override string ToString() => $"ID: {Id}, Name: {Name}, Validity: ({ValidFrom} - {ValidTo}), ValidOn: {ValidOn}";
     
-    public string getRouteStopPoints() => string.Join("\n", RouteStopPoints);
+    public string GetRouteStopPoints() => string.Join("\n", RouteStopPoints);
 }
