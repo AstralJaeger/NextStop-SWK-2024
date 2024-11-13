@@ -13,7 +13,7 @@ public class Holiday
     /// <summary>
     /// Gets or sets the name of the holiday.
     /// </summary>
-    public string Name { get; set; }
+    public string? Name { get; set; }
 
     /// <summary>
     /// Gets or sets the start date and time of the holiday.
@@ -29,4 +29,21 @@ public class Holiday
     /// Gets or sets the type of the holiday (e.g., "BankHoliday", "SchoolVacation").
     /// </summary>
     public HolidayType Type { get; set; }
+    
+    /// <summary>
+    /// Constructor method for Holiday
+    /// </summary>
+    public Holiday(int id, string name, DateTime start, DateTime end, HolidayType type)
+    {
+        Id = id;
+        Name = name;
+        Start = start;
+        End = end;
+        Type = type;
+    }
+    
+    public Holiday() { }
+    
+    public override string ToString() => $" ID: {Id},  Name: {Name} ({Start} - {End}), Type: {Type}";
+    
 }

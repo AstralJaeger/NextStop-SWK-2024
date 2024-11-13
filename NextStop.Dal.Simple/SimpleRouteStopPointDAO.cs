@@ -8,6 +8,31 @@ namespace NextStop.Dal.Simple;
 /// </summary>
 public class SimpleRouteStopPointDao
 {
+    static StopPoint stopPoint1 = new StopPoint
+    {
+        Id = 1,
+        Name = "Hauptbahnhof",
+        ShortName = "Hbf",
+        Location = new Coordinates { Latitude = 40.748817, Longitude = -73.985428 }
+    };
+
+    static StopPoint stopPoint2 = new StopPoint
+    {
+        Id = 2,
+        Name = "Uferpromenade",
+        ShortName = "UPN",
+        Location = new Coordinates { Latitude = 34.052235, Longitude = -118.243683 }
+    };
+
+    static Route route1 = new Route
+    {
+        Id = 1,
+        Name = "Green",
+        ValidFrom = new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Local),
+        ValidTo = new DateTime(2025, 12, 31, 0, 0, 0, DateTimeKind.Local),
+        ValidOn = 0b0111110 // Mon-Fri
+    };
+
     // Static list to hold route stop point data, simulating a database.
     private static IList<RouteStopPoint> routeStopPointList = new List<RouteStopPoint>
     {
@@ -18,7 +43,9 @@ public class SimpleRouteStopPointDao
             RouteId = 1,
             ArrivalTime = DateTime.Now.AddMinutes(10),
             DepartureTime = DateTime.Now.AddMinutes(15),
-            Order = 1
+            Order = 1,
+            StopPoint = stopPoint1,  // Required StopPoint instance
+            Route = route1           // Required Route instance
         },
         new RouteStopPoint
         {
@@ -27,7 +54,9 @@ public class SimpleRouteStopPointDao
             RouteId = 1,
             ArrivalTime = DateTime.Now.AddMinutes(20),
             DepartureTime = DateTime.Now.AddMinutes(25),
-            Order = 2
+            Order = 2,
+            StopPoint = stopPoint2,  // Required StopPoint instance
+            Route = route1           // Required Route instance
         }
     };
 

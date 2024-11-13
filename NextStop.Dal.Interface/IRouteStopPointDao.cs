@@ -5,7 +5,7 @@ namespace NextStop.Dal.Interface;
 /// <summary>
 /// Data Access Object interface for managing Route Stop Point-related operations.
 /// </summary>
-public interface IRouteStopPointDAO
+public interface IRouteStopPointDao
 {
 
     /// <summary>

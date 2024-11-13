@@ -30,4 +30,17 @@ public class StopPoint
     /// </summary>
     public List<Route> StopPointRoutes { get; set; } = new List<Route>();
     //public List<RouteStopPoint> StopPointRoutes { get; set; } = new List<RouteStopPoint>(); ???
+    
+    public StopPoint(int id, string name, string shortName, Coordinates location)
+    {
+        Id = id;
+        Name = name;
+        ShortName = shortName;
+        Location = location;
+    }
+
+    public StopPoint() {}
+    public override string ToString() => $"ID: {Id}, Name: {Name}, ShortName: {ShortName}, Location: {Location}";
+    
+    public string getStopPointRoutes() => "The following routes pass through this Stoppoint:" + string.Join(", ", StopPointRoutes.Select(r => $"{r.Name}"));
 }

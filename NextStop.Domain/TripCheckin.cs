@@ -28,10 +28,12 @@ public class TripCheckin
     /// <summary>
     /// Navigation property for accessing the associated trip.
     /// </summary>
-    public Trip Trip { get; set; }
+    public required Trip Trip { get; set; }
 
     /// <summary>
     /// Navigation property for accessing the associated stop point.
     /// </summary>
-    public StopPoint StopPoint { get; set; }
+    public required StopPoint StopPoint { get; set; }
+
+    public override string ToString() => $"ID: {Id}, Trip: {TripId}, StopPoint: {StopPointId}, Checkin: {Checkin}";
 }

@@ -3,14 +3,14 @@ using NextStop.Domain;
 
 namespace NextStop.Dal.Ado;
 
-public class StopPointDAO: IStopPointDAO
+public class RouteDao : IRouteDao
 {
-    public Task InsertAsync(StopPoint stopPoint)
+    public Task InsertAsync(Route route)
     {
         throw new NotImplementedException();
     }
 
-    public Task UpdateAsync(StopPoint stopPoint)
+    public Task UpdateAsync(Route route)
     {
         throw new NotImplementedException();
     }
@@ -20,12 +20,12 @@ public class StopPointDAO: IStopPointDAO
         throw new NotImplementedException();
     }
 
-    public Task<StopPoint> GetByIdAsync(int id)
+    public Task<Route> GetByIdAsync(int id)
     {
         throw new NotImplementedException();
     }
 
-    public Task<List<StopPoint>> GetAllAsync()
+    public Task<List<Route>> GetAllAsync()
     {
         throw new NotImplementedException();
     }

@@ -5,7 +5,7 @@ namespace NextStop.Common;
 /// <summary>
 /// Utility class for managing configuration settings.
 /// </summary>
-public class ConfigurationUtil
+public static class ConfigurationUtil
 {
     /// <summary>
     /// Static variable that stores the loaded configuration.

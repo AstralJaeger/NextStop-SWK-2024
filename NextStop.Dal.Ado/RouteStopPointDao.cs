@@ -3,39 +3,39 @@ using NextStop.Domain;
 
 namespace NextStop.Dal.Ado;
 
-public class HolidayDAO : IHolidayDAO
+public class RouteStopPointDao :IRouteStopPointDao
 {
-    public Task<int> InsertHolidayAsync(Holiday holiday)
+    public Task InsertAsync(RouteStopPoint routeStopPoint)
     {
         throw new NotImplementedException();
     }
 
-    public Task<bool> UpdateHolidayAsync(Holiday holiday)
+    public Task UpdateAsync(RouteStopPoint routeStopPoint)
     {
         throw new NotImplementedException();
     }
 
-    public Task<bool> DeleteHolidayAsync(int holidayId)
+    public Task DeleteAsync(int id)
     {
         throw new NotImplementedException();
     }
 
-    public Task<bool> IsHolidayAsync(DateTime date)
+    public Task<RouteStopPoint> GetByIdAsync(int id)
     {
         throw new NotImplementedException();
     }
 
-    public Task<Holiday?> GetHolidayByIdAsync(int holidayId)
+    public Task<List<RouteStopPoint>> GetAllAsync()
     {
         throw new NotImplementedException();
     }
 
-    public Task<IEnumerable<Holiday>> GetAllHolidaysAsync()
+    public Task<List<RouteStopPoint>> GetStopPointsByRouteIdAsync(int routeId)
     {
         throw new NotImplementedException();
     }
 
-    public Task<IEnumerable<Holiday>> GetHolidaysByYearAsync(int year)
+    public Task<RouteStopPoint?> GetNextStopPointAsync(int routeId, int currentStopOrder)
     {
         throw new NotImplementedException();
     }

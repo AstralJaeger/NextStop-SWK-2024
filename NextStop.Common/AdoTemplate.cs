@@ -9,7 +9,7 @@ namespace NextStop.Common;
 /// <typeparam name="T">The type of object to which the row is mapped.</typeparam>
 /// <param name="row">The database row to be mapped.</param>
 /// <returns>An object of type T containing the mapped data of the row.</returns>
-public delegate T RowMapper<T>(IDataRecord row);
+public delegate T RowMapper< out T>(IDataRecord row);
 
 public class AdoTemplate(IConnectionFactory connectionFactory)
 {
@@ -18,7 +18,7 @@ public class AdoTemplate(IConnectionFactory connectionFactory)
     /// </summary>
     /// <param name="command">The <see cref="DbCommand"/> to which the parameters should be added.</param>
     /// <param name="parameters">An array of <see cref="QueryParameter"/> objects containing the names and values of the parameters.</param>
-    private void AddParameters(DbCommand command, QueryParameter[] parameters)
+    private static void AddParameters(DbCommand command, QueryParameter[] parameters)
     {
         foreach (var p in parameters)
         {

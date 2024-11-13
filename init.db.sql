@@ -86,7 +86,7 @@ DO $$
 
 -- Insert sample data into stoppoint table
         INSERT INTO stoppoint (name, short_name, latitude, longitude) VALUES
-            ('Hauptbahnhof', 'Hbf', 40.748817, -73.985428),
+            ('Hauptbahnhof', 'HBF', 40.748817, -73.985428),
             ('Uferpromenade', 'UPN', 34.052235, -118.243683),
             ('Ostpark', 'OPK', 51.507351, -0.127758),
             ('Industriezeile', 'IDZ', 40.712776, -74.005974)

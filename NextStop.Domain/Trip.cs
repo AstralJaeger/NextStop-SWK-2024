@@ -29,4 +29,18 @@ public class Trip
     /// Navigation property for accessing the check-ins of this trip at different stop points.
     /// </summary>
     public List<TripCheckin> TripCheckins { get; set; } = new List<TripCheckin>();
+
+    public Trip(int id, int routeId, int vehicleId) //, Route route)
+    {
+        Id = id;
+        RouteId = routeId;
+        VehicleId = vehicleId;
+        //Route = route;
+    }
+
+    public Trip() { }
+    
+    public override string ToString() => $"Id: {Id}, RouteId: {RouteId}, VehicleId: {VehicleId}";
+    
+    public string getTripChechIns() => string.Join(", ", TripCheckins.Select(t => t.ToString()));
 }
