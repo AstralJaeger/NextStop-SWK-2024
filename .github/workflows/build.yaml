@@ -37,7 +37,7 @@ jobs:
         
       - name: Test
         run: | 
-          docker compose up -d
+          docker compose up -d postgres keycloak
           dotnet test --logger trx --results-directory "TestResults-${{ matrix.dotnet-version }}"
         
       - name: Upload dotnet test results

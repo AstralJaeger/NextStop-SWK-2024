@@ -1,20 +1,20 @@
 ﻿services:
 
-#  nextstop:
-#    build:
-#      context: .
-#      dockerfile: NextStop.Client/Dockerfile
-#    environment:
-#      - HOSTNAME=localhost
-#      - HOSTNAME_PORT=8080
-#      - DB_URL=postgresql://postgres/keycloak
-#    ports:
-#      - "8080:8080"
-#    restart: unless-stopped
-#    depends_on:
-#      - postgres
-#    networks:
-#      - nextstop_net
+  nextstop:
+    build:
+      context: .
+      dockerfile: NextStop.Client/Dockerfile
+    environment:
+      - HOSTNAME=localhost
+      - HOSTNAME_PORT=8080
+      - DB_URL=postgresql://postgres/keycloak
+    ports:
+      - "8080:8080"
+    restart: unless-stopped
+    depends_on:
+      - postgres
+    networks:
+      - nextstop_net
 
   postgres:
     image: kartoza/postgis:17-3.5
