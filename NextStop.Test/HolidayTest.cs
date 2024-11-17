@@ -78,7 +78,7 @@ public class HolidayTest
     [TestCaseSource(nameof(TestInsertValidHoliday))]
     public async Task TestInsertValidHoliday_InsertHolidayAsyncTest(Holiday holiday)
     {
-        await _dao.InsertHolidayAsync(holiday);
+        Assert.That(await _dao.InsertHolidayAsync(holiday), Is.EqualTo(1));
     }
 
     [Test(Description = "Update an existing holiday")]
