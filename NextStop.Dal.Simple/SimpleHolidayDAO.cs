@@ -41,7 +41,8 @@ public class SimpleHolidayDAO
 
     public Holiday GetById(int id)
     {
-        return null; //TODO 
+        // ToDo
+        throw new NotImplementedException();
     }
 
     public void Insert(Holiday holiday)

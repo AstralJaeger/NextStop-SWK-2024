@@ -67,7 +67,8 @@ public class SimpleRouteStopPointDao
     /// <returns>The route stop point object with the specified ID, or null if not found.</returns>
     public RouteStopPoint GetById(int id)
     {
-        return null; //todo
+        // ToDo
+        throw new NotImplementedException();
     }
 
     /// <summary>

@@ -90,7 +90,8 @@ public class SimpleRouteDao
     /// <returns>The route object with the specified ID, or null if not found.</returns>
     public Route GetById(int id)
     {
-        return null; //todo
+        // ToDo
+        throw new NotImplementedException();
     }
 
     /// <summary>

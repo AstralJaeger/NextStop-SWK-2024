@@ -21,8 +21,8 @@ public class SimpleTripDAO
             Route = new Route { Id = 1, Name = "Green" },
             TripCheckins = new List<TripCheckin>
             {
-                new TripCheckin { Id = 1, TripId = 1, StopPointId = 1, Checkin = DateTime.Now.AddMinutes(-15) },
-                new TripCheckin { Id = 2, TripId = 1, StopPointId = 2, Checkin = DateTime.Now }
+                // new TripCheckin { Id = 1, TripId = 1, StopPointId = 1, Checkin = DateTime.Now.AddMinutes(-15) },
+                // new TripCheckin { Id = 2, TripId = 1, StopPointId = 2, Checkin = DateTime.Now }
             }
         },
         new Trip 
@@ -33,7 +33,7 @@ public class SimpleTripDAO
             Route = new Route { Id = 2, Name = "Glue" },
             TripCheckins = new List<TripCheckin>
             {
-                new TripCheckin { Id = 3, TripId = 2, StopPointId = 3, Checkin = DateTime.Now.AddMinutes(-10) }
+                // new TripCheckin { Id = 3, TripId = 2, StopPointId = 3, Checkin = DateTime.Now.AddMinutes(-10) }
             }
         }
     };
@@ -45,7 +45,8 @@ public class SimpleTripDAO
     /// <returns>The trip object with the specified ID, or null if not found.</returns>
     public Trip GetById(int id)
     {
-        return null; //todo
+        // ToDo
+        throw new NotImplementedException();
     }
 
     /// <summary>
