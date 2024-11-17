@@ -69,12 +69,10 @@ public class HolidayDao (IConnectionFactory connectionFactory) : IHolidayDao
     public async Task<IEnumerable<Holiday>> GetAllHolidaysAsync()
     {
         return await template.QueryAsync("select * from holiday", MapRowToHoliday);
-
     }
 
     public async Task<IEnumerable<Holiday>> GetHolidaysByYearAsync(int year)
     {
         return await template.QueryAsync("select * from holiday where  EXTRACT(YEAR FROM start_date) =@year", MapRowToHoliday, new QueryParameter("@year", year));
-
     }
 }
