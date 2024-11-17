@@ -36,7 +36,9 @@ jobs:
         run: dotnet build
         
       - name: Test
-        run: dotnet test --logger trx --results-directory "TestResults-${{ matrix.dotnet-version }}"
+        run: | 
+          docker compose up
+          dotnet test --logger trx --results-directory "TestResults-${{ matrix.dotnet-version }}"
         
       - name: Upload dotnet test results
         uses: actions/upload-artifact@v4
