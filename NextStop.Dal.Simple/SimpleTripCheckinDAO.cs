@@ -37,7 +37,8 @@ public class SimpleTripCheckInDao
     /// <returns>The trip check-in object with the specified ID, or null if not found.</returns>
     public TripCheckin GetById(int id)
     {
-        return null; //todo
+        // ToDo
+        throw new NotImplementedException();
     }
 
     /// <summary>

@@ -43,7 +43,8 @@ public class SimpleStopPointDao
     /// <returns>The stop point object with the specified ID, or null if not found.</returns>
     public StopPoint GetById(int id)
     {
-        return null; //todo
+        // ToDo
+        throw new NotImplementedException();
     }
 
     /// <summary>
