@@ -233,8 +233,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://{{host}}/Trip",
-							"protocol": "http",
+							"raw": "{{host}}/Trip",
 							"host": [
 								"{{host}}"
 							],
@@ -246,7 +245,7 @@
 					"response": []
 				},
 				{
-					"name": "GET (Read) /Trip/id/:id",
+					"name": "GET (Read) /Trip/:id",
 					"id": "9c627844-1806-4752-ab98-951ba8b572dd",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
@@ -267,14 +266,12 @@
 							}
 						},
 						"url": {
-							"raw": "http://{{host}}/Trip/id/1",
-							"protocol": "http",
+							"raw": "{{host}}/Trip/1",
 							"host": [
 								"{{host}}"
 							],
 							"path": [
 								"Trip",
-								"id",
 								"1"
 							]
 						}
@@ -306,8 +303,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://{{host}}/TripCheckIn",
-							"protocol": "http",
+							"raw": "{{host}}/TripCheckIn",
 							"host": [
 								"{{host}}"
 							],
@@ -319,7 +315,7 @@
 					"response": []
 				},
 				{
-					"name": "GET (Read) /TripCheckIn/id/:id",
+					"name": "GET (Read) /TripCheckIn/:id",
 					"id": "69452168-954d-4814-a398-64edca859c24",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
@@ -340,14 +336,12 @@
 							}
 						},
 						"url": {
-							"raw": "http://{{host}}/TripCheckIn/id/1",
-							"protocol": "http",
+							"raw": "{{host}}/TripCheckIn/1",
 							"host": [
 								"{{host}}"
 							],
 							"path": [
 								"TripCheckIn",
-								"id",
 								"1"
 							]
 						}
