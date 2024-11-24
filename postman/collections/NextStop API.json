@@ -1,0 +1,353 @@
+{
+	"info": {
+		"_postman_id": "d58bb204-ba62-46fd-8900-24ccf13a4f72",
+		"name": "NextStop API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_uid": "5802449-d58bb204-ba62-46fd-8900-24ccf13a4f72"
+	},
+	"item": [
+		{
+			"name": "Holiday",
+			"item": [
+				{
+					"name": "POST (Create) /holiday",
+					"id": "8b8dd7af-5086-451b-88be-1ab5f5acdc5d",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"\",\r\n    \"start\": \"\",\r\n    \"end\": \"\",\r\n    \"type\": \"\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://{{host}}/holiday",
+							"protocol": "http",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"holiday"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PUT (Update) /holiday Copy",
+					"id": "2d06b6d2-5f9e-4f59-a6bb-d36d47b89363",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": \"\",\r\n    \"name\": \"\",\r\n    \"start\": \"\",\r\n    \"end\": \"\",\r\n    \"type\": \"\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://{{host}}/holiday",
+							"protocol": "http",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"holiday"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET /holiday/year/:year",
+					"id": "34b3e99a-8a78-4464-abca-c694b831ccd3",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"\",\r\n    \"start\": \"\",\r\n    \"end\": \"\",\r\n    \"type\": \"\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://{{host}}/holiday/year/2025",
+							"protocol": "http",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"holiday",
+								"year",
+								"2025"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET /holiday/id/:id",
+					"id": "058f1469-5328-4c1b-befb-7709ba88580b",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"\",\r\n    \"start\": \"\",\r\n    \"end\": \"\",\r\n    \"type\": \"\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://{{host}}/holiday/id/1",
+							"protocol": "http",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"holiday",
+								"id",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DELETE /holiday/:id",
+					"id": "3cad167f-f5e0-417e-8818-182bd94510ac",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://{{host}}/holiday/1",
+							"protocol": "http",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"holiday",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"id": "917ff462-964c-42d5-abfa-4387066bbba2"
+		},
+		{
+			"name": "Route",
+			"item": [
+				{
+					"name": "POST (Create) /route",
+					"id": "3c55fc53-e2c0-4106-bfbd-25fe7e19e40a",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"\",\r\n    \"validFrom\": \"\",\r\n    \"validTo\": \"\",\r\n    \"validOn\": \"\",\r\n    \"stops\": [\r\n        {\r\n            \"stopPoint\": 0,\r\n            \"arrivalTime\": \"\",\r\n            \"departureTime\": \"\",\r\n            \"order\": 0\r\n        },\r\n        {\r\n            \"stopPoint\": 0,\r\n            \"arrivalTime\": \"\",\r\n            \"departureTime\": \"\",\r\n            \"order\": 1\r\n        }\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://{{host}}/",
+							"protocol": "http",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"id": "91fb8b3e-a462-49ac-8223-48416b421437"
+		},
+		{
+			"name": "RouteStopPoint",
+			"item": [],
+			"id": "e537f822-225c-4f55-aaba-ea8f5b560d5c"
+		},
+		{
+			"name": "Trip",
+			"item": [],
+			"id": "7904c834-a851-48fa-bffe-1e29d9802f66"
+		},
+		{
+			"name": "TripCheckIn",
+			"item": [
+				{
+					"name": "POST (Create) /TripCheckIn",
+					"id": "e479acef-2bba-4a89-8abd-5467fafc0896",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"trip_id\": 0,\r\n    \"stoppoint_id\": 0,\r\n    \"checkinTime\": \"\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://{{host}}/TripCheckIn",
+							"protocol": "http",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"TripCheckIn"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET (Read) /TripCheckIn/id/:id",
+					"id": "69452168-954d-4814-a398-64edca859c24",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"trip_id\": 0,\r\n    \"stoppoint_id\": 0,\r\n    \"checkinTime\": \"\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://{{host}}/TripCheckIn/id/1",
+							"protocol": "http",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"TripCheckIn",
+								"id",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"id": "34ecd70a-4b9f-41b7-a3b4-fe49579a0565"
+		},
+		{
+			"name": "Plain",
+			"id": "72303813-09aa-44ed-aa20-a1ec12a4074a",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{host}}/",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						""
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "481bad61-211f-4da5-8ad3-90b4d71ba4c3",
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "5f3ef759-e3dd-4294-9f4d-6c7801cc6bd0",
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"id": "6d7521c0-a04a-4677-94f9-6388d8127fb9",
+			"key": "host",
+			"value": "localhost:8080",
+			"type": "string"
+		},
+		{
+			"id": "bd1ccc2c-80c7-4716-967f-f57f672b1c6e",
+			"key": "apikey",
+			"value": "",
+			"type": "string"
+		}
+	]
+}
