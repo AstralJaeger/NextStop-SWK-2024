@@ -3,7 +3,7 @@ using NextStop.Domain;
 
 namespace NextStop.Dal.Ado;
 
-public class TripCheckinDaoO : ITripCheckinDao
+public class TripCheckinDao : ITripCheckinDao
 {
     public Task<int> InsertTripCheckInAsync(TripCheckin tripCheckIn)
     {
