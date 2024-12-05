@@ -1,6 +1,9 @@
-﻿namespace NextStop.Service.Interfaces;
+﻿using NextStop.Domain;
 
-public class IStopPointService
+namespace NextStop.Service.Interfaces;
+
+public interface IStopPointService
 {
-    
+    public Task<IEnumerable<StopPoint>> GetAllAsync();
+    public Task<StopPoint> GetStopPointByIdAsync(int id);
 }

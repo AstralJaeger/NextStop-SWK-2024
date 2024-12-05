@@ -1,25 +1,38 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
     <PropertyGroup>
         <OutputType>Exe</OutputType>
         <TargetFramework>net8.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
+        <RootNamespace>NextStop.Client</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
       <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="9.0.0-rc.2.24473.5" />
       <PackageReference Include="Npgsql" Version="8.0.5" />
+      <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="7.1.0" />
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="5.0.0-rc2" />
     </ItemGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\NextStop.Dal.Ado\NextStop.Dal.Ado.csproj" />
+      <ProjectReference Include="..\NextStop.ServiceInterface\NextStop.ServiceInterface.csproj" />
+      <ProjectReference Include="..\NextStop.Service\NextStop.Service.csproj" />
     </ItemGroup>
 
     <ItemGroup>
       <None Update="appsettings.json">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Content Update="appsettings.Development.json">
+        <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      </Content>
     </ItemGroup>
 
 </Project>

@@ -1,6 +1,8 @@
-﻿namespace NextStop.Service.Services;
+﻿using NextStop.Service.Interfaces;
 
-public class RouteService
+namespace NextStop.Service.Services;
+
+public class RouteService : IRouteService
 {
     
 }

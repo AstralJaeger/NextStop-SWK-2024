@@ -1,6 +1,6 @@
 ﻿namespace NextStop.Service.Interfaces;
 
-public class IRouteStopPointService
+public interface IRouteStopPointService
 {
     
 }

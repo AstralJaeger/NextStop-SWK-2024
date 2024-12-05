@@ -1,6 +1,8 @@
-﻿namespace NextStop.Service.Services;
+﻿using NextStop.Service.Interfaces;
 
-public class HolidayService
+namespace NextStop.Service.Services;
+
+public class HolidayService : IHolidayService
 {
     
 }
