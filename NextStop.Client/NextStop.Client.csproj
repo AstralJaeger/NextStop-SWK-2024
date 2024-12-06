@@ -17,7 +17,6 @@
 
     <ItemGroup>
       <ProjectReference Include="..\NextStop.Dal.Ado\NextStop.Dal.Ado.csproj" />
-      <ProjectReference Include="..\NextStop.ServiceInterface\NextStop.ServiceInterface.csproj" />
       <ProjectReference Include="..\NextStop.Service\NextStop.Service.csproj" />
     </ItemGroup>
 
@@ -25,14 +24,6 @@
       <None Update="appsettings.json">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>
-    </ItemGroup>
-
-    <ItemGroup>
-      <Content Update="appsettings.Development.json">
-        <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-      </Content>
     </ItemGroup>
 
 </Project>

@@ -1,18 +1,15 @@
-﻿using System.Net;
-using NextStop.Dal.Ado;
-using NextStop.Dal.Interface;
+﻿using NextStop.Dal.Interface;
 using NextStop.Domain;
 using NextStop.Service.Interfaces;
-using NextStop.ServiceInterface;
 
 namespace NextStop.Service;
 
 public class StopPointService(IStopPointDao stopPointDao): IStopPointService
 {
     private readonly IStopPointDao stopPointDao = stopPointDao;
-    public async Task<IEnumerable<StopPoint>> GetAllAsync()
+    public async Task<IEnumerable<StopPoint>> GetAllStopPointsAsync()
     {
-        IEnumerable<StopPoint> endpoints = await stopPointDao.GetAllAsync();
+        IEnumerable<StopPoint> endpoints = await stopPointDao.GetAllStopPointsAsync();
         return endpoints;
         
     }

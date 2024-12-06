@@ -57,7 +57,7 @@ public class StopPointDao (IConnectionFactory connectionFactory): IStopPointDao
 
     }
 
-    public async Task<IEnumerable<StopPoint>> GetAllAsync()
+    public async Task<IEnumerable<StopPoint>> GetAllStopPointsAsync()
     {
         return await template.QueryAsync("select * from stoppoint", MapRowToStopPoint);
 

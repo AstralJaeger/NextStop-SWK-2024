@@ -14,10 +14,11 @@ public class StopPointController(IStopPointService stopPointService) : Controlle
     public async Task<ActionResult> GetAllEndPoints()
     {
         //todo Fehlerbehandlung
-        var result = await stopPointService.GetAllAsync();
+        var result = await stopPointService.GetAllStopPointsAsync();
         return Ok(result);
     }
 
+    [HttpGet("{id:int}")]
     public async Task<ActionResult> GetStopPointById(int id)
     {
         var result = await stopPointService.GetStopPointByIdAsync(id);

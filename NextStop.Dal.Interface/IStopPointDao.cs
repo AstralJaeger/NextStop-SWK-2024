@@ -44,6 +44,6 @@ public interface IStopPointDao
     /// Asynchronously retrieves all stop points from the database.
     /// </summary>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation, containing a list of all stop point objects.</returns>
-    Task<IEnumerable<StopPoint>> GetAllAsync();
+    Task<IEnumerable<StopPoint>> GetAllStopPointsAsync();
 
 }
