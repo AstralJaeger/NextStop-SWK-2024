@@ -8,7 +8,7 @@ public class TripCheckin
     /// <summary>
     /// Gets or sets the unique identifier for the trip check-in.
     /// </summary>
-    public int Id { get; set; }
+    public int Id { get; set; } //todo change to Guid
 
     /// <summary>
     /// Gets or sets the identifier of the associated trip.

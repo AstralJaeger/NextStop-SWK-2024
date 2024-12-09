@@ -1,3 +1,5 @@
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using NextStop.Common;
 using NextStop.Dal.Ado;
 using NextStop.Dal.Interface;
@@ -32,19 +34,16 @@ builder.Services.AddScoped<ITripService, TripService>();
 builder.Services.AddScoped<ITripDao, TripDao>();
 
 
-builder.Services.AddControllers();
+builder.Services.AddControllers(options => options.ReturnHttpNotAcceptable = true).AddJsonOptions(options =>
+{
+    options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
+    // JSON-Daten sind nicht case-sensitiv, z. B. "Name" und "name" werden gleich behandelt.
+    options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+    // JSON-Objekte verwenden CamelCase (z. B. `orderDate` statt `OrderDate`).
+    options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+    // Serialisiert Enums als Strings (z. B. `Rating.A` wird zu "A").
+}).AddXmlDataContractSerializerFormatters();
 
-//Beispiel aus OrderManagement mit Formatfestlegung
-// builder.Services.AddControllers(options => options.ReturnHttpNotAcceptable = true).AddJsonOptions(options =>
-//     {
-//         options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
-//         // JSON-Daten sind nicht case-sensitiv, z. B. "Name" und "name" werden gleich behandelt.
-//         options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
-//         // JSON-Objekte verwenden CamelCase (z. B. `orderDate` statt `OrderDate`).
-//         options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
-//         // Serialisiert Enums als Strings (z. B. `Rating.A` wird zu "A").
-//     })
-//     .AddXmlDataContractSerializerFormatters();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

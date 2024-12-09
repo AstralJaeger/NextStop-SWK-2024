@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using NextStop.Api.DTOs;
+using NextStop.Api.Mappers;
 using NextStop.Domain;
 using NextStop.Service.Interfaces;
 
@@ -8,66 +9,114 @@ namespace NextStop.Api.Controllers;
 [ApiController]
 //[ProducesResponseType(StatusCodes.Status200OK)] 
 [Route("api/[controller]")]
-public class HolidayController(IHolidayService holidayService) : ControllerBase
+public class HolidayController : ControllerBase
 {
     private readonly IHolidayService holidayService;
+    
+    // Klassischer Konstruktor für Dependency Injection
+    public HolidayController(IHolidayService holidayService)
+    {
+        this.holidayService = holidayService ?? throw new ArgumentNullException(nameof(holidayService));
+    }
     
     [HttpGet]
     public async Task<ActionResult> GetHolidays()
     {
         var result = await holidayService.GetAllHolidaysAsync();
-        return Ok(result);
+        return Ok(result.Select(r => r.ToHolidayDto()));
     }
 
-    [HttpGet("{id:int}")]
+    [HttpGet("by-id/{id:int}")]
     public async Task<ActionResult> GetHolidaysById(int id)
     {
         var result = await holidayService.GetHolidayByIdAsync(id);
-        return Ok(result);
+        if (result is null)
+        {
+            // Gibt 404 zurück, wenn der Kunde nicht existiert.
+            return NotFound(StatusInfo.InvalidHolidayId(id));
+        }
+        return Ok(result.ToHolidayDto());
     }
     
-    [HttpGet("{year:int}")]
+    
+    [HttpGet("by-year/{year:int}")]
     public async Task<ActionResult> GetHolidaysByYear(int year)
     {
         var result = await holidayService.GetHolidaysByYearAsync(year);
+        if (result is null)
+        {
+            // Gibt 404 zurück, wenn der Kunde nicht existiert.
+            return NotFound(StatusInfo.InvalidYearForHolidays(year));
+        }
         return Ok(result);
     }
     
-    [HttpDelete("{id:int}")]
-    public async Task<ActionResult> DeleteHoliday(int id)
+    
+    [HttpGet("is-holiday/{date}")]
+    public async Task<bool> IsHoliday(string date)
     {
-        var result = await holidayService.DeleteHolidayAsync(id);
-        return Ok(result);
+        var result = await holidayService.IsHolidayAsync(date);
+        return result;
     }
     
+    
+    
+
     [HttpPost]
+    [Produces("application/json", "text/plain")]
     public async Task<ActionResult<HolidayDto>> InsertHoliday(HolidayForCreationDto holidayDto)
     //string name, string startDate, string endDate, string type
     {
-        if (holidayDto.Id != Guid.Empty && await holidayService.HolidayAlreadyExist(holidayDto.Id))
+        if (holidayDto.Id != 0 && await holidayService.HolidayAlreadyExist(holidayDto.Id))
         {
-            return BadRequest(); //todo something like this --> return Conflict(StatusInfo.CustomerAlreadyExists(customerDto.Id));
+            return Conflict(StatusInfo.HolidayAlreadyExists(holidayDto.Id));
+            
         }
         
         Holiday newHoliday = holidayDto.ToHoliday();
         await holidayService.InsertHolidayAsync(newHoliday);
-        
-        return CreatedAtAction(//todo)
-        //do something like this
-        
-        // // Gibt 201 Created zurück und liefert die Kunden-Details.
-        // return CreatedAtAction(
-        //     actionName: nameof(GetCustomerById),  // Verweist auf den Endpunkt zum Abrufen eines Kunden.
-        //     routeValues: new { customerId = customer.Id },
-        //     value: customer.ToCustomerDto()
-        // )
+
+        return CreatedAtAction(
+            actionName: nameof(GetHolidays), // Verweist auf den Endpunkt zum Abrufen eines Kunden.
+            routeValues: new { holidayId = newHoliday.Id },
+            value: newHoliday.ToHolidayDto()
+            );
+
     }
 
 
-    [HttpPut("{id:int}")]
-    UpdateHolidayAsync
+
+    [HttpPut("update/{holidayId:int}")]
+    public async Task<ActionResult> UpdateHoliday(int holidayId, HolidayForUpdateDto holidayDto)
+    {
+        var existingHoliday = await holidayService.GetHolidayByIdAsync(holidayId);
+        if (existingHoliday == null)
+        {
+            return NotFound();
+        }
+
+        holidayDto.UpdateHoliday(existingHoliday);
         
-    [HttpGet("{id:int}")]
-    IsHolidayAsync
+        await holidayService.UpdateHolidayAsync(existingHoliday);
+
+        return NoContent();
+    }
+
     
+    [HttpDelete("delete/{id:int}")]
+    public async Task<ActionResult> DeleteHoliday(int id)
+    {
+        if (await holidayService.DeleteHolidayAsync(id))
+        {
+            // Gibt 204 No Content zurück, wenn erfolgreich gelöscht.
+            return NoContent();
+        }
+        else
+        {
+            
+            return NotFound();
+        }
+
+    }
+
 }

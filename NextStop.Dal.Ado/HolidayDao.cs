@@ -26,8 +26,8 @@ public class HolidayDao (IConnectionFactory connectionFactory) : IHolidayDao
         return await template.ExecuteAsync(
             "insert into holiday (name, start_date, end_date, typ) values (@name, @start_date, @end_date, @type::holiday_type)",
             new QueryParameter("@name", holiday.Name),
-            new QueryParameter("@start_date", holiday.Start),
-            new QueryParameter("@end_date", holiday.End),
+            new QueryParameter("@start_date", holiday.StartDate),
+            new QueryParameter("@end_date", holiday.EndDate),
             new QueryParameter("@type", holiday.Type.ToString()));
 
     }
@@ -37,8 +37,8 @@ public class HolidayDao (IConnectionFactory connectionFactory) : IHolidayDao
         return await template.ExecuteAsync(
             "update holiday set name = @name, start_date = @start_date, end_date = @end_date, typ = @type::holiday_type where id = @id",
             new QueryParameter("@name", holiday.Name),
-            new QueryParameter("@start_date", holiday.Start),
-            new QueryParameter("@end_date", holiday.End),
+            new QueryParameter("@start_date", holiday.StartDate),
+            new QueryParameter("@end_date", holiday.EndDate),
             new QueryParameter("@type", holiday.Type.ToString()),
             new QueryParameter("@id", holiday.Id) ) == 1;
     }

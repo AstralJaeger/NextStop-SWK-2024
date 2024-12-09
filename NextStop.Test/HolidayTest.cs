@@ -218,8 +218,8 @@ public class HolidayTest
             Assert.NotNull(result);
             Assert.That(holiday.Id, Is.EqualTo(result.Id));
             Assert.That(holiday.Name, Is.EqualTo(result.Name));
-            Assert.That(holiday.Start, Is.EqualTo(result.Start));
-            Assert.That(holiday.End, Is.EqualTo(result.End));
+            Assert.That(holiday.StartDate, Is.EqualTo(result.StartDate));
+            Assert.That(holiday.EndDate, Is.EqualTo(result.EndDate));
             Assert.That(holiday.Type, Is.EqualTo(result.Type));
         });
     }

@@ -8,7 +8,7 @@ public class RouteStopPoint
     /// <summary>
     /// Gets or sets the unique identifier for the route-stop point connection.
     /// </summary>
-    public int Id { get; set; }
+    public int Id { get; set; } //todo change to Guid
 
     /// <summary>
     /// Gets or sets the identifier of the associated stop point.

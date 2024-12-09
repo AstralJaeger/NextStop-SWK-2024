@@ -8,7 +8,7 @@ public class Trip
     /// <summary>
     /// Gets or sets the unique identifier for the trip.
     /// </summary>
-    public int Id { get; set; }
+    public int Id { get; set; } //todo change to Guid
 
     /// <summary>
     /// Gets or sets the identifier of the route that this trip follows.

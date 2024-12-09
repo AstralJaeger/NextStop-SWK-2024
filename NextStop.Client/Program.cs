@@ -208,7 +208,7 @@ static class Program
         var stopPointDao = new StopPointDao(connectionFactory);
 
         // Alle StopPoints abrufen und ausgeben
-        var stopPoints = await stopPointDao.GetAllAsync();
+        var stopPoints = await stopPointDao.GetAllStopPointsAsync();
 
         Console.WriteLine("StopPoints in der Datenbank:");
         foreach (var stopPoint in stopPoints)

@@ -8,7 +8,7 @@ public class Holiday
     /// <summary>
     /// Gets or sets the unique identifier for the holiday.
     /// </summary>
-    public int Id { get; set; }
+    public int Id { get; set; } //todo change to Guid
 
     /// <summary>
     /// Gets or sets the name of the holiday.
@@ -18,12 +18,12 @@ public class Holiday
     /// <summary>
     /// Gets or sets the start date and time of the holiday.
     /// </summary>
-    public DateTime Start { get; set; }
+    public DateTime StartDate { get; set; }
 
     /// <summary>
     /// Gets or sets the end date and time of the holiday.
     /// </summary>
-    public DateTime End { get; set; }
+    public DateTime EndDate { get; set; }
 
     /// <summary>
     /// Gets or sets the type of the holiday (e.g., "BankHoliday", "SchoolVacation").
@@ -37,13 +37,13 @@ public class Holiday
     {
         Id = id;
         Name = name;
-        Start = start;
-        End = end;
+        StartDate = start;
+        EndDate = end;
         Type = type;
     }
     
     public Holiday() { }
     
-    public override string ToString() => $" ID: {Id},  Name: {Name} ({Start} - {End}), Type: {Type}";
+    public override string ToString() => $" ID: {Id},  Name: {Name} ({StartDate} - {EndDate}), Type: {Type}";
     
 }

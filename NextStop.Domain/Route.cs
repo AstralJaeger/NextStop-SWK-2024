@@ -8,7 +8,7 @@ public class Route
     /// <summary>
     /// Gets or sets the unique identifier for the route.
     /// </summary>
-    public int Id { get; set; }
+    public int Id { get; set; } //todo change to Guid
 
     /// <summary>
     /// Gets or sets the name of the route.
