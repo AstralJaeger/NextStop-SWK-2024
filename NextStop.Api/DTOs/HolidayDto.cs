@@ -1,4 +1,5 @@
-﻿using NextStop.Domain;
+﻿using System.ComponentModel.DataAnnotations;
+using NextStop.Domain;
 namespace NextStop.Api.DTOs;
 
 public record HolidayDto
@@ -21,12 +22,18 @@ public record HolidayForCreationDto
 {
     public int Id { get; init; }
     
+    [Required(ErrorMessage = "Name is required.")]
+    [StringLength(100, ErrorMessage = "Name must be between 1 and 100 characters.")]
     public required string Name { get; set; } 
     
+    [Required]
     public required DateTime StartDate { get; set; }
     
+    [Required]
+    [DateGreaterThan("StartDate", ErrorMessage = "EndDate must be later than StartDate.")]
     public required DateTime EndDate { get; set; }
     
+    [Required]
     public required HolidayType HolidayType { get; set; }
 
 
@@ -70,4 +77,35 @@ public record HolidayForUpdateDto
         holiday.Type = this.HolidayType;
     }
     
+}
+
+
+
+public class DateGreaterThanAttribute : ValidationAttribute
+{
+    private readonly string _comparisonProperty;
+
+    public DateGreaterThanAttribute(string comparisonProperty)
+    {
+        _comparisonProperty = comparisonProperty;
+    }
+
+    protected override ValidationResult IsValid(object value, ValidationContext validationContext)
+    {
+        var comparisonProperty = validationContext.ObjectType.GetProperty(_comparisonProperty);
+
+        if (comparisonProperty == null)
+        {
+            return new ValidationResult($"Property '{_comparisonProperty}' not found.");
+        }
+
+        var comparisonValue = (DateTime)comparisonProperty.GetValue(validationContext.ObjectInstance);
+
+        if ((DateTime)value <= comparisonValue)
+        {
+            return new ValidationResult(ErrorMessage ?? $"Date must be greater than {_comparisonProperty}.");
+        }
+
+        return ValidationResult.Success;
+    }
 }

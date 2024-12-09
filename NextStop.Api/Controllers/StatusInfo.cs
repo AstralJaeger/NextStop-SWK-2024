@@ -21,5 +21,28 @@ public class StatusInfo
         Title = "Conflicting holiday IDs", // Kurze Beschreibung des Problems.
         Detail = $"Holiday id ID '{holidayId}' already exists" // Detaillierte Erklärung.
     };
-    
+
+    public static object? InvalidStopPointId(int stopPointId) => new ProblemDetails
+    {
+        Title = "Invalid stoppoint ID", // Titel des Fehlers.
+        Detail = $"Stoppoint with ID '{stopPointId}' does not exist"
+    };
+
+    public static object? StopPointAlreadyExists(object stopPointId) => new ProblemDetails
+    {
+        Title = "Conflicting stoppoint IDs", // Kurze Beschreibung des Problems.
+        Detail = $"Stoppoint with ID '{stopPointId}' already exists" // Detaillierte Erklärung.
+    };
+
+    public static object? InvalidStopPointShortName(string shortName) => new ProblemDetails
+    {
+        Title = "Conflicting stoppoint shortname", // Kurze Beschreibung des Problems.
+        Detail = $"Stoppoint with shortname '{shortName}' already exists" // Detaillierte Erklärung.
+    };
+
+    public static object? InvalidStopPointName(string name) => new ProblemDetails
+    {
+        Title = "Conflicting stoppoint name", // Kurze Beschreibung des Problems.
+        Detail = $"Stoppoint with name '{name}' already exists" // Detaillierte Erklärung.
+    };
 }

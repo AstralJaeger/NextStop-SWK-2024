@@ -19,8 +19,10 @@ public class HolidayController : ControllerBase
         this.holidayService = holidayService ?? throw new ArgumentNullException(nameof(holidayService));
     }
     
+    //todo Fehlerbehandlung
+    
     [HttpGet]
-    public async Task<ActionResult> GetHolidays()
+    public async Task<ActionResult> GetAllHolidays()
     {
         var result = await holidayService.GetAllHolidaysAsync();
         return Ok(result.Select(r => r.ToHolidayDto()));
@@ -65,8 +67,14 @@ public class HolidayController : ControllerBase
     [HttpPost]
     [Produces("application/json", "text/plain")]
     public async Task<ActionResult<HolidayDto>> InsertHoliday(HolidayForCreationDto holidayDto)
-    //string name, string startDate, string endDate, string type
+
     {
+        // Prüfe, ob das ModelState gültig ist
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState); // Gibt die Validierungsfehler zurück
+        }
+        
         if (holidayDto.Id != 0 && await holidayService.HolidayAlreadyExist(holidayDto.Id))
         {
             return Conflict(StatusInfo.HolidayAlreadyExists(holidayDto.Id));
@@ -77,13 +85,12 @@ public class HolidayController : ControllerBase
         await holidayService.InsertHolidayAsync(newHoliday);
 
         return CreatedAtAction(
-            actionName: nameof(GetHolidays), // Verweist auf den Endpunkt zum Abrufen eines Kunden.
+            actionName: nameof(GetHolidaysById), // Verweist auf den Endpunkt zum Abrufen eines Kunden.
             routeValues: new { holidayId = newHoliday.Id },
             value: newHoliday.ToHolidayDto()
             );
 
     }
-
 
 
     [HttpPut("update/{holidayId:int}")]

@@ -12,7 +12,7 @@ public interface IStopPointDao
     /// </summary>
     /// <param name="stopPoint">The stop point object to insert.</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    Task<int> InsertAsync(StopPoint stopPoint);
+    Task<int> InsertStopPointAsync(StopPoint stopPoint);
 
 
     /// <summary>
@@ -20,7 +20,7 @@ public interface IStopPointDao
     /// </summary>
     /// <param name="stopPoint">The stop point object with updated information.</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    Task<bool> UpdateAsync(StopPoint stopPoint);
+    Task<bool> UpdateStopPointAsync(StopPoint stopPoint);
 
 
     /// <summary>
@@ -28,7 +28,7 @@ public interface IStopPointDao
     /// </summary>
     /// <param name="id">The unique ID of the stop point to delete.</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    Task<bool> DeleteAsync(int id);
+    Task<bool> DeleteStopPointAsync(int id);
     
     //----------------------------------------------------------------------------------
 
@@ -37,7 +37,7 @@ public interface IStopPointDao
     /// </summary>
     /// <param name="id">The unique ID of the stop point.</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation, containing the stop point object with the specified ID.</returns>
-    Task<StopPoint?> GetByIdAsync(int id);
+    Task<StopPoint?> GetStopPointByIdAsync(int id);
 
     
     /// <summary>
@@ -46,4 +46,12 @@ public interface IStopPointDao
     /// <returns>A <see cref="Task"/> representing the asynchronous operation, containing a list of all stop point objects.</returns>
     Task<IEnumerable<StopPoint>> GetAllStopPointsAsync();
 
+    Task<IEnumerable<StopPoint>> GetRoutesByStopPointAsync(int stopPointId);
+    Task<StopPoint?> GetStopPointByShortNameAsync(string shortName);
+    Task<StopPoint?> GetStopPointByNameAsync(string name);
+    
+ 
 }
+
+
+

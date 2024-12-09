@@ -99,10 +99,10 @@ public class HolidayService(IHolidayDao holidayDao) : IHolidayService
             await holidayDao.InsertHolidayAsync(newHoliday); 
             return true;
         }
-        catch (Exception ex)
+        catch (Exception e)
         {
             // Logge den Fehler
-            Console.WriteLine($"Could not insert holiday: {ex.Message}");
+            Console.WriteLine($"Could not insert holiday: {e.Message}");
             return false;
         }
     }

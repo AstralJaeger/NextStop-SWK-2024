@@ -51,7 +51,38 @@ public class StopPointDao (IConnectionFactory connectionFactory): IStopPointDao
             new QueryParameter("@spId", id)) == 1;
     }
 
-    public async Task<StopPoint?> GetByIdAsync(int id)
+    public async Task<int> InsertStopPointAsync(StopPoint stopPoint)
+    {
+        return await template.ExecuteAsync(
+            "insert into stoppoint (name, short_name, latitude, longitude) values (@name, @short_name, @latitude, @longitude)",
+            new QueryParameter("@name", stopPoint.Name),
+            new QueryParameter("@short_name", stopPoint.ShortName),
+            new QueryParameter("@latitude", stopPoint.Location.Latitude),
+            new QueryParameter("@longitude", stopPoint.Location.Longitude)
+        );
+    }
+
+    public async Task<bool> UpdateStopPointAsync(StopPoint stopPoint)
+    {
+        return await template.ExecuteAsync(
+            "update stoppoint set name = @name, short_name = @short_name, latitude = @latitude, longitude = @longitude where id = @id",
+            new QueryParameter("@name", stopPoint.Name),
+            new QueryParameter("@short_name", stopPoint.ShortName),
+            new QueryParameter("@latitude", stopPoint.Location.Latitude),
+            new QueryParameter("@longitude", stopPoint.Location.Longitude),
+            new QueryParameter("@id", stopPoint.Id)
+        ) == 1;
+    }
+
+    public async Task<bool> DeleteStopPointAsync(int id)
+    {
+        return await template.ExecuteAsync(
+            "delete from stoppoint where id = @id",
+            new QueryParameter("@id", id)
+        ) == 1;
+    }
+
+    public async Task<StopPoint?> GetStopPointByIdAsync(int id)
     {
         return await template.QuerySingleAsync("select * from stoppoint where id=@spId", MapRowToStopPoint, new QueryParameter("@spId", id));
 
@@ -61,5 +92,29 @@ public class StopPointDao (IConnectionFactory connectionFactory): IStopPointDao
     {
         return await template.QueryAsync("select * from stoppoint", MapRowToStopPoint);
 
+    }
+
+
+    public Task<IEnumerable<StopPoint>> GetRoutesByStopPointAsync(int stopPointId)
+    {
+        return null;
+    }
+
+    public async Task<StopPoint?> GetStopPointByShortNameAsync(string shortName)
+    {
+        return await template.QuerySingleAsync(
+            "select * from stoppoint where short_name=@spName",
+            MapRowToStopPoint,
+            new QueryParameter("@spName", shortName)
+        );
+    }
+
+    public async Task<StopPoint?> GetStopPointByNameAsync(string name)
+    {
+        return await template.QuerySingleAsync(
+            "select * from stoppoint where name=@spName",
+            MapRowToStopPoint,
+            new QueryParameter("@spName", name)
+        );
     }
 }
