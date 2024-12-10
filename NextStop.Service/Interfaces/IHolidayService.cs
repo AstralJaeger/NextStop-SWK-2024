@@ -9,7 +9,7 @@ public interface IHolidayService
     public Task<IEnumerable<Holiday>> GetHolidaysByYearAsync(int year);
     public Task<bool> DeleteHolidayAsync(int id);
     public Task<bool> HolidayAlreadyExist(int holidayDtoId);
-    public Task<bool> InsertHolidayAsync(Holiday newHoliday);
+    public Task InsertHolidayAsync(Holiday newHoliday);
     public Task<bool> IsHolidayAsync(string date);
     public Task UpdateHolidayAsync(Holiday? holiday);
 }

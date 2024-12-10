@@ -6,8 +6,6 @@ namespace NextStop.Service.Services;
 
 public class HolidayService(IHolidayDao holidayDao) : IHolidayService
 {
-    private readonly IHolidayDao holidayDao = holidayDao;
-    
     //Semaphore zur Sicherstellung von Thread-Sicherheit bei gleichzeitigen Zugriffen.
     private static readonly SemaphoreSlim semaphore = new(1, 1);
     
@@ -43,24 +41,28 @@ public class HolidayService(IHolidayDao holidayDao) : IHolidayService
     
     public async Task<IEnumerable<Holiday>> GetAllHolidaysAsync()
     {
-        IEnumerable<Holiday> holidays = await holidayDao.GetAllHolidaysAsync();
-        return holidays;
+        return await await RunInLockAsync(() =>
+        {
+            return holidayDao.GetAllHolidaysAsync();
+        });
     }
 
     public async Task<Holiday?> GetHolidayByIdAsync(int id)
     {
         return await await RunInLockAsync(() =>
         { 
-            Task<Holiday?> holiday = holidayDao.GetHolidayByIdAsync(id);
-            return holiday;
+            return holidayDao.GetHolidayByIdAsync(id);
         });
         
     }
 
     public async Task<IEnumerable<Holiday>> GetHolidaysByYearAsync(int year)
     {
-        IEnumerable<Holiday> holidaysByYear = await holidayDao.GetHolidaysByYearAsync(year);
-        return holidaysByYear;
+        return await await RunInLockAsync( () =>
+        {
+            return holidayDao.GetHolidaysByYearAsync(year);
+        });
+
     }
 
     public async Task<bool> IsHolidayAsync(string date)
@@ -71,7 +73,10 @@ public class HolidayService(IHolidayDao holidayDao) : IHolidayService
             throw new ArgumentException("Invalid date format.", nameof(date));
         }
         
-        return await await RunInLockAsync(() => holidayDao.IsHolidayAsync(parsedDate));
+        return await await RunInLockAsync(() =>
+        {
+            return holidayDao.IsHolidayAsync(parsedDate);
+        });
         
     }
 
@@ -86,25 +91,25 @@ public class HolidayService(IHolidayDao holidayDao) : IHolidayService
 
 
 
-    public async Task<bool> InsertHolidayAsync(Holiday newHoliday)
+    public async Task InsertHolidayAsync(Holiday newHoliday)
     {
         if (newHoliday == null)
         {
             throw new ArgumentNullException(nameof(newHoliday));
         }
 
-        // Beispiel: Daten in die Datenbank einfügen
-        try
+        await DoInLockAsync(async () =>
         {
-            await holidayDao.InsertHolidayAsync(newHoliday); 
-            return true;
-        }
-        catch (Exception e)
-        {
-            // Logge den Fehler
-            Console.WriteLine($"Could not insert holiday: {e.Message}");
-            return false;
-        }
+            try
+            {
+                await holidayDao.InsertHolidayAsync(newHoliday); 
+            }
+            catch (Exception e)
+            {
+     
+                Console.WriteLine($"Could not insert holiday: {e.Message}");
+            }
+        });
     }
 
 
@@ -138,8 +143,10 @@ public class HolidayService(IHolidayDao holidayDao) : IHolidayService
     
     public async Task<bool> DeleteHolidayAsync(int id)
     {
-        bool holidayDeletedSuccessfully = await holidayDao.DeleteHolidayAsync(id);
-        return holidayDeletedSuccessfully;
+        return await await RunInLockAsync(() =>
+        {
+            return holidayDao.DeleteHolidayAsync(id);
+        });
     }
 
 }

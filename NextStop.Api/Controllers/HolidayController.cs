@@ -29,7 +29,7 @@ public class HolidayController : ControllerBase
     }
 
     [HttpGet("by-id/{id:int}")]
-    public async Task<ActionResult> GetHolidaysById(int id)
+    public async Task<ActionResult> GetHolidayById(int id)
     {
         var result = await holidayService.GetHolidayByIdAsync(id);
         if (result is null)
@@ -85,7 +85,7 @@ public class HolidayController : ControllerBase
         await holidayService.InsertHolidayAsync(newHoliday);
 
         return CreatedAtAction(
-            actionName: nameof(GetHolidaysById), // Verweist auf den Endpunkt zum Abrufen eines Kunden.
+            actionName: nameof(GetHolidayById), // Verweist auf den Endpunkt zum Abrufen eines Kunden.
             routeValues: new { holidayId = newHoliday.Id },
             value: newHoliday.ToHolidayDto()
             );

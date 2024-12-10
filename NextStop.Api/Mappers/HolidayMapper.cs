@@ -18,20 +18,6 @@ public static partial class HolidayMapper
     public static partial Holiday ToHoliday(this HolidayDto holidayDto);
 
     public static partial void UpdateHoliday(this Holiday holiday, HolidayDto holidayDto);
-
-    // public static HolidayDto ToHolidayDto(this Holiday holiday)
-    // {
-    //     return null;
-    // }
-    //
-    // public static Holiday ToHoliday(this HolidayDto holidayDto)
-    // {
-    //     return null;
-    // }
-    //
-    // public static void UpdateHoliday(this HolidayDto holidayDto, Holiday holiday)
-    // {
-    //     
-    // }
+    
     
 }

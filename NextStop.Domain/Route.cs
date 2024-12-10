@@ -8,8 +8,8 @@ public class Route
     /// <summary>
     /// Gets or sets the unique identifier for the route.
     /// </summary>
-    public int Id { get; set; } //todo change to Guid
-
+    public int Id { get; set; }
+    
     /// <summary>
     /// Gets or sets the name of the route.
     /// </summary>
@@ -38,5 +38,6 @@ public class Route
 
     public override string ToString() => $"ID: {Id}, Name: {Name}, Validity: ({ValidFrom} - {ValidTo}), ValidOn: {ValidOn}";
     
-    public string GetRouteStopPoints() => string.Join("\n", RouteStopPoints);
+    public Route() { }
+    //public string GetRouteStopPoints() => string.Join("\n", RouteStopPoints);
 }
