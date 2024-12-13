@@ -100,4 +100,22 @@ public class StatusInfo
         Title = "Conflicting Routestoppoint IDs", // Kurze Beschreibung des Problems.
         Detail = $"Routestoppoint with ID '{routeStopPointId}' already exists" // Detaillierte Erklärung.
     };
+
+    public static object? InvalidTripId(int tripId) => new ProblemDetails
+    {
+        Title = "Invalid trip ID", // Titel des Fehlers.
+        Detail = $"Trip with ID '{tripId}' does not exist"
+    };
+
+    public static object? InvalidVehicleId(int vehicleId)  => new ProblemDetails
+    {
+        Title = "Invalid vehicle ID", // Titel des Fehlers.
+        Detail = $"Vehicle with ID '{vehicleId}' does not exist"
+    };
+
+    public static object? TripAlreadyExists(object tripId)  => new ProblemDetails
+    {
+        Title = "Conflicting trip IDs", // Kurze Beschreibung des Problems.
+        Detail = $"Trip with ID '{tripId}' already exists" // Detaillierte Erklärung.
+    };
 }

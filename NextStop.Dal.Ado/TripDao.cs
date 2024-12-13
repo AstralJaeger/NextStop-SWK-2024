@@ -48,6 +48,12 @@ public class TripDao(IConnectionFactory connectionFactory) : ITripDao
 
     }
 
+    public async Task<IEnumerable<Trip>> GetTripsByVehicleIdAsync(int vehicleId)
+    {
+        return await template.QueryAsync("select * from trip where vehicle_id=@vehicleId", MapRowToTrip, new QueryParameter("@vehicleId", vehicleId));
+
+    }
+
     public async Task<IEnumerable<Trip>> GetAllTripsAsync()
     {
         return await template.QueryAsync("select * from trip", MapRowToTrip);

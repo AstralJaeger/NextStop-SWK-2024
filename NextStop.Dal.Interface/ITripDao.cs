@@ -39,6 +39,15 @@ public interface ITripDao
     /// <returns>The trip object with the specified ID, or null if not found.</returns>
     Task<Trip?> GetTripByIdAsync(int tripId);
 
+    /// <summary>
+    /// Retrieves all trips associated with a specific route ID.
+    /// </summary>
+    /// <param name="routeId">The ID of the route.</param>
+    /// <returns>A list of trip objects for the specified route.</returns>
+    Task<IEnumerable<Trip>> GetTripsByRouteIdAsync(int routeId);
+    
+    Task<IEnumerable<Trip>> GetTripsByVehicleIdAsync(int vehicleId);
+
     
     /// <summary>
     /// Retrieves all trips from the database.
@@ -62,10 +71,5 @@ public interface ITripDao
     //Task<IEnumerable<Trip>> GetOngoingTripsAsync();
 
     
-    /// <summary>
-    /// Retrieves all trips associated with a specific route ID.
-    /// </summary>
-    /// <param name="routeId">The ID of the route.</param>
-    /// <returns>A list of trip objects for the specified route.</returns>
-    Task<IEnumerable<Trip>> GetTripsByRouteIdAsync(int routeId);
+
 }

@@ -43,4 +43,6 @@ public class Trip
     public override string ToString() => $"Id: {Id}, RouteId: {RouteId}, VehicleId: {VehicleId}";
     
     public string getTripChechIns() => string.Join(", ", TripCheckins.Select(t => t.ToString()));
+
+
 }

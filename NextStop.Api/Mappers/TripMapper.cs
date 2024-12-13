@@ -1,6 +1,13 @@
-﻿namespace NextStop.Api.Mappers;
+﻿using NextStop.Api.DTOs;
+using NextStop.Domain;
+using Riok.Mapperly.Abstractions;
 
-public class TripMapper
+namespace NextStop.Api.Mappers;
+
+[Mapper]
+public static partial class TripMapper
 {
+    public static partial TripDto ToTripDto(this Trip trip);
     
+    public static partial Trip ToTrip(this TripDto tripDto);
 }
