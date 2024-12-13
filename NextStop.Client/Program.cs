@@ -236,7 +236,7 @@ static class Program
             Console.WriteLine("StopPoint inserted successfully!");
 
             // StopPoint nach ID abrufen, um den generierten ID-Wert zu verwenden
-            var stopPointById = await stopPointDao.GetByIdAsync(newStopPoint.Id);
+            var stopPointById = await stopPointDao.GetRoutesByStopPointAsync(newStopPoint.Id);
             if (stopPointById != null)
             {
                 Console.WriteLine($"Retrieved StopPoint by ID: {stopPointById.ToString()}");
@@ -250,7 +250,7 @@ static class Program
                     Console.WriteLine("StopPoint updated successfully!");
 
                     // StopPoint erneut nach ID abrufen, um die Änderung zu überprüfen
-                    var updatedStopPoint = await stopPointDao.GetByIdAsync(stopPointById.Id);
+                    var updatedStopPoint = await stopPointDao.GetRoutesByStopPointAsync(stopPointById.Id);
                     if (updatedStopPoint != null)
                     {
                         Console.WriteLine($"Updated StopPoint: {updatedStopPoint.ToString()}");
@@ -262,7 +262,7 @@ static class Program
                             Console.WriteLine("StopPoint deleted successfully!");
 
                             // Überprüfen, ob StopPoint wirklich gelöscht wurde
-                            var deletedStopPoint = await stopPointDao.GetByIdAsync(updatedStopPoint.Id);
+                            var deletedStopPoint = await stopPointDao.GetStopPointByIdAsync(updatedStopPoint.Id);
                             if (deletedStopPoint == null)
                             {
                                 Console.WriteLine("StopPoint was deleted successfully and is no longer in the database.");

@@ -6,7 +6,7 @@ namespace NextStop.Service;
 
 public class StopPointService(IStopPointDao stopPointDao): IStopPointService
 {
-    private readonly IStopPointDao stopPointDao = stopPointDao;
+    //private readonly IStopPointDao stopPointDao = stopPointDao;
     
     //Semaphore zur Sicherstellung von Thread-Sicherheit bei gleichzeitigen Zugriffen.
     private static readonly SemaphoreSlim semaphore = new(1, 1);
@@ -42,53 +42,63 @@ public class StopPointService(IStopPointDao stopPointDao): IStopPointService
     
     public async Task<IEnumerable<StopPoint>> GetAllStopPointsAsync()
     {
-        IEnumerable<StopPoint> endpoints = await stopPointDao.GetAllStopPointsAsync();
-        return endpoints;
-        
+        return await await RunInLockAsync(() =>
+        {
+            return stopPointDao.GetAllStopPointsAsync();
+        });
     }
 
-    public async Task<StopPoint> GetStopPointByIdAsync(int id)
+    public async Task<StopPoint?> GetStopPointByIdAsync(int id)
     {
-        //todo Fehlerbehandlung
-        StopPoint stopPpoint = await stopPointDao.GetStopPointByIdAsync(id);
-        return stopPpoint;
+        return await await RunInLockAsync(() =>
+        { 
+            return stopPointDao.GetStopPointByIdAsync(id);
+        });
     }
 
     public async Task<StopPoint?> GetStopPointByNameAsync(string name)
     {
-        return await stopPointDao.GetStopPointByNameAsync(name);
+        return await await RunInLockAsync( () =>
+        {
+            return stopPointDao.GetStopPointByNameAsync(name);
+        });
     }
 
     public async Task<StopPoint?> GetStopPointByShortNameAsync(string shortName)
     {
-        return await stopPointDao.GetStopPointByShortNameAsync(shortName);
+        return await await RunInLockAsync( () =>
+        {
+            return stopPointDao.GetStopPointByShortNameAsync(shortName);
+        });
     }
 
-    public async Task<IEnumerable<StopPoint>> GetRoutesByStopPointAsync(int stopPointId)
+    public async Task<IEnumerable<Route>> GetRoutesByStopPointAsync(int stopPointId)
     {
-        return await stopPointDao.GetRoutesByStopPointAsync(stopPointId);
-        
+        return await await RunInLockAsync( () =>
+        {
+            return stopPointDao.GetRoutesByStopPointAsync(stopPointId);
+        });
     }
 
 
-    public async Task<bool> InsertStopPointAsync(StopPoint newStopPoint)
+    public async Task InsertStopPointAsync(StopPoint newStopPoint)
     {
         if (newStopPoint == null)
         {
             throw new ArgumentNullException(nameof(newStopPoint));
         }
 
-        try
+        await DoInLockAsync(async () =>
         {
-            await stopPointDao.InsertStopPointAsync(newStopPoint);
-            return true;
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine($"Could not insert stoppoint: {e.Message}");;
-            return false;
-        }
-            
+            try
+            {
+                await stopPointDao.InsertStopPointAsync(newStopPoint);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"Could not insert stoppoint: {e.Message}");
+            }
+        });
     }
 
     public async Task<bool> StopPointAlreadyExists(int stopPointId)
@@ -128,8 +138,10 @@ public class StopPointService(IStopPointDao stopPointDao): IStopPointService
     
     public async Task<bool> DeleteStopPointAsync(int id)
     {
-        bool stopPointDeletedSuccessfully = await stopPointDao.DeleteStopPointAsync(id);
-        return stopPointDeletedSuccessfully;
+        return await await RunInLockAsync(() =>
+        {
+            return stopPointDao.DeleteStopPointAsync(id);
+        });
     }
 
 

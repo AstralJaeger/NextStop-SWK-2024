@@ -60,7 +60,7 @@ public class RouteController : ControllerBase
         var result = await routeService.GetRoutesByValidFromAsync(validFromDate);
         if (result is null)
         {
-            return NotFound(StatusInfo.InfalidValidFromForRoute(validFrom));
+            return NotFound(StatusInfo.InvalidValidFromForRoute(validFrom));
         }
         return Ok(result);
     }
@@ -76,14 +76,14 @@ public class RouteController : ControllerBase
         var result = await routeService.GetRoutesByValidToAsync(validToDate);
         if (result is null)
         {
-            return NotFound(StatusInfo.InfalidValidToForRoute(validTo));
+            return NotFound(StatusInfo.InvalidValidToForRoute(validTo));
         }
         return Ok(result);
     }
     
     [HttpPost]
     [Produces("application/json", "text/plain")]
-    public async Task<ActionResult> CreateRoute(RouteForCreationDto routeDto)
+    public async Task<ActionResult> InsertRoute(RouteForCreationDto routeDto)
     {
         if (!ModelState.IsValid)
         {

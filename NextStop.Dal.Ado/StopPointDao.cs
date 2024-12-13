@@ -84,20 +84,33 @@ public class StopPointDao (IConnectionFactory connectionFactory): IStopPointDao
 
     public async Task<StopPoint?> GetStopPointByIdAsync(int id)
     {
-        return await template.QuerySingleAsync("select * from stoppoint where id=@spId", MapRowToStopPoint, new QueryParameter("@spId", id));
+        return await template.QuerySingleAsync(
+            "select * from stoppoint where id=@spId", 
+            MapRowToStopPoint, new QueryParameter("@spId", id));
 
     }
 
     public async Task<IEnumerable<StopPoint>> GetAllStopPointsAsync()
     {
-        return await template.QueryAsync("select * from stoppoint", MapRowToStopPoint);
+        return await template.QueryAsync(
+            "select * from stoppoint", MapRowToStopPoint);
 
     }
 
 
-    public Task<IEnumerable<StopPoint>> GetRoutesByStopPointAsync(int stopPointId)
+    public async Task<IEnumerable<Route>> GetRoutesByStopPointAsync(int stopPointId)
     {
-        return null;
+        const string query = @"
+        SELECT r.*
+        FROM route r
+        INNER JOIN routestoppoint rsp ON r.id = rsp.route_id
+        WHERE rsp.stop_point_id = @stopPointId";
+
+        return await template.QueryAsync(
+            query,
+            RouteDao.MapRowToRoute,
+            new QueryParameter("@stopPointId", stopPointId)
+        );
     }
 
     public async Task<StopPoint?> GetStopPointByShortNameAsync(string shortName)

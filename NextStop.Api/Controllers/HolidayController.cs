@@ -13,13 +13,12 @@ public class HolidayController : ControllerBase
 {
     private readonly IHolidayService holidayService;
     
-    // Klassischer Konstruktor für Dependency Injection
+
     public HolidayController(IHolidayService holidayService)
     {
         this.holidayService = holidayService ?? throw new ArgumentNullException(nameof(holidayService));
     }
     
-    //todo Fehlerbehandlung
     
     [HttpGet]
     public async Task<ActionResult> GetAllHolidays()

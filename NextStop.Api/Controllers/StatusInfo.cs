@@ -58,13 +58,13 @@ public class StatusInfo
         Detail = $"Route with name {name}' does not exist"
     };
         
-    public static object? InfalidValidToForRoute(string validTo) => new ProblemDetails
+    public static object? InvalidValidToForRoute(string validTo) => new ProblemDetails
     {
         Title = "Invalid valid from date", // Titel des Fehlers.
         Detail = $"Route which is valid from {validTo}' does not exist"
     };
 
-    public static object? InfalidValidFromForRoute(string validFrom) => new ProblemDetails
+    public static object? InvalidValidFromForRoute(string validFrom) => new ProblemDetails
     {
         Title = "Invalid valid to date", // Titel des Fehlers.
         Detail = $"Route which is valid to {validFrom}' does not exist"
@@ -74,5 +74,30 @@ public class StatusInfo
     {
         Title = "Conflicting route IDs", // Kurze Beschreibung des Problems.
         Detail = $"Route with ID '{routeId}' already exists" // Detaillierte Erklärung.
+    };
+
+    public static object? InvalidRouteStopPointId(int stopPointId) => new ProblemDetails
+    {
+        Title = "Invalid stoppoint ID", // Titel des Fehlers.
+        Detail = $"Stoppoint with ID '{stopPointId}' does not exist"
+    };
+
+
+    public static object? InvalidStopPointArrivalTime(string arrivalTime) => new ProblemDetails
+    {
+        Title = "Invalid arrival time for Routestoppoint", // Titel des Fehlers.
+        Detail = $"Routestoppoint with arrival time {arrivalTime}' does not exist"
+    };
+
+    public static object? InvalidStopPointDepartureTime(string departureTime) => new ProblemDetails
+    {
+        Title = "Invalid departure time for Routestoppoint", // Titel des Fehlers.
+        Detail = $"Routestoppoint with departure time {departureTime}' does not exist"
+    };
+
+    public static object? RouteStopPointAlreadyExists(object routeStopPointId) => new ProblemDetails
+    {
+        Title = "Conflicting Routestoppoint IDs", // Kurze Beschreibung des Problems.
+        Detail = $"Routestoppoint with ID '{routeStopPointId}' already exists" // Detaillierte Erklärung.
     };
 }

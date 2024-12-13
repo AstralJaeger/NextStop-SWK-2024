@@ -97,6 +97,11 @@ public class HolidayService(IHolidayDao holidayDao) : IHolidayService
         {
             throw new ArgumentNullException(nameof(newHoliday));
         }
+        
+        if (await HolidayAlreadyExist(newHoliday.Id))
+        {
+            throw new InvalidOperationException($"Holiday with ID {newHoliday.Id} already exists.");
+        }
 
         await DoInLockAsync(async () =>
         {

@@ -3,7 +3,7 @@ DO $$
     BEGIN
         
         -- Create enumeration for holiday type
-        CREATE TYPE holiday_type AS ENUM ('BankHoliday', 'SchoolVacation', 'NationalHoliday', 'ReligiousHoliday', 'Other');
+       -- CREATE TYPE holiday_type AS ENUM ('BankHoliday', 'SchoolVacation', 'NationalHoliday', 'ReligiousHoliday', 'Other');
         
         
         -- Create holiday table if it does not exist

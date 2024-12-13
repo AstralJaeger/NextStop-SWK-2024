@@ -74,12 +74,27 @@ public class StopPointController: Controller
         }
         return Ok(result.ToStopPointDto());
     }
-    
+
+
+    [HttpGet("by-stoppoint/{stopPointId:int}")]
+    public async Task<ActionResult> GetRoutesByStopPoint(int stopPointId)
+    {
+        var routes = await stopPointService.GetRoutesByStopPointAsync(stopPointId);
+
+        if (routes == null || !routes.Any())
+        {
+            return NotFound(StatusInfo.InvalidStopPointId(stopPointId));
+        }
+
+        return Ok(routes.Select(r => r.ToRouteDto()));
+    }
+
+
     [HttpPost]
     [Produces("application/json", "text/plain")]
     public async Task<ActionResult<StopPointDto>> InsertStopPoint(StopPointForCreationDto stopPointDto)
     {
-        if (stopPointDto.Id != 0 && await stopPointService.StopPointAlreadyExists(stopPointDto.Id))
+        if (stopPointDto.Id == 0 && await stopPointService.StopPointAlreadyExists(stopPointDto.Id))
         {
             return Conflict(StatusInfo.StopPointAlreadyExists(stopPointDto.Id));
         }

@@ -46,7 +46,7 @@ public interface IStopPointDao
     /// <returns>A <see cref="Task"/> representing the asynchronous operation, containing a list of all stop point objects.</returns>
     Task<IEnumerable<StopPoint>> GetAllStopPointsAsync();
 
-    Task<IEnumerable<StopPoint>> GetRoutesByStopPointAsync(int stopPointId);
+    Task<IEnumerable<Route>> GetRoutesByStopPointAsync(int stopPointId);
     Task<StopPoint?> GetStopPointByShortNameAsync(string shortName);
     Task<StopPoint?> GetStopPointByNameAsync(string name);
     

@@ -9,7 +9,7 @@ public class RouteDao(IConnectionFactory connectionFactory) : IRouteDao
 {
 
     private readonly AdoTemplate template = new AdoTemplate(connectionFactory);
-    private static Route MapRowToRoute(IDataRecord row)
+    public static Route MapRowToRoute(IDataRecord row)
         => new Route
         {
             Id = (int)row["id"],
