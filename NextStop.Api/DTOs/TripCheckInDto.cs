@@ -10,7 +10,7 @@ public record TripCheckinDto
     /// <summary>
     /// Gets the unique ID of the trip check-in.
     /// </summary>
-    public int Id { get; init; }
+    public required int Id { get; init; }
 
     /// <summary>
     /// Gets or sets the ID of the associated trip.
@@ -31,7 +31,7 @@ public record TripCheckinDto
     /// </summary>
     [Required(ErrorMessage = "CheckIn time is required.")]
     [DataType(DataType.DateTime, ErrorMessage = "CheckIn must be a valid date and time.")]
-    public DateTime CheckIn { get; init; }
+    public required DateTime CheckIn { get; init; }
 
     /// <summary>
     /// Converts the DTO into a <see cref="TripCheckin"/> domain object.
@@ -44,7 +44,7 @@ public record TripCheckinDto
             Id = this.Id,
             TripId = this.TripId,
             StopPointId = this.StopPointId,
-            Checkin = this.CheckIn,
+            CheckIn = this.CheckIn,
         };
 
     }

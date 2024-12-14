@@ -63,10 +63,8 @@ public class RouteStopPointService(IRouteStopPointDao routeStopPointDao, IStopPo
     /// <inheritdoc />
     public async Task InsertRouteStopPointAsync(RouteStopPoint routeStopPoint)
     {
-        if (routeStopPoint is null)
-        {
-            throw new ArgumentNullException(nameof(routeStopPoint));
-        }
+        ArgumentNullException.ThrowIfNull(routeStopPoint);
+
 
         if (await RouteStopPointAlreadyExists(routeStopPoint.Id))
         {

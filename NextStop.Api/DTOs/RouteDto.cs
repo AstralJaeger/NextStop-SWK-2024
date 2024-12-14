@@ -19,7 +19,7 @@ public record RouteDto
     /// </summary>
     [Required(ErrorMessage = "Name is required.")]
     [StringLength(100, ErrorMessage = "Name must be between 1 and 100 characters.")]
-    public string Name { get; set; }
+    public required string Name { get; set; }
     
     /// <summary>
     /// Gets or sets the starting validity date of the route.
@@ -51,6 +51,7 @@ public record RouteDto
 /// <summary>
 /// Custom validation attribute to ensure ValidOn is a valid binary encoding for days of the week.
 /// </summary>
+[AttributeUsage(AttributeTargets.Property)]
 public class BinaryDayOfWeekAttribute : ValidationAttribute
 {
     /// <summary>
@@ -58,7 +59,7 @@ public class BinaryDayOfWeekAttribute : ValidationAttribute
     /// </summary>
     /// <param name="value">The value being validated.</param>
     /// <returns><c>true</c> if the value is valid; otherwise, <c>false</c>.</returns>
-    public override bool IsValid(object value)
+    public override bool IsValid(object? value)
     {
         if (value is not int validOn)
         {
@@ -79,21 +80,21 @@ public record RouteForCreationDto
     /// <summary>
     /// Gets or initializes the unique ID of the route to be created.
     /// </summary>
-    public int Id { get; init; }
+    public required int Id { get; init; }
     
     /// <summary>
     /// Gets or sets the name of the route.
     /// </summary>
     [Required(ErrorMessage = "Name is required.")]
     [StringLength(100, ErrorMessage = "Name must be between 1 and 100 characters.")]
-    public string Name { get; set; }
+    public required string Name { get; set; }
 
     /// <summary>
     /// Gets or sets the starting validity date of the route.
     /// </summary>
     [Required(ErrorMessage = "ValidFrom is required.")]
     [DataType(DataType.Date, ErrorMessage = "ValidFrom must be a valid date.")]
-    public DateTime ValidFrom { get; set; }
+    public required DateTime ValidFrom { get; set; }
 
     /// <summary>
     /// Gets or sets the ending validity date of the route.
@@ -101,7 +102,7 @@ public record RouteForCreationDto
     [Required(ErrorMessage = "ValidTo is required.")]
     [DataType(DataType.Date, ErrorMessage = "ValidTo must be a valid date.")]
     [DateGreaterThan("ValidFrom", ErrorMessage = "ValidTo must be greater than ValidFrom.")]
-    public DateTime ValidTo { get; set; }
+    public required DateTime ValidTo { get; set; }
 
     /// <summary>
     /// Gets or sets the binary-encoded days of the week on which the route is valid.
@@ -109,7 +110,7 @@ public record RouteForCreationDto
     /// </summary>
     [Required(ErrorMessage = "ValidOn is required.")]
     [BinaryDayOfWeek(ErrorMessage = "ValidOn must be a valid binary encoding for days of the week (1-127).")]
-    public int ValidOn { get; set; }
+    public required int ValidOn { get; set; }
 
     /// <summary>
     /// Converts the DTO into a <see cref="Route"/> domain object.

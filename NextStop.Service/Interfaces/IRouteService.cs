@@ -37,7 +37,7 @@ public interface IRouteService
     /// </summary>
     /// <param name="id">The unique ID of the route.</param>
     /// <returns>The <see cref="Route"/> object if found; otherwise, <c>null</c>.</returns>
-    public Task<Route> GetRouteByIdAsync(int id);
+    public Task<Route?> GetRouteByIdAsync(int id);
     
     //......................................................................
 
@@ -46,7 +46,7 @@ public interface IRouteService
     /// </summary>
     /// <param name="name">The name of the route.</param>
     /// <returns>The <see cref="Route"/> object if found; otherwise, <c>null</c>.</returns>
-    public Task<Route> GetRouteByNameAsync(string name);
+    public Task<Route?> GetRouteByNameAsync(string name);
 
     
     //......................................................................

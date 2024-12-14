@@ -59,23 +59,20 @@ public class TripService (ITripDao tripDao) : ITripService
     //**********************************************************************************
 
     /// <inheritdoc />
-    public async Task InsertTripAsync(Trip newTrip)
+    public async Task InsertTripAsync(Trip trip)
     {
-        if (newTrip is null)
-        {
-            throw new ArgumentNullException(nameof(newTrip));
-        }
+        ArgumentNullException.ThrowIfNull(trip);
         
-        if (await TripAlreadyExists(newTrip.Id))
+        if (await TripAlreadyExists(trip.Id))
         {
-            throw new InvalidOperationException($"Trip with ID {newTrip.Id} already exists.");
+            throw new InvalidOperationException($"Trip with ID {trip.Id} already exists.");
         }
 
         await DoInLockAsync(async () =>
         {
             try
             {
-                await tripDao.InsertTripAsync(newTrip);
+                await tripDao.InsertTripAsync(trip);
             }
             catch (Exception e)
             {

@@ -59,18 +59,15 @@ public class StopPointService(IStopPointDao stopPointDao): IStopPointService
     //**********************************************************************************
 
     /// <inheritdoc />
-    public async Task InsertStopPointAsync(StopPoint newStopPoint)
+    public async Task InsertStopPointAsync(StopPoint stopPoint)
     {
-        if (newStopPoint is null)
-        {
-            throw new ArgumentNullException(nameof(newStopPoint));
-        }
+        ArgumentNullException.ThrowIfNull(stopPoint);
 
         await DoInLockAsync(async () =>
         {
             try
             {
-                await stopPointDao.InsertStopPointAsync(newStopPoint);
+                await stopPointDao.InsertStopPointAsync(stopPoint);
             }
             catch (Exception e)
             {
@@ -155,10 +152,7 @@ public class StopPointService(IStopPointDao stopPointDao): IStopPointService
     /// <inheritdoc />
     public async Task UpdateStopPointAsync(StopPoint? stopPoint)
     {
-        if (stopPoint is null)
-        {
-            throw new ArgumentNullException(nameof(stopPoint));
-        }
+        ArgumentNullException.ThrowIfNull(stopPoint);
 
         await DoInLockAsync(async () =>
         {

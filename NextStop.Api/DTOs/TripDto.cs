@@ -11,7 +11,7 @@ public record TripDto
     /// <summary>
     /// Gets the unique ID of the trip.
     /// </summary>
-    public int Id { get; init; }
+    public required int Id { get; init; }
     
     /// <summary>
     /// Gets or sets the ID of the associated route.

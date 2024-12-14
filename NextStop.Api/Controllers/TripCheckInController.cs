@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Globalization;
+using Microsoft.AspNetCore.Mvc;
 using NextStop.Api.DTOs;
 using NextStop.Api.Mappers;
 using NextStop.Domain;
@@ -148,7 +149,11 @@ public class TripCheckInController: ControllerBase
     [HttpGet("by-checkin/{checkin}")]
     public async Task<ActionResult> GetTripCheckInsByCheckin(string checkin)
     {
-        if (!DateTime.TryParse(checkin, out var checkinDate))
+        if (!DateTime.TryParseExact(checkin,
+                "dd-MM-yyyy",
+                new CultureInfo("de-AT"),
+                DateTimeStyles.None,
+                out var checkinDate))
         {
             return BadRequest("Invalid check-in date format. Please provide a valid date.");
         }

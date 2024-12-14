@@ -1,4 +1,5 @@
-﻿using NextStop.Dal.Interface;
+﻿using System.Globalization;
+using NextStop.Dal.Interface;
 using NextStop.Domain;
 using NextStop.Service.Interfaces;
 
@@ -62,10 +63,7 @@ public class HolidayService(IHolidayDao holidayDao) : IHolidayService
     /// <inheritdoc />
     public async Task InsertHolidayAsync(Holiday newHoliday)
     {
-        if (newHoliday is null)
-        {
-            throw new ArgumentNullException(nameof(newHoliday));
-        }
+        ArgumentNullException.ThrowIfNull(newHoliday);
         
         if (await HolidayAlreadyExists(newHoliday.Id))
         {
@@ -129,7 +127,10 @@ public class HolidayService(IHolidayDao holidayDao) : IHolidayService
     public async Task<bool> IsHolidayAsync(string date)
     {
        
-        if (!DateTime.TryParse(date, out var parsedDate))
+        if (!DateTime.TryParseExact(date, 
+                "dd-MM-yyyy",
+                new CultureInfo("de-AT"),
+                DateTimeStyles.None,out var parsedDate))
         {
             throw new ArgumentException("Invalid date format.", nameof(date));
         }
@@ -160,17 +161,14 @@ public class HolidayService(IHolidayDao holidayDao) : IHolidayService
     /// <inheritdoc />
     public async Task UpdateHolidayAsync(Holiday? holiday)
     {
-        if (holiday is null)
-        {
-            throw new ArgumentNullException(nameof(holiday));
-        }
+        ArgumentNullException.ThrowIfNull(holiday);
 
         await DoInLockAsync(async () =>
         {
             var existingHoliday = await holidayDao.GetHolidayByIdAsync(holiday.Id);
             if (existingHoliday is null)
             {
-                throw new Exception($"Holiday with ID {holiday.Id} not found.");
+                throw new InvalidOperationException($"Holiday with ID {holiday.Id} not found.");
             }
             
             existingHoliday.Name = holiday.Name;

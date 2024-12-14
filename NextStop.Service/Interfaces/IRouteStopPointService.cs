@@ -82,7 +82,7 @@ public interface IRouteStopPointService
     /// </summary>
     /// <param name="routeStopPointDto">The ID of the route stop point to check.</param>
     /// <returns><c>true</c> if the route stop point exists; otherwise, <c>false</c>.</returns>
-    Task<bool> RouteStopPointAlreadyExists(int routeStopPointDto);
+    Task<bool> RouteStopPointAlreadyExists(int routeStopPointId);
 
     //......................................................................
 

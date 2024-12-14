@@ -64,10 +64,8 @@ public class RouteService(IRouteDao routeDao) : IRouteService
     /// <inheritdoc />
     public async Task InsertRouteAsync(Route route)
     {
-        if (route is null)
-        {
-            throw new ArgumentNullException(nameof(route));
-        }
+        ArgumentNullException.ThrowIfNull(route);
+
 
         await DoInLockAsync(async () =>
         {

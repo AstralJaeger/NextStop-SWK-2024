@@ -43,7 +43,7 @@ public class TripCheckinDao(IConnectionFactory connectionFactory) : ITripCheckin
             new QueryParameter("@tripCheckinId", tripCheckIn.Id),
             new QueryParameter("@tripId", tripCheckIn.TripId),
             new QueryParameter("@stopPointId", tripCheckIn.StopPointId),
-            new QueryParameter("@checkin", tripCheckIn.Checkin));
+            new QueryParameter("@checkin", tripCheckIn.CheckIn));
     }
 
     //**********************************************************************************

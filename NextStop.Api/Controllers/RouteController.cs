@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Globalization;
+using Microsoft.AspNetCore.Mvc;
 using NextStop.Api.DTOs;
 using NextStop.Api.Mappers;
 using NextStop.Service.Interfaces;
@@ -120,7 +121,11 @@ public class RouteController : ControllerBase
     [HttpGet("by-validFrom/{validFrom}")]
     public async Task<ActionResult> GetRoutesByValidFrom(string validFrom)
     {
-        if (!DateTime.TryParse(validFrom, out var validFromDate))
+        if (!DateTime.TryParseExact(validFrom,
+                "dd-MM-yyyy",
+                new CultureInfo("de-AT"),
+                DateTimeStyles.None,
+                out var validFromDate))
         {
             return BadRequest("Invalid date format for validFrom.");
         }
@@ -143,7 +148,11 @@ public class RouteController : ControllerBase
     [HttpGet("by-validTo/{validTo}")]
     public async Task<ActionResult> GetRoutesByValidTo(string validTo)
     {
-        if (!DateTime.TryParse(validTo, out var validToDate))
+        if (!DateTime.TryParseExact(validTo,
+                "dd-MM-yyyy",
+                new CultureInfo("de-AT"),
+                DateTimeStyles.None,
+                out var validToDate))
         {
             return BadRequest("Invalid date format for validTo.");
         }

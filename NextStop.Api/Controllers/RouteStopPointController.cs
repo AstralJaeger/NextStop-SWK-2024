@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Globalization;
+using Microsoft.AspNetCore.Mvc;
 using NextStop.Api.DTOs;
 using NextStop.Api.Mappers;
 using NextStop.Service.Interfaces;
@@ -124,7 +125,11 @@ public class RouteStopPointController : ControllerBase
     [HttpGet("by-arrivalTime/{arrivalTime}")]
     public async Task<ActionResult> GetRouteStopPointsByArrivalTime(string arrivalTime)
     {
-        if (!DateTime.TryParse(arrivalTime, out var parsedArrivalTime))
+        if (!DateTime.TryParseExact(arrivalTime,
+                "dd-MM-yyyy",
+                new CultureInfo("de-AT"),
+                DateTimeStyles.None,
+                out var parsedArrivalTime))
         {
             return BadRequest("Invalid date format for arrivalTime.");
         }
@@ -149,7 +154,10 @@ public class RouteStopPointController : ControllerBase
     [HttpGet("by-departureTime/{departureTime}")]
     public async Task<ActionResult> GetRouteStopPointByDepartureTime(string departureTime)
     {
-        if (!DateTime.TryParse(departureTime, out var parsedDepartureTime))
+        if (!DateTime.TryParseExact(departureTime, 
+                "dd-MM-yyyy",
+                new CultureInfo("de-AT"),
+                DateTimeStyles.None,out var parsedDepartureTime))
         {
             return BadRequest("Invalid date format for departureTime.");
         }

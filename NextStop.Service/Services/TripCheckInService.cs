@@ -61,16 +61,13 @@ public class TripCheckInService(ITripCheckinDao tripCheckinDao) : ITripCheckInSe
     //**********************************************************************************
 
     /// <inheritdoc />
-    public async Task InsertTripCheckinAsync(TripCheckin newTripCheckin)
+    public async Task InsertTripCheckinAsync(TripCheckin tripCheckin)
     {
-        if (newTripCheckin is null)
-        {
-            throw new ArgumentNullException(nameof(newTripCheckin));
-        }
+        ArgumentNullException.ThrowIfNull(tripCheckin);
 
-        if (await TripCheckinAlreadyExists(newTripCheckin.Id))
+        if (await TripCheckinAlreadyExists(tripCheckin.Id))
         {
-            throw new InvalidOperationException($"TripCheckin with ID {newTripCheckin.Id} already exists.");
+            throw new InvalidOperationException($"TripCheckin with ID {tripCheckin.Id} already exists.");
 
         }
 
@@ -78,7 +75,7 @@ public class TripCheckInService(ITripCheckinDao tripCheckinDao) : ITripCheckInSe
         {
             try
             {
-                await tripCheckinDao.InsertTripCheckinAsync(newTripCheckin);
+                await tripCheckinDao.InsertTripCheckinAsync(tripCheckin);
             }
             catch (Exception e)
             {

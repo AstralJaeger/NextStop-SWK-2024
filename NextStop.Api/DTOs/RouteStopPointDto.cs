@@ -58,19 +58,19 @@ public record RouteStopPointForCreationDto
     /// <summary>
     /// Gets the unique ID of the route stop point to be created.
     /// </summary>
-    public int Id { get; init; }
+    public required int Id { get; init; }
     
     /// <summary>
     /// Gets or sets the ID of the route associated with this stop point.
     /// </summary>
     [Required(ErrorMessage = "RouteId is required.")]
-    public int RouteId { get; set; }
+    public required int RouteId { get; set; }
 
     /// <summary>
     /// Gets or sets the ID of the stop point.
     /// </summary>
     [Required(ErrorMessage = "StopPointId is required.")]
-    public int StopPointId { get; set; }
+    public required int StopPointId { get; set; }
     
     
     /// <summary>
@@ -78,7 +78,7 @@ public record RouteStopPointForCreationDto
     /// </summary>
     [Required(ErrorMessage = "ArrivalTime is required.")]
     [DataType(DataType.DateTime, ErrorMessage = "ArrivalTime must be a valid date and time.")]
-    public DateTime ArrivalTime { get; set; }
+    public required DateTime ArrivalTime { get; set; }
     
     /// <summary>
     /// Gets or sets the departure time from the stop point.
@@ -86,7 +86,7 @@ public record RouteStopPointForCreationDto
     [Required(ErrorMessage = "DepartureTime is required.")]
     [DataType(DataType.DateTime, ErrorMessage = "DepartureTime must be a valid date and time.")]
     [DateGreaterThan("ArrivalTime", ErrorMessage = "DepartureTime must be later than ArrivalTime.")]
-    public DateTime DepartureTime { get; set; }
+    public required DateTime DepartureTime { get; set; }
     
     /// <summary>
     /// Gets or sets the order number of the stop point on the route.

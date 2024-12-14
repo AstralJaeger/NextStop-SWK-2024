@@ -12,7 +12,7 @@ namespace NextStop.Api.Controllers;
 /// </summary>
 [ApiController]
 [Route("api/[controller]")]
-public class StopPointController: Controller
+public class StopPointController: ControllerBase
 {
     private readonly IStopPointService stopPointService;
 

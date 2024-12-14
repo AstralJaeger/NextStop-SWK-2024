@@ -78,7 +78,7 @@ public interface IStopPointService
     /// <param name="id">The unique ID of the stop point to check.</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation, containing
     /// <c>true</c> if the stop point exists; otherwise, <c>false</c>.</returns>
-    public Task<bool> StopPointAlreadyExists(int id);
+    public Task<bool> StopPointAlreadyExists(int stopPointId);
     
     //**********************************************************************************
     // UPDATE-Methods
@@ -90,7 +90,7 @@ public interface IStopPointService
     /// <param name="id">The unique ID of the stop point to delete.</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation, containing
     /// <c>true</c> if the deletion was successful; otherwise, <c>false</c>.</returns>
-    public Task UpdateStopPointAsync(StopPoint existingStopPoint);
+    public Task UpdateStopPointAsync(StopPoint? stopPoint);
 
     //**********************************************************************************
     // DELETE-Methods

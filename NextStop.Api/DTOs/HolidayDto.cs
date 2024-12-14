@@ -15,7 +15,7 @@ public record HolidayDto
     /// <summary>
     /// Gets or sets the name of the holiday.
     /// </summary>
-    public string Name { get; set; }
+    public required string Name { get; set; }
 
     /// <summary>
     /// Gets or sets the start date of the holiday.
@@ -44,7 +44,7 @@ public record HolidayForCreationDto
     /// <summary>
     /// Gets the unique ID of the holiday to be created.
     /// </summary>
-    public int Id { get; init; }
+    public required int Id { get; init; }
     
     /// <summary>
     /// Gets or sets the name of the holiday.
@@ -132,10 +132,7 @@ public record HolidayForUpdateDto
     public void UpdateHoliday(Holiday? holiday)
     {
         
-        if (holiday is null)
-        {
-            throw new ArgumentNullException(nameof(holiday));
-        }
+        ArgumentNullException.ThrowIfNull(holiday);
         
         holiday.Name = this.Name;
         holiday.StartDate = this.StartDate;
@@ -149,6 +146,7 @@ public record HolidayForUpdateDto
 /// <summary>
 /// Custom validation attribute to ensure a date is greater than another specified date.
 /// </summary>
+[AttributeUsage(AttributeTargets.Property)]
 public class DateGreaterThanAttribute : ValidationAttribute
 {
     private readonly string _comparisonProperty;
@@ -168,7 +166,7 @@ public class DateGreaterThanAttribute : ValidationAttribute
     /// <param name="value">The value being validated.</param>
     /// <param name="validationContext">The context of the validation.</param>
     /// <returns>A <see cref="ValidationResult"/> indicating whether the value is valid.</returns>
-    protected override ValidationResult IsValid(object value, ValidationContext validationContext)
+    protected override ValidationResult IsValid(object? value, ValidationContext validationContext)
     {
         var comparisonProperty = validationContext.ObjectType.GetProperty(_comparisonProperty);
 
@@ -177,13 +175,18 @@ public class DateGreaterThanAttribute : ValidationAttribute
             return new ValidationResult($"Property '{_comparisonProperty}' not found.");
         }
 
-        var comparisonValue = (DateTime)comparisonProperty.GetValue(validationContext.ObjectInstance);
+        var comparisonValue = comparisonProperty.GetValue(validationContext.ObjectInstance) as DateTime?;
+        
+        if (comparisonValue == null)
+        {
+            return new ValidationResult($"Property '{_comparisonProperty}' must not be null.");
+        }
 
-        if ((DateTime)value <= comparisonValue)
+        if (value is DateTime dateValue && dateValue <= comparisonValue)
         {
             return new ValidationResult(ErrorMessage ?? $"Date must be greater than {_comparisonProperty}.");
         }
 
-        return ValidationResult.Success;
+        return ValidationResult.Success ?? new ValidationResult("Validation successful.");
     }
 }

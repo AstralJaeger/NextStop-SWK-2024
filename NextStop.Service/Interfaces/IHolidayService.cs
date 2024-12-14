@@ -52,9 +52,9 @@ public interface IHolidayService
     /// <summary>
     /// Checks if a holiday with the specified ID already exists.
     /// </summary>
-    /// <param name="holidayDtoId">The ID of the holiday to check.</param>
+    /// <param name="holidayId">The ID of the holiday to check.</param>
     /// <returns><c>true</c> if the holiday exists; otherwise, <c>false</c>.</returns>
-    public Task<bool> HolidayAlreadyExists(int holidayDtoId);
+    public Task<bool> HolidayAlreadyExists(int holidayId);
 
     //......................................................................
 

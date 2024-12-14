@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using NextStop.Domain;
+﻿using NextStop.Domain;
 
 namespace NextStop.Dal.Interface;
 
@@ -70,11 +69,11 @@ public interface IRouteStopPointDao
     /// <summary>
     /// Asynchronously retrieves route stop points by its departure time.
     /// </summary>
-    /// <param name="arrivalTime">The departure time of the stop point.</param>
+    /// <param name="departureTime">The departure time of the stop point.</param>
     /// <returns>
     /// A <see cref="Task{TResult}"/> representing the asynchronous operation, containing a list of route stop points for the specified departure time.
     /// </returns>
-    Task<IEnumerable<RouteStopPoint>> GetRouteStopPointsByDepartureTimeAsync(DateTime arrivalTime);
+    Task<IEnumerable<RouteStopPoint>> GetRouteStopPointsByDepartureTimeAsync(DateTime departureTime);
 
     //----------------------------------------------------------------------------------
 
@@ -97,7 +96,7 @@ public interface IRouteStopPointDao
     //----------------------------------------------------------------------------------
 
     
-    Task<IEnumerable<RouteStopPoint>> GetRoutesByStopPointIdAsync(int id);
+    Task<IEnumerable<RouteStopPoint>> GetRoutesByStopPointIdAsync(int stopPointId);
 
 
     //----------------------------------------------------------------------------------

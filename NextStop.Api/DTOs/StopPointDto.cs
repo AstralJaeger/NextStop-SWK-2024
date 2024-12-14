@@ -18,20 +18,20 @@ public record StopPointDto
     /// </summary>
     [Required(ErrorMessage = "Name is required.")]
     [StringLength(100, ErrorMessage = "Name must be between 1 and 100 characters.")]
-    public string Name { get; init; }
+    public required string Name { get; init; }
     
     /// <summary>
     /// Gets or sets the short name of the stop point.
     /// </summary>
     [Required(ErrorMessage = "ShortName is required.")]
     [StringLength(3, ErrorMessage = "ShortName must be exactly 3 characters long.")]
-    public string ShortName { get; init; }
+    public required string ShortName { get; init; }
     
     /// <summary>
     /// Gets or sets the geographical location of the stop point.
     /// </summary>
     [Required(ErrorMessage = "Location is required.")]
-    public CoordinatesDto Location { get; init; }
+    public required CoordinatesDto Location { get; init; }
     
 }
 
@@ -44,26 +44,26 @@ public record StopPointForCreationDto
     /// <summary>
     /// Gets the unique ID of the stop point to be created.
     /// </summary>
-    public int Id { get; init; }
+    public required int Id { get; init; }
     
     /// <summary>
     /// Gets or sets the name of the stop point.
     /// </summary>
     [Required(ErrorMessage = "Name is required.")]
     [StringLength(100, ErrorMessage = "Name must be between 1 and 100 characters.")]
-    public string Name { get; init; }
+    public required string Name { get; init; }
     
     /// <summary>
     /// Gets or sets the short name of the stop point.
     /// </summary>
     [Required(ErrorMessage = "ShortName is required.")]
     [StringLength(100, ErrorMessage = "ShortName must be 3 characters long.")]
-    public string ShortName { get; init; }
+    public required string ShortName { get; init; }
     
     /// <summary>
     /// Gets or sets the geographical location of the stop point.
     /// </summary>
-    public CoordinatesDto Location { get; init; }
+    public required CoordinatesDto Location { get; init; }
 
     /// <summary>
     /// Converts the DTO into a <see cref="StopPoint"/> domain object.
@@ -116,20 +116,20 @@ public record StopPointForUpdateDto
     /// </summary>
     [Required(ErrorMessage = "Name is required.")]
     [StringLength(100, ErrorMessage = "Name must be between 1 and 100 characters.")]
-    public string Name { get; init; }
+    public required string Name { get; init; }
     
     /// <summary>
     /// Gets or sets the updated short name of the stop point.
     /// </summary>
     [Required(ErrorMessage = "ShortName is required.")]
     [StringLength(100, ErrorMessage = "ShortName must be 3 characters long.")]
-    public string ShortName { get; init; }
+    public required string ShortName { get; init; }
     
     /// <summary>
     /// Gets or sets the updated geographical location of the stop point.
     /// </summary>
     [Required(ErrorMessage = "Location is required.")]
-    public CoordinatesDto Location { get; init; }
+    public required CoordinatesDto Location { get; init; }
     
     /// <summary>
     /// Updates an existing <see cref="StopPoint"/> object with the data from this DTO.
@@ -138,10 +138,7 @@ public record StopPointForUpdateDto
     /// <exception cref="ArgumentNullException">Thrown if the stopPoint parameter is null.</exception>
     public void UpdateStopPoint(StopPoint stopPoint)
     {
-        if (stopPoint == null)
-        {
-            throw new ArgumentNullException(nameof(stopPoint));
-        }
+        ArgumentNullException.ThrowIfNull(stopPoint);
 
         stopPoint.Name = this.Name;
         stopPoint.ShortName = this.ShortName;

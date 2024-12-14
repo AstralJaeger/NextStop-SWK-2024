@@ -2,7 +2,7 @@
 
 namespace NextStop.Api.Controllers;
 
-public class StatusInfo
+public static class StatusInfo
 {
     public static ProblemDetails InvalidHolidayId(int holidayId) => new ProblemDetails
     {

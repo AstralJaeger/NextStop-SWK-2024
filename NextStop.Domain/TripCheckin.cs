@@ -23,7 +23,7 @@ public class TripCheckin
     /// <summary>
     /// Gets or sets the check-in date and time.
     /// </summary>
-    public DateTime Checkin { get; set; }
+    public DateTime CheckIn { get; set; }
 
     /// <summary>
     /// Navigation property for accessing the associated trip.
@@ -40,10 +40,10 @@ public class TripCheckin
         Id = id;
         TripId = tripId;
         StopPointId = stopPointId;
-        Checkin = checkin;
+        CheckIn = checkin;
     }
     
     public TripCheckin() {}
 
-    public override string ToString() => $"ID: {Id}, Trip: {TripId}, StopPoint: {StopPointId}, Checkin: {Checkin}";
+    public override string ToString() => $"ID: {Id}, Trip: {TripId}, StopPoint: {StopPointId}, Checkin: {CheckIn}";
 }

@@ -24,8 +24,5 @@ public static partial class HolidayMapper
     /// <param name="holidayDto">The <see cref="HolidayDto"/> to map.</param>
     /// <returns>A <see cref="Holiday"/> object containing the mapped data.</returns>
     public static partial Holiday ToHoliday(this HolidayDto holidayDto);
-
-    //public static partial void UpdateHoliday(this Holiday holiday, HolidayDto holidayDto);
-    
     
 }
