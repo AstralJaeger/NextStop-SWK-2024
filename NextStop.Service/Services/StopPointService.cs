@@ -4,14 +4,24 @@ using NextStop.Service.Interfaces;
 
 namespace NextStop.Service;
 
+/// <summary>
+/// Service for managing stoppoint.
+/// </summary>
 public class StopPointService(IStopPointDao stopPointDao): IStopPointService
 {
-    //private readonly IStopPointDao stopPointDao = stopPointDao;
-    
-    //Semaphore zur Sicherstellung von Thread-Sicherheit bei gleichzeitigen Zugriffen.
+    /// <summary>
+    /// Semaphore to ensure thread safety during concurrent access.
+    /// </summary>
     private static readonly SemaphoreSlim semaphore = new(1, 1);
     
-    // Führt eine Funktion thread-sicher aus und gibt das Ergebnis zurück.
+    //......................................................................
+
+    /// <summary>
+    /// Executes a function in a thread-safe manner and returns the result.
+    /// </summary>
+    /// <typeparam name="T">The return type of the function.</typeparam>
+    /// <param name="func">The function to be executed.</param>
+    /// <returns>The result of the function.</returns>
     private static async Task<T> RunInLockAsync<T>(Func<T> func)
     {
         await semaphore.WaitAsync();
@@ -25,7 +35,12 @@ public class StopPointService(IStopPointDao stopPointDao): IStopPointService
         }
     }
 
-    // Führt eine Aktion thread-sicher aus.
+    //......................................................................
+
+    /// <summary>
+    /// Executes an action in a thread-safe manner.
+    /// </summary>
+    /// <param name="action">The action to be executed.</param>
     private static async Task DoInLockAsync(Action action)
     {
         await semaphore.WaitAsync();
@@ -39,51 +54,14 @@ public class StopPointService(IStopPointDao stopPointDao): IStopPointService
         }
     }
 
-    
-    public async Task<IEnumerable<StopPoint>> GetAllStopPointsAsync()
-    {
-        return await await RunInLockAsync(() =>
-        {
-            return stopPointDao.GetAllStopPointsAsync();
-        });
-    }
+    //**********************************************************************************
+    // CREATE-Methods
+    //**********************************************************************************
 
-    public async Task<StopPoint?> GetStopPointByIdAsync(int id)
-    {
-        return await await RunInLockAsync(() =>
-        { 
-            return stopPointDao.GetStopPointByIdAsync(id);
-        });
-    }
-
-    public async Task<StopPoint?> GetStopPointByNameAsync(string name)
-    {
-        return await await RunInLockAsync( () =>
-        {
-            return stopPointDao.GetStopPointByNameAsync(name);
-        });
-    }
-
-    public async Task<StopPoint?> GetStopPointByShortNameAsync(string shortName)
-    {
-        return await await RunInLockAsync( () =>
-        {
-            return stopPointDao.GetStopPointByShortNameAsync(shortName);
-        });
-    }
-
-    public async Task<IEnumerable<Route>> GetRoutesByStopPointAsync(int stopPointId)
-    {
-        return await await RunInLockAsync( () =>
-        {
-            return stopPointDao.GetRoutesByStopPointAsync(stopPointId);
-        });
-    }
-
-
+    /// <inheritdoc />
     public async Task InsertStopPointAsync(StopPoint newStopPoint)
     {
-        if (newStopPoint == null)
+        if (newStopPoint is null)
         {
             throw new ArgumentNullException(nameof(newStopPoint));
         }
@@ -100,7 +78,67 @@ public class StopPointService(IStopPointDao stopPointDao): IStopPointService
             }
         });
     }
+    
+    //**********************************************************************************
+    //READ-Methods
+    //**********************************************************************************
 
+    /// <inheritdoc />
+    public async Task<IEnumerable<StopPoint>> GetAllStopPointsAsync()
+    {
+        return await await RunInLockAsync(() =>
+        {
+            return stopPointDao.GetAllStopPointsAsync();
+        });
+    }
+
+    //......................................................................
+
+    /// <inheritdoc />
+    public async Task<StopPoint?> GetStopPointByIdAsync(int id)
+    {
+        return await await RunInLockAsync(() =>
+        { 
+            return stopPointDao.GetStopPointByIdAsync(id);
+        });
+    }
+
+    //......................................................................
+
+    /// <inheritdoc />
+    public async Task<StopPoint?> GetStopPointByNameAsync(string name)
+    {
+        return await await RunInLockAsync( () =>
+        {
+            return stopPointDao.GetStopPointByNameAsync(name);
+        });
+    }
+
+    //......................................................................
+
+    /// <inheritdoc />
+    public async Task<StopPoint?> GetStopPointByShortNameAsync(string shortName)
+    {
+        return await await RunInLockAsync( () =>
+        {
+            return stopPointDao.GetStopPointByShortNameAsync(shortName);
+        });
+    }
+
+    //......................................................................
+
+    /// <inheritdoc />
+    public async Task<IEnumerable<Route>> GetRoutesByStopPointAsync(int stopPointId)
+    {
+        return await await RunInLockAsync( () =>
+        {
+            return stopPointDao.GetRoutesByStopPointAsync(stopPointId);
+        });
+    }
+
+    //......................................................................
+
+    /// <inheritdoc />
     public async Task<bool> StopPointAlreadyExists(int stopPointId)
     {
         return await await RunInLockAsync(async () =>
@@ -110,10 +148,14 @@ public class StopPointService(IStopPointDao stopPointDao): IStopPointService
         });
     }
 
-    
+    //**********************************************************************************
+    //UPDATE-Methods
+    //**********************************************************************************
+
+    /// <inheritdoc />
     public async Task UpdateStopPointAsync(StopPoint? stopPoint)
     {
-        if (stopPoint == null)
+        if (stopPoint is null)
         {
             throw new ArgumentNullException(nameof(stopPoint));
         }
@@ -121,7 +163,7 @@ public class StopPointService(IStopPointDao stopPointDao): IStopPointService
         await DoInLockAsync(async () =>
         {
             var existingStopPoint = await stopPointDao.GetStopPointByIdAsync(stopPoint.Id);
-            if (existingStopPoint == null)
+            if (existingStopPoint is null)
             {
                 throw new ArgumentException($"Could not find stop point with id: {stopPoint.Id}");
             }
@@ -135,7 +177,12 @@ public class StopPointService(IStopPointDao stopPointDao): IStopPointService
         await stopPointDao.UpdateStopPointAsync(stopPoint);
     }
     
-    
+
+    //**********************************************************************************
+    // DELETE-Methods
+    //**********************************************************************************
+
+    /// <inheritdoc />
     public async Task<bool> DeleteStopPointAsync(int id)
     {
         return await await RunInLockAsync(() =>

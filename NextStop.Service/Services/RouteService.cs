@@ -5,12 +5,25 @@ using NextStop.Service.Interfaces;
 
 namespace NextStop.Service.Services;
 
+/// <summary>
+/// Service for managing routes.
+/// </summary>
 public class RouteService(IRouteDao routeDao) : IRouteService
 {
-    //private readonly IRouteDao routeDao = routeDao;
     
-    //Semaphore zur Sicherstellung von Thread-Sicherheit bei gleichzeitigen Zugriffen.
+    /// <summary>
+    /// Semaphore to ensure thread safety during concurrent access.
+    /// </summary>
     private static readonly SemaphoreSlim semaphore = new(1, 1);
+   
+    //......................................................................
+
+    /// <summary>
+    /// Executes a function in a thread-safe manner and returns the result.
+    /// </summary>
+    /// <typeparam name="T">The return type of the function.</typeparam>
+    /// <param name="func">The function to be executed.</param>
+    /// <returns>The result of the function.</returns>
     private static async Task<T> RunInLockAsync<T>(Func<T> func)
     {
         await semaphore.WaitAsync();
@@ -24,7 +37,12 @@ public class RouteService(IRouteDao routeDao) : IRouteService
         }
     }
 
-    // Führt eine Aktion thread-sicher aus.
+    //......................................................................
+
+    /// <summary>
+    /// Executes an action in a thread-safe manner.
+    /// </summary>
+    /// <param name="action">The action to be executed.</param>
     private static async Task DoInLockAsync(Action action)
     {
         await semaphore.WaitAsync();
@@ -39,49 +57,14 @@ public class RouteService(IRouteDao routeDao) : IRouteService
     }
     
     
-    public async Task<IEnumerable<Route>> GetAllRoutesAsync()
-    {
-        return await await RunInLockAsync(() =>
-        { 
-            return routeDao.GetAllRoutesAsync();
-        });
-    }
+    //**********************************************************************************
+    // CREATE-Methods
+    //**********************************************************************************
 
-    public async Task<Route?> GetRouteByIdAsync(int id)
-    {
-        return await await RunInLockAsync(() => 
-        { 
-            return routeDao.GetRouteByIdAsync(id);
-        });
-    }
-
-    public async Task<Route> GetRouteByNameAsync(string name)
-    {
-        return await await RunInLockAsync(() => 
-        { 
-            return routeDao.GetRouteByNameAsync(name);
-        });
-    }
-
-    public async Task<IEnumerable<Route>> GetRoutesByValidToAsync(DateTime validToDate)
-    {
-        return await await RunInLockAsync(() =>
-        {
-            return routeDao.GetRouteByValidToAsync(validToDate);
-        });
-    }
-
-    public async Task<IEnumerable<Route>> GetRoutesByValidFromAsync(DateTime validFromDate)
-    {
-        return await await RunInLockAsync(() =>
-        {
-            return routeDao.GetRouteByValidFromAsync(validFromDate);
-        });
-    }
-
+    /// <inheritdoc />
     public async Task InsertRouteAsync(Route route)
     {
-        if (route == null)
+        if (route is null)
         {
             throw new ArgumentNullException(nameof(route));
         }
@@ -98,8 +81,67 @@ public class RouteService(IRouteDao routeDao) : IRouteService
             }
         });
     }
-
     
+    //**********************************************************************************
+    //READ-Methods
+    //**********************************************************************************
+
+    /// <inheritdoc />
+    public async Task<IEnumerable<Route>> GetAllRoutesAsync()
+    {
+        return await await RunInLockAsync(() =>
+        { 
+            return routeDao.GetAllRoutesAsync();
+        });
+    }
+
+    //......................................................................
+
+    /// <inheritdoc />
+    public async Task<Route?> GetRouteByIdAsync(int id)
+    {
+        return await await RunInLockAsync(() => 
+        { 
+            return routeDao.GetRouteByIdAsync(id);
+        });
+    }
+
+    //......................................................................
+
+    /// <inheritdoc />
+    public async Task<Route?> GetRouteByNameAsync(string name)
+    {
+        return await await RunInLockAsync(() => 
+        { 
+            return routeDao.GetRouteByNameAsync(name);
+        });
+    }
+
+    //......................................................................
+
+    /// <inheritdoc />
+    public async Task<IEnumerable<Route>> GetRoutesByValidToAsync(DateTime validToDate)
+    {
+        return await await RunInLockAsync(() =>
+        {
+            return routeDao.GetRouteByValidToAsync(validToDate);
+        });
+    }
+
+    //......................................................................
+
+    /// <inheritdoc />
+    public async Task<IEnumerable<Route>> GetRoutesByValidFromAsync(DateTime validFromDate)
+    {
+        return await await RunInLockAsync(() =>
+        {
+            return routeDao.GetRouteByValidFromAsync(validFromDate);
+        });
+    }
+
+    //......................................................................
+    
+    /// <inheritdoc />
     public async Task<bool> RouteAlreadyExist(int routeId)
     {
         return await await RunInLockAsync(async () =>
@@ -109,7 +151,6 @@ public class RouteService(IRouteDao routeDao) : IRouteService
         });
     }
     
-
 
     // public async Task<IEnumerable<Route>> GetRoutesByValidityDayAsync(int validityDay)
     // {

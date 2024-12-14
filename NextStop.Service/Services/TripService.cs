@@ -4,10 +4,24 @@ using NextStop.Service.Interfaces;
 
 namespace NextStop.Service.Services;
 
+/// <summary>
+/// Service for managing trips.
+/// </summary>
 public class TripService (ITripDao tripDao) : ITripService
 {
-    //Semaphore zur Sicherstellung von Thread-Sicherheit bei gleichzeitigen Zugriffen.
+    /// <summary>
+    /// Semaphore to ensure thread safety during concurrent access.
+    /// </summary>
     private static readonly SemaphoreSlim semaphore = new(1, 1);
+    
+    //......................................................................
+
+    /// <summary>
+    /// Executes a function in a thread-safe manner and returns the result.
+    /// </summary>
+    /// <typeparam name="T">The return type of the function.</typeparam>
+    /// <param name="func">The function to be executed.</param>
+    /// <returns>The result of the function.</returns>
     private static async Task<T> RunInLockAsync<T>(Func<T> func)
     {
         await semaphore.WaitAsync();
@@ -21,7 +35,12 @@ public class TripService (ITripDao tripDao) : ITripService
         }
     }
 
-    // Führt eine Aktion thread-sicher aus.
+    //......................................................................
+
+    /// <summary>
+    /// Executes an action in a thread-safe manner.
+    /// </summary>
+    /// <param name="action">The action to be executed.</param>
     private static async Task DoInLockAsync(Action action)
     {
         await semaphore.WaitAsync();
@@ -35,52 +54,14 @@ public class TripService (ITripDao tripDao) : ITripService
         }
     }
     
-    
-    public async Task<IEnumerable<Trip>> GetAllTripsAsync()
-    {
-        return await await RunInLockAsync(() =>
-        {
-            return tripDao.GetAllTripsAsync();
-        });
-    }
+    //**********************************************************************************
+    // CREATE-Methods
+    //**********************************************************************************
 
-    public async Task<Trip?> GetTripByIdAsync(int id)
-    {
-        return await await RunInLockAsync(() =>
-        {
-            return tripDao.GetTripByIdAsync(id);
-        });
-    }
-    
-
-    public async Task<IEnumerable<Trip>> GetTripsByRouteIdAsync(int routeId)
-    {
-        return await await RunInLockAsync(() =>
-        {
-            return tripDao.GetTripsByRouteIdAsync(routeId);
-        });
-    }
-
-    public async Task<IEnumerable<Trip>> GetTripsByVehicleIdAsync(int vehicleId)
-    {
-        return await await RunInLockAsync(() =>
-        {
-            return tripDao.GetTripsByVehicleIdAsync(vehicleId);
-        });
-    }
-
-    public async Task<bool> TripAlreadyExists(int id)
-    {
-        return await await RunInLockAsync(async () =>
-        {
-            var existingTrip = await tripDao.GetTripByIdAsync(id);
-            return existingTrip != null;
-        });
-    }
-
+    /// <inheritdoc />
     public async Task InsertTripAsync(Trip newTrip)
     {
-        if (newTrip == null)
+        if (newTrip is null)
         {
             throw new ArgumentNullException(nameof(newTrip));
         }
@@ -102,4 +83,63 @@ public class TripService (ITripDao tripDao) : ITripService
             }
         });
     }
+    
+    //**********************************************************************************
+    //READ-Methods
+    //**********************************************************************************
+
+    /// <inheritdoc />
+    public async Task<IEnumerable<Trip>> GetAllTripsAsync()
+    {
+        return await await RunInLockAsync(() =>
+        {
+            return tripDao.GetAllTripsAsync();
+        });
+    }
+
+    //......................................................................
+
+    /// <inheritdoc />
+    public async Task<Trip?> GetTripByIdAsync(int id)
+    {
+        return await await RunInLockAsync(() =>
+        {
+            return tripDao.GetTripByIdAsync(id);
+        });
+    }
+    
+    //......................................................................
+
+    /// <inheritdoc />
+    public async Task<IEnumerable<Trip>> GetTripsByRouteIdAsync(int routeId)
+    {
+        return await await RunInLockAsync(() =>
+        {
+            return tripDao.GetTripsByRouteIdAsync(routeId);
+        });
+    }
+
+    //......................................................................
+
+    /// <inheritdoc />
+    public async Task<IEnumerable<Trip>> GetTripsByVehicleIdAsync(int vehicleId)
+    {
+        return await await RunInLockAsync(() =>
+        {
+            return tripDao.GetTripsByVehicleIdAsync(vehicleId);
+        });
+    }
+
+    //......................................................................
+
+    /// <inheritdoc />
+    public async Task<bool> TripAlreadyExists(int id)
+    {
+        return await await RunInLockAsync(async () =>
+        {
+            var existingTrip = await tripDao.GetTripByIdAsync(id);
+            return existingTrip is not null;
+        });
+    }
+    
 }

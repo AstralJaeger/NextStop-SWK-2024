@@ -4,14 +4,26 @@ using NextStop.Service.Interfaces;
 
 namespace NextStop.Service.Services;
 
+/// <summary>
+/// Service for managing routestoppoints.
+/// </summary>
 public class RouteStopPointService(IRouteStopPointDao routeStopPointDao, IStopPointDao stopPointDao)
     : IRouteStopPointService
 {
 
-    //Semaphore zur Sicherstellung von Thread-Sicherheit bei gleichzeitigen Zugriffen.
+    /// <summary>
+    /// Semaphore to ensure thread safety during concurrent access.
+    /// </summary>
     private static readonly SemaphoreSlim semaphore = new(1, 1);
 
-    // Führt eine Funktion thread-sicher aus und gibt das Ergebnis zurück.
+    //......................................................................
+
+    /// <summary>
+    /// Executes a function in a thread-safe manner and returns the result.
+    /// </summary>
+    /// <typeparam name="T">The return type of the function.</typeparam>
+    /// <param name="func">The function to be executed.</param>
+    /// <returns>The result of the function.</returns>
     private static async Task<T> RunInLockAsync<T>(Func<T> func)
     {
         await semaphore.WaitAsync();
@@ -25,7 +37,12 @@ public class RouteStopPointService(IRouteStopPointDao routeStopPointDao, IStopPo
         }
     }
 
-    // Führt eine Aktion thread-sicher aus.
+    //......................................................................
+
+    /// <summary>
+    /// Executes an action in a thread-safe manner.
+    /// </summary>
+    /// <param name="action">The action to be executed.</param>
     private static async Task DoInLockAsync(Action action)
     {
         await semaphore.WaitAsync();
@@ -39,51 +56,14 @@ public class RouteStopPointService(IRouteStopPointDao routeStopPointDao, IStopPo
         }
     }
 
-
-    public async Task<IEnumerable<RouteStopPoint>> GetAllRouteStopPointsAsync()
-    {
-        return await await RunInLockAsync(() => { return routeStopPointDao.GetAllRouteStopPointAsync(); });
-    }
-
-    public async Task<RouteStopPoint?> GetRouteStopPointByIdAsync(int id)
-    {
-        return await await RunInLockAsync(() => { return routeStopPointDao.GetRouteStopPointByIdAsync(id); });
-    }
-
-    public async Task<IEnumerable<RouteStopPoint>> GetRouteStopPointsByRouteIdAsync(int routeId)
-    {
-        return await await RunInLockAsync(() => { return routeStopPointDao.GetStopPointsByRouteIdAsync(routeId); });
-    }
-
-    public async Task<IEnumerable<RouteStopPoint>> GetRouteStopPointsByRouteNameAsync(string routeName)
-    {
-
-        return await await RunInLockAsync(() =>
-        {
-            return routeStopPointDao.GetRouteStopPointsByRouteNameAsync(routeName);
-        });
-    }
-
-    public async Task<RouteStopPoint?> GetRouteStopPointByArrivalTimeAsync(DateTime arrivalTime)
-    {
-        return await await RunInLockAsync(() =>
-        {
-            return routeStopPointDao.GetStopPointByArrivalTimeAsync(arrivalTime);
-        });
-    }
-
-    public async Task<RouteStopPoint?> GetRouteStopPointByDepartureTimeAsync(DateTime departureTime)
-    {
-        return await await RunInLockAsync(() =>
-        {
-            return routeStopPointDao.GetRouteStopPointByDepartureTimeAsync(departureTime);
-        });
-    }
-
-
+    //**********************************************************************************
+    // CREATE-Methods
+    //**********************************************************************************
+    
+    /// <inheritdoc />
     public async Task InsertRouteStopPointAsync(RouteStopPoint routeStopPoint)
     {
-        if (routeStopPoint == null)
+        if (routeStopPoint is null)
         {
             throw new ArgumentNullException(nameof(routeStopPoint));
         }
@@ -107,16 +87,82 @@ public class RouteStopPointService(IRouteStopPointDao routeStopPointDao, IStopPo
             }
         });
     }
+    
+    //**********************************************************************************
+    //READ-Methods
+    //**********************************************************************************
 
-    public async Task<bool> RouteStopPointAlreadyExists(int routeStopPointId)
+    /// <inheritdoc />
+    public async Task<IEnumerable<RouteStopPoint>> GetAllRouteStopPointsAsync()
+    {
+        return await await RunInLockAsync(() => { return routeStopPointDao.GetAllRouteStopPointAsync(); });
+    }
+
+    //......................................................................
+
+    /// <inheritdoc />
+    public async Task<RouteStopPoint?> GetRouteStopPointByIdAsync(int id)
+    {
+        return await await RunInLockAsync(() => { return routeStopPointDao.GetRouteStopPointByIdAsync(id); });
+    }
+
+    //......................................................................
+
+    /// <inheritdoc />
+    public async Task<IEnumerable<RouteStopPoint>> GetRouteStopPointsByRouteIdAsync(int routeId)
+    {
+        return await await RunInLockAsync(() => { return routeStopPointDao.GetStopPointsByRouteIdAsync(routeId); });
+    }
+
+    //......................................................................
+
+    /// <inheritdoc />
+    public async Task<IEnumerable<RouteStopPoint>> GetRouteStopPointsByRouteNameAsync(string routeName)
+    {
+
+        return await await RunInLockAsync(() =>
+        {
+            return routeStopPointDao.GetRouteStopPointsByRouteNameAsync(routeName);
+        });
+    }
+
+    //......................................................................
+
+    /// <inheritdoc />
+    public async Task<IEnumerable<RouteStopPoint>> GetRouteStopPointsByArrivalTimeAsync(DateTime arrivalTime)
+    {
+        return await await RunInLockAsync(() =>
+        {
+            return routeStopPointDao.GetRouteStopPointsByArrivalTimeAsync(arrivalTime);
+        });
+    }
+
+    //......................................................................
+
+    /// <inheritdoc />
+    public async Task<IEnumerable<RouteStopPoint>> GetRouteStopPointsByDepartureTimeAsync(DateTime departureTime)
+    {
+        return await await RunInLockAsync(() =>
+        {
+            return routeStopPointDao.GetRouteStopPointsByDepartureTimeAsync(departureTime);
+        });
+    }
+
+    //......................................................................
+
+    /// <inheritdoc />
+   public async Task<bool> RouteStopPointAlreadyExists(int routeStopPointId)
     {
         return await await RunInLockAsync(async () =>
         {
             var existingRouteStopPoint = await routeStopPointDao.GetRouteStopPointByIdAsync(routeStopPointId);
-            return existingRouteStopPoint != null;
+            return existingRouteStopPoint is not null;
         });
     }
     
+    //......................................................................
+
+    /// <inheritdoc />
     public async Task<bool> IsSameRouteForRouteStopPoints(string startStopPointName, string endStopPointName)
     {
         return await await RunInLockAsync(async () =>
@@ -125,8 +171,7 @@ public class RouteStopPointService(IRouteStopPointDao routeStopPointDao, IStopPo
             {
                 throw new ArgumentException("Start and end StopPoint names must be provided.");
             }
-
-            // Holen der StopPoint-IDs basierend auf den Namen
+            
             var startStopPoint = await stopPointDao.GetStopPointByNameAsync(startStopPointName);
             if (startStopPoint == null)
             {
@@ -139,57 +184,11 @@ public class RouteStopPointService(IRouteStopPointDao routeStopPointDao, IStopPo
                 throw new ArgumentException($"StopPoint with name '{endStopPointName}' not found.");
             }
             
-            // Überprüfen, ob beide StopPoints auf derselben Route liegen
             return await await RunInLockAsync(() => 
                 routeStopPointDao.IsSameRouteForRouteStopPoints(startStopPoint.Id, endStopPoint.Id));
         });
     }
 
-    // public async Task<IEnumerable<RouteStopPoint>> GetRouteBetweenStopPointsAsync(string startStopPointName,
-    //     string endStopPointName)
-    // {
-    //     // Hole den Start- und Ziel-StopPoint
-    //     var startStopPoint = await stopPointDao.GetStopPointByNameAsync(startStopPointName);
-    //     var endStopPoint = await stopPointDao.GetStopPointByNameAsync(endStopPointName);
-    //
-    //     if (startStopPoint == null || endStopPoint == null)
-    //     {
-    //         throw new Exception("Start or End StopPoint not found.");
-    //     }
-    //
-    //     // Hole alle Routen, die den Start-StopPoint anfahren
-    //     var startRoutes = await routeStopPointDao.GetRoutesByStopPointIdAsync(startStopPoint.Id);
-    //
-    //     // Hole alle Routen, die den Ziel-StopPoint anfahren
-    //     var endRoutes = await routeStopPointDao.GetRoutesByStopPointIdAsync(endStopPoint.Id);
-    //
-    //     // Prüfe auf direkte Verbindungen
-    //     var directRoutes = startRoutes.Where(r => endRoutes.Any(er => er.RouteId == r.RouteId)).ToList();
-    //
-    //     // Suche Verbindungen mit Umstiegen
-    //     var transferRoutes = new List<RouteStopPoint>();
-    //     foreach (var startRoute in startRoutes)
-    //     {
-    //         // Hole StopPoints für jede Route
-    //         var startRouteStopPoints = await routeStopPointDao.GetStopPointsByRouteIdAsync(startRoute.RouteId);
-    //
-    //         foreach (var transferStop in startRouteStopPoints)
-    //         {
-    //             if (transferStop.StopPointId != startStopPoint.Id && transferStop.StopPointId != endStopPoint.Id)
-    //             {
-    //                 // Prüfe, ob der Transfer-StopPoint eine Verbindung zum Ziel hat
-    //                 var transferToEndRoutes =
-    //                     await routeStopPointDao.GetRoutesByStopPointIdAsync(transferStop.StopPointId);
-    //                 if (transferToEndRoutes.Any(r => endRoutes.Select(er => er.RouteId).Distinct().Contains(r.RouteId)))
-    //                 {
-    //                     transferRoutes.Add(transferStop);
-    //                 }
-    //             }
-    //         }
-    //     }
-    //
-    //     // Kombiniere direkte und indirekte Routen
-    //     return directRoutes.Concat(transferRoutes);
-    // }
+   
 
 }

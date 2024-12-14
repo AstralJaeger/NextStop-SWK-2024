@@ -4,43 +4,26 @@ using Riok.Mapperly.Abstractions;
 
 namespace NextStop.Api.Mappers;
 
+/// <summary>
+/// Provides mapping functionality between <see cref="StopPoint"/> domain objects and <see cref="StopPointDto"/> data transfer objects.
+/// </summary>
 [Mapper]
 public static partial class StopPointMapper
 {
+    /// <summary>
+    /// Maps a <see cref="StopPoint"/> domain object to a <see cref="StopPointDto"/>.
+    /// </summary>
+    /// <param name="stopPoint">The <see cref="StopPoint"/> object to map.</param>
+    /// <returns>A <see cref="StopPointDto"/> containing the mapped data.</returns>
     public static partial StopPointDto ToStopPointDto(this StopPoint stopPoint);
-    public static partial IEnumerable<StopPointDto> ToStopPointDtos(this IEnumerable<StopPoint> stopPoints);
     
+    /// <summary>
+    /// Maps a <see cref="StopPointDto"/> data transfer object to a <see cref="StopPoint"/> domain object.
+    /// </summary>
+    /// <param name="stopPointDto">The <see cref="StopPointDto"/> to map.</param>
+    /// <returns>A <see cref="StopPoint"/> object containing the mapped data.</returns>
     public static partial StopPoint ToStopPoint(this StopPointDto stopPoint);
     
     public static partial void UpdateStopPoint(this StopPoint stopPoint, StopPointDto stopPointDto);
     
-    
-    // public static StopPointDto ToStopPointDto(this StopPoint stopPoint)
-    // {
-    //     return new StopPointDto
-    //     {
-    //         Id = stopPoint.Id,
-    //         Name = stopPoint.Name,
-    //         ShortName = stopPoint.ShortName,
-    //         Location = new CoordinatesDto
-    //         {
-    //             Latitude = stopPoint.Location.Latitude,
-    //             Longitude = stopPoint.Location.Longitude
-    //         }
-    //     };
-    // }
-    //
-    // public static StopPoint ToStopPoint(this StopPointForCreationDto stopPointDto)
-    // {
-    //     return new StopPoint
-    //     {
-    //         Name = stopPointDto.Name,
-    //         ShortName = stopPointDto.ShortName,
-    //         Location = new Coordinates
-    //         {
-    //             Latitude = stopPointDto.Location.Latitude,
-    //             Longitude = stopPointDto.Location.Longitude
-    //         }
-    //     };
-    // }
 }

@@ -5,20 +5,69 @@ using NextStop.Service.Interfaces;
 
 namespace NextStop.Api.Controllers;
 
+/// <summary>
+/// API Controller for managing Route Stop Points.
+/// Provides endpoints for creating, retrieving, and validating route stop points.
+/// </summary>
 [ApiController]
-//[ProducesResponseType(StatusCodes.Status200OK)] 
 [Route("api/[controller]")]
 
 public class RouteStopPointController : ControllerBase
 {
     private readonly IRouteStopPointService routeStopPointService;
-    //private readonly IStopPointService stopPointService;
+    
+    //......................................................................
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="RouteStopPointController"/> class.
+    /// </summary>
+    /// <param name="routeStopPointService">The service for managing route stop points.</param>
     public RouteStopPointController(IRouteStopPointService routeStopPointService)
     {
         this.routeStopPointService = routeStopPointService ?? throw new ArgumentNullException(nameof(routeStopPointService));
     }
 
+    //**********************************************************************************
+    // CREATE-Methods
+    //**********************************************************************************
+
+    /// <summary>
+    /// Inserts a new route stop point into the system.
+    /// </summary>
+    /// <param name="routeStopPointDto">The data for creating a new route stop point.</param>
+    /// <returns>The created route stop point.</returns>
+    [HttpPost]
+    [Produces("application/json", "text/plain")]
+    public async Task<ActionResult> InsertRouteStopPoint(RouteStopPointForCreationDto routeStopPointDto)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+
+        if (routeStopPointDto.Id is not 0 && await routeStopPointService.RouteStopPointAlreadyExists(routeStopPointDto.Id))
+        {
+            return Conflict(StatusInfo.RouteStopPointAlreadyExists(routeStopPointDto.Id));
+        }
+        
+        var newRouteStopPoint = routeStopPointDto.ToRouteStopPoint();
+        await routeStopPointService.InsertRouteStopPointAsync(newRouteStopPoint);
+
+        return CreatedAtAction(
+            actionName: nameof(GetRouteStopPointById), // Endpoint für die Rückgabe des Objekts
+            routeValues: new { id = newRouteStopPoint.RouteId },
+            value: newRouteStopPoint
+        );
+    }
+    
+    //**********************************************************************************
+    //READ-Methods
+    //**********************************************************************************
+
+    /// <summary>
+    /// Retrieves all route stop points in the system.
+    /// </summary>
+    /// <returns>A collection of all route stop points as DTOs.</returns>
     [HttpGet]
     public async Task<ActionResult> GetAllRouteStopPoints()
     {
@@ -26,6 +75,13 @@ public class RouteStopPointController : ControllerBase
         return Ok(result.Select(r => r.ToRouteStopPointDto()));
     }
 
+    //......................................................................
+
+    /// <summary>
+    /// Retrieves a route stop point by its unique ID.
+    /// </summary>
+    /// <param name="id">The unique ID of the route stop point.</param>
+    /// <returns>The route stop point as a DTO, or a 404 status if not found.</returns>
     [HttpGet("by-id/{id:int}")]
     public async Task<ActionResult> GetRouteStopPointById(int id)
     {
@@ -38,63 +94,89 @@ public class RouteStopPointController : ControllerBase
         return Ok(result.ToRouteStopPointDto());
     }
 
+    //......................................................................
+
+    /// <summary>
+    /// Retrieves route stop points associated with a specific route ID.
+    /// </summary>
+    /// <param name="routeId">The ID of the route.</param>
+    /// <returns>A collection of route stop points as DTOs, or a 404 status if not found.</returns>
     [HttpGet("by-routeId/{routeId:int}")]
     public async Task<ActionResult> GetRoutStopPointsByRouteId(int routeId)
     {
         var result = await routeStopPointService.GetRouteStopPointsByRouteIdAsync(routeId);
 
-        if (result is null)
+        if (!result.Any())
         {
             return NotFound(StatusInfo.InvalidRouteId(routeId));
         }
 
         return Ok(result.Select(r => r.ToRouteStopPointDto()));
     }
-        
+
+    //......................................................................
+
+    /// <summary>
+    /// Retrieves route stop points by its arrival time.
+    /// </summary>
+    /// <param name="arrivalTime">The arrival time to search for.</param>
+    /// <returns>A collection of route stop points as DTOs, or a 404 status if not found.</returns>
     [HttpGet("by-arrivalTime/{arrivalTime}")]
-    public async Task<ActionResult> GetRouteStopPointsByArrivalTimeAsync(string arrivalTime)
+    public async Task<ActionResult> GetRouteStopPointsByArrivalTime(string arrivalTime)
     {
         if (!DateTime.TryParse(arrivalTime, out var parsedArrivalTime))
         {
             return BadRequest("Invalid date format for arrivalTime.");
         }
 
-        var result = await routeStopPointService.GetRouteStopPointByArrivalTimeAsync(parsedArrivalTime);
+        var result = await routeStopPointService.GetRouteStopPointsByArrivalTimeAsync(parsedArrivalTime);
 
-        if (result is null)
+        if (!result.Any())
         {
             return NotFound(StatusInfo.InvalidStopPointArrivalTime(arrivalTime));
         }
 
-        return Ok(result.ToRouteStopPointDto());
+        return Ok(result.Select(r => r.ToRouteStopPointDto()));
     }
     
+    //......................................................................
     
-
+    /// <summary>
+    /// Retrieves route stop points by its departure time.
+    /// </summary>
+    /// <param name="departureTime">The departure time to search for.</param>
+    /// <returns>A collection of route stop points as DTOs, or a 404 status if not found.</returns>
     [HttpGet("by-departureTime/{departureTime}")]
-    public async Task<ActionResult> GetRouteStopPointByDepartureTimeAsync(string departureTime)
+    public async Task<ActionResult> GetRouteStopPointByDepartureTime(string departureTime)
     {
         if (!DateTime.TryParse(departureTime, out var parsedDepartureTime))
         {
             return BadRequest("Invalid date format for departureTime.");
         }
 
-        var result = await routeStopPointService.GetRouteStopPointByDepartureTimeAsync(parsedDepartureTime);
+        var result = await routeStopPointService.GetRouteStopPointsByDepartureTimeAsync(parsedDepartureTime);
 
-        if (result is null)
+        if (!result.Any())
         {
             return NotFound(StatusInfo.InvalidStopPointDepartureTime(departureTime));
         }
 
-        return Ok(result.ToRouteStopPointDto());
+        return Ok(result.Select(r => r.ToRouteStopPointDto()));
     }
 
+    //......................................................................
+
+    /// <summary>
+    /// Retrieves route stop points by the name of their associated route.
+    /// </summary>
+    /// <param name="routeName">The name of the route.</param>
+    /// <returns>A collection of route stop points as DTOs, or a 404 status if not found.</returns>
     [HttpGet("by-routeName/{routeName}")]
     public async Task<ActionResult> GetRouteStopPointsByRouteName(string routeName)
     {
         var result = await routeStopPointService.GetRouteStopPointsByRouteNameAsync(routeName);
 
-        if (result is null)
+        if (!result.Any())
         {
             return NotFound(StatusInfo.InvalidRouteName(routeName));
         }
@@ -102,33 +184,14 @@ public class RouteStopPointController : ControllerBase
         return Ok(result.Select(r => r.ToRouteStopPointDto()));
     }
     
-    
-    [HttpPost]
-    [Produces("application/json", "text/plain")]
-    public async Task<ActionResult> InsertRouteStopPoint(RouteStopPointForCreationDto routeStopPointDto)
-    {
-        // Validierung des Modells
-        if (!ModelState.IsValid)
-        {
-            return BadRequest(ModelState);
-        }
+    //......................................................................
 
-
-        if (routeStopPointDto.Id != 0 && await routeStopPointService.RouteStopPointAlreadyExists(routeStopPointDto.Id))
-        {
-            return Conflict(StatusInfo.RouteStopPointAlreadyExists(routeStopPointDto.Id));
-        }
-        
-        var newRouteStopPoint = routeStopPointDto.ToRouteStopPoint();
-        await routeStopPointService.InsertRouteStopPointAsync(newRouteStopPoint);
-
-        return CreatedAtAction(
-            actionName: nameof(GetRouteStopPointById), // Endpoint für die Rückgabe des Objekts
-            routeValues: new { routeId = newRouteStopPoint.RouteId },
-            value: newRouteStopPoint
-        );
-    }
-    
+    /// <summary>
+    /// Determines if two stop points are on the same route.
+    /// </summary>
+    /// <param name="startStopPointName">The name of the start stop point.</param>
+    /// <param name="endStopPointName">The name of the end stop point.</param>
+    /// <returns>A boolean indicating whether the stop points share the same route.</returns>
     [HttpGet("is-same-route/{startStopPointName}/{endStopPointName}")]
     public async Task<ActionResult> IsSameRouteForRouteStopPoints(string startStopPointName, string endStopPointName)
     {
@@ -138,77 +201,21 @@ public class RouteStopPointController : ControllerBase
             {
                 return BadRequest("Both startStopPointName and endStopPointName must be provided.");
             }
-
-            // Aufruf der Service-Methode
+            
             var result = await routeStopPointService.IsSameRouteForRouteStopPoints(startStopPointName, endStopPointName);
-
-            // Rückgabe des Ergebnisses
+            
             return Ok(new { SameRoute = result });
         }
-        catch (ArgumentException ex)
+        catch (ArgumentException e)
         {
-            return BadRequest(ex.Message);
+            return BadRequest(e.Message);
         }
-        catch (Exception ex)
+        catch (Exception e)
         {
-            return StatusCode(StatusCodes.Status500InternalServerError, $"An error occurred: {ex.Message}");
+            return StatusCode(StatusCodes.Status500InternalServerError, $"An error occurred: {e.Message}");
         }
     }
     
     
-    // [HttpGet("routes-between/{startStopPointName}/{endStopPointName}")]
-    // public async Task<ActionResult> GetRouteBetweenStopPoints(string startStopPointName, string endStopPointName)
-    // {
-    //     try
-    //     {
-    //         var routes = await routeStopPointService.GetRouteBetweenStopPointsAsync(startStopPointName, endStopPointName);
-    //
-    //         if (!routes.Any())
-    //         {
-    //             return NotFound($"No routes found between '{startStopPointName}' and '{endStopPointName}'.");
-    //         }
-    //
-    //         return Ok(routes.Select(r => r.ToRouteStopPointDto()));
-    //     }
-    //     catch (Exception ex)
-    //     {
-    //         return StatusCode(StatusCodes.Status500InternalServerError, $"An error occurred: {ex.Message}");
-    //     }
-    // }
     
-    
-    // [HttpGet("routes-between/")]
-    // public async Task<ActionResult> GetRoutesBetweenStopPoints(string startStopPointName, string endStopPointName)
-    // {
-    //     try
-    //     {
-    //         // Lösen der StopPoint-Namen in IDs
-    //         var startStopPoint = await stopPointService.GetStopPointByNameAsync(startStopPointName);
-    //         if (startStopPoint == null)
-    //         {
-    //             return NotFound($"Start StopPoint with name '{startStopPointName}' not found.");
-    //         }
-    //
-    //         var endStopPoint = await stopPointService.GetStopPointByNameAsync(endStopPointName);
-    //         if (endStopPoint == null)
-    //         {
-    //             return NotFound($"End StopPoint with name '{endStopPointName}' not found.");
-    //         }
-    //
-    //         // Suchen der Routen zwischen den beiden StopPoints
-    //         var routes = await routeStopPointService.GetRoutesBetweenStopPointsAsync(startStopPoint.Name, endStopPoint.Name);
-    //
-    //         if (routes is null)
-    //         {
-    //             return NotFound($"No routes found between StopPoint '{startStopPointName}' and StopPoint '{endStopPointName}'.");
-    //         }
-    //
-    //         // Rückgabe der gefundenen Routen
-    //         return Ok(routes.Select(r => r.ToRouteStopPointDto()));
-    //     }
-    //     catch (Exception ex)
-    //     {
-    //         return StatusCode(StatusCodes.Status500InternalServerError, $"An error occurred: {ex.Message}");
-    //     }
-    // }
 }

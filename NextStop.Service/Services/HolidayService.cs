@@ -4,12 +4,24 @@ using NextStop.Service.Interfaces;
 
 namespace NextStop.Service.Services;
 
+/// <summary>
+/// Service for managing holidays.
+/// </summary>
 public class HolidayService(IHolidayDao holidayDao) : IHolidayService
 {
-    //Semaphore zur Sicherstellung von Thread-Sicherheit bei gleichzeitigen Zugriffen.
+    /// <summary>
+    /// Semaphore to ensure thread safety during concurrent access.
+    /// </summary>
     private static readonly SemaphoreSlim semaphore = new(1, 1);
     
-    // Führt eine Funktion thread-sicher aus und gibt das Ergebnis zurück.
+    //......................................................................
+
+    /// <summary>
+    /// Executes a function in a thread-safe manner and returns the result.
+    /// </summary>
+    /// <typeparam name="T">The return type of the function.</typeparam>
+    /// <param name="func">The function to be executed.</param>
+    /// <returns>The result of the function.</returns>
     private static async Task<T> RunInLockAsync<T>(Func<T> func)
     {
         await semaphore.WaitAsync();
@@ -23,7 +35,12 @@ public class HolidayService(IHolidayDao holidayDao) : IHolidayService
         }
     }
 
-    // Führt eine Aktion thread-sicher aus.
+    //......................................................................
+
+    /// <summary>
+    /// Executes an action in a thread-safe manner.
+    /// </summary>
+    /// <param name="action">The action to be executed.</param>
     private static async Task DoInLockAsync(Action action)
     {
         await semaphore.WaitAsync();
@@ -38,67 +55,19 @@ public class HolidayService(IHolidayDao holidayDao) : IHolidayService
     }
     
     
-    
-    public async Task<IEnumerable<Holiday>> GetAllHolidaysAsync()
-    {
-        return await await RunInLockAsync(() =>
-        {
-            return holidayDao.GetAllHolidaysAsync();
-        });
-    }
+    //**********************************************************************************
+    // CREATE-Methods
+    //**********************************************************************************
 
-    public async Task<Holiday?> GetHolidayByIdAsync(int id)
-    {
-        return await await RunInLockAsync(() =>
-        { 
-            return holidayDao.GetHolidayByIdAsync(id);
-        });
-        
-    }
-
-    public async Task<IEnumerable<Holiday>> GetHolidaysByYearAsync(int year)
-    {
-        return await await RunInLockAsync( () =>
-        {
-            return holidayDao.GetHolidaysByYearAsync(year);
-        });
-
-    }
-
-    public async Task<bool> IsHolidayAsync(string date)
-    {
-       
-        if (!DateTime.TryParse(date, out var parsedDate))
-        {
-            throw new ArgumentException("Invalid date format.", nameof(date));
-        }
-        
-        return await await RunInLockAsync(() =>
-        {
-            return holidayDao.IsHolidayAsync(parsedDate);
-        });
-        
-    }
-
-    public async Task<bool> HolidayAlreadyExist(int holidayId)
-    {
-        return await await RunInLockAsync(async () =>
-        {
-            var existingHoliday = await holidayDao.GetHolidayByIdAsync(holidayId);
-            return existingHoliday != null;
-        });
-    }
-
-
-
+    /// <inheritdoc />
     public async Task InsertHolidayAsync(Holiday newHoliday)
     {
-        if (newHoliday == null)
+        if (newHoliday is null)
         {
             throw new ArgumentNullException(nameof(newHoliday));
         }
         
-        if (await HolidayAlreadyExist(newHoliday.Id))
+        if (await HolidayAlreadyExists(newHoliday.Id))
         {
             throw new InvalidOperationException($"Holiday with ID {newHoliday.Id} already exists.");
         }
@@ -116,12 +85,82 @@ public class HolidayService(IHolidayDao holidayDao) : IHolidayService
             }
         });
     }
+    
+    //**********************************************************************************
+    //READ-Methods
+    //**********************************************************************************
 
+    /// <inheritdoc />
+    public async Task<IEnumerable<Holiday>> GetAllHolidaysAsync()
+    {
+        return await await RunInLockAsync( () =>
+        {
+            return holidayDao.GetAllHolidaysAsync();
+        });
+    }
 
+    //......................................................................
 
+    /// <inheritdoc />
+    public async Task<Holiday?> GetHolidayByIdAsync(int id)
+    {
+        return await await RunInLockAsync(() =>
+        { 
+            return holidayDao.GetHolidayByIdAsync(id);
+        });
+        
+    }
+
+    //......................................................................
+
+    /// <inheritdoc />
+    public async Task<IEnumerable<Holiday>> GetHolidaysByYearAsync(int year)
+    {
+        return await await RunInLockAsync( () =>
+        {
+            return holidayDao.GetHolidaysByYearAsync(year) ;
+        });
+
+    }
+
+    //......................................................................
+
+    /// <inheritdoc />
+    public async Task<bool> IsHolidayAsync(string date)
+    {
+       
+        if (!DateTime.TryParse(date, out var parsedDate))
+        {
+            throw new ArgumentException("Invalid date format.", nameof(date));
+        }
+        
+        return await await RunInLockAsync(() =>
+        {
+            return holidayDao.IsHolidayAsync(parsedDate);
+        });
+        
+    }
+
+    //......................................................................
+
+    /// <inheritdoc />
+    public async Task<bool> HolidayAlreadyExists(int holidayId)
+    {
+        return await await RunInLockAsync(async () =>
+        {
+            var existingHoliday = await holidayDao.GetHolidayByIdAsync(holidayId);
+            return existingHoliday is not null;
+        });
+    }
+
+    //**********************************************************************************
+    //UPDATE-Methods
+    //**********************************************************************************
+
+    /// <inheritdoc />
     public async Task UpdateHolidayAsync(Holiday? holiday)
     {
-        if (holiday == null)
+        if (holiday is null)
         {
             throw new ArgumentNullException(nameof(holiday));
         }
@@ -129,23 +168,25 @@ public class HolidayService(IHolidayDao holidayDao) : IHolidayService
         await DoInLockAsync(async () =>
         {
             var existingHoliday = await holidayDao.GetHolidayByIdAsync(holiday.Id);
-            if (existingHoliday == null)
+            if (existingHoliday is null)
             {
                 throw new Exception($"Holiday with ID {holiday.Id} not found.");
             }
-
-            // Aktualisiere die Felder im gespeicherten Holiday-Objekt
+            
             existingHoliday.Name = holiday.Name;
             existingHoliday.StartDate = holiday.StartDate;
             existingHoliday.EndDate = holiday.EndDate;
             existingHoliday.Type = holiday.Type;
-
-            // Speichere die Änderungen
+            
             await holidayDao.UpdateHolidayAsync(existingHoliday);
         });
     }
     
-    
+    //**********************************************************************************
+    // DELETE-Methods
+    //**********************************************************************************
+
+    /// <inheritdoc />
     public async Task<bool> DeleteHolidayAsync(int id)
     {
         return await await RunInLockAsync(() =>

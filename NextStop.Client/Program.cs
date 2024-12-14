@@ -230,7 +230,7 @@ static class Program
         );
 
         // StopPoint in die Datenbank einfügen
-        int insertResult = await stopPointDao.InsertAsync(newStopPoint);
+        int insertResult = await stopPointDao.InsertStopPointAsync(newStopPoint);
         if (insertResult > 0)
         {
             Console.WriteLine("StopPoint inserted successfully!");
@@ -244,7 +244,7 @@ static class Program
                 // Update des StopPoints
                 stopPointById.Name = "Rathaus";
                 stopPointById.ShortName = "RTH";
-                bool updateResult = await stopPointDao.UpdateAsync(stopPointById);
+                bool updateResult = await stopPointDao.UpdateStopPointAsync(stopPointById);
                 if (updateResult)
                 {
                     Console.WriteLine("StopPoint updated successfully!");
@@ -256,7 +256,7 @@ static class Program
                         Console.WriteLine($"Updated StopPoint: {updatedStopPoint.ToString()}");
 
                         // StopPoint löschen
-                        bool deleteResult = await stopPointDao.DeleteAsync(updatedStopPoint.Id);
+                        bool deleteResult = await stopPointDao.DeleteStopPointAsync(updatedStopPoint.Id);
                         if (deleteResult)
                         {
                             Console.WriteLine("StopPoint deleted successfully!");
