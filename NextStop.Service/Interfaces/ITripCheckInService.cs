@@ -16,7 +16,7 @@ public interface ITripCheckInService
     /// </summary>
     /// <param name="checkIn">The <see cref="TripCheckin"/> object to insert.</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    public Task InsertTripCheckinAsync(TripCheckin tripCheckIn);
+    public Task InsertTripCheckinAsync(TripCheckin tripCheckin);
 
     //**********************************************************************************
     // READ-Methods
