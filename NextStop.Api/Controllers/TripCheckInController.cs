@@ -1,4 +1,5 @@
 ﻿using System.Globalization;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NextStop.Api.DTOs;
 using NextStop.Api.Mappers;
@@ -41,6 +42,7 @@ public class TripCheckInController: ControllerBase
     /// <param name="tripCheckinDto">The data transfer object for creating a trip check-in.</param>
     /// <returns>The created trip check-in as a DTO.</returns>
     [HttpPost]
+    [Authorize(Roles = "admin")]
     [Produces("application/json", "text/plain")]
     public async Task<ActionResult<TripCheckinDto>> InsertTripChekin(TripCheckinDto tripCheckinDto)
 
