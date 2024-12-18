@@ -85,9 +85,7 @@ public interface IStopPointDao
     /// <param name="id">The unique ID of the stop point to delete.</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     Task<bool> DeleteStopPointAsync(int id);
-    
- 
+
+
+    Task<IEnumerable<StopPoint>> GetStopPointByCoordinates(double longitude, double latitude, double radius);
 }
-
-
-

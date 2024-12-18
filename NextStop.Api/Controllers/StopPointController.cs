@@ -70,7 +70,6 @@ public class StopPointController: ControllerBase
     [HttpGet]
     public async Task<ActionResult> GetAllStopPoints()
     {
-       
         var result = await stopPointService.GetAllStopPointsAsync();
         return Ok(result.Select(r => r.ToStopPointDto()));
     }
@@ -91,6 +90,30 @@ public class StopPointController: ControllerBase
             return NotFound(StatusInfo.InvalidStopPointId(id));
         }
         return Ok(result.ToStopPointDto());
+    }
+
+    //......................................................................
+
+    /// <summary>
+    /// Retrieves multiple stop points by their unique ID.
+    /// </summary>
+    /// <param name="ids">The unique IDs of the stop points.</param>
+    /// <returns>The stop points as a DTO list, or a 404 status if not found.</returns>
+    [HttpPost("by-ids")]
+    public async Task<ActionResult> GetStopPointById([FromBody] IEnumerable<int> ids)
+    {
+        var tasks = new List<Task<StopPoint?>>();
+        foreach (var id in ids)
+        {
+            tasks.Add(stopPointService.GetStopPointByIdAsync(id));
+        }
+
+        StopPoint?[] result = await Task.WhenAll(tasks);
+        if (result.All(r => r is not null))
+        {
+            return Ok(result.Select(r => r?.ToStopPointDto()));
+        }
+        return NotFound(StatusInfo.InvalidStopPointIds());
     }
 
     //......................................................................
@@ -149,6 +172,39 @@ public class StopPointController: ControllerBase
         return Ok(routes.Select(r => r.ToRouteDto()));
     }
 
+    //......................................................................
+
+    /// <summary>
+    /// Retrieves all stoppoints near the location.
+    /// </summary>
+    /// <param name="latitude">The latitude of the location.</param>
+    /// <param name="longitude">The longitude of the location.</param>
+    /// <param name="radius">The latitude of the location.</param>
+    /// <returns>A collection of routes as DTOs, or a 404 status if no routes are found.</returns>
+    [HttpGet("by-coordinates")]
+    public async Task<ActionResult> GetStopPointByCoordinate([FromQuery] double longitude, [FromQuery] double latitude, [FromQuery] double radius)
+    {
+        if (latitude < -90 || latitude > 90 || longitude < -180 || longitude > 180)
+        {
+            return BadRequest("Invalid latitude or longitude values.");
+        }
+
+        if (radius < 100 && radius > 10000)
+        {
+            return BadRequest("Radius must be between 100 and 1000 meters");
+        }
+        
+        var stoppoints = await stopPointService.GetStopPointByCoordinatesAsync(longitude, latitude, radius);
+
+        if (!stoppoints.Any())
+        {
+            return NotFound(StatusInfo.StopPointNotFound(longitude, latitude, radius));
+        }
+
+        return Ok(stoppoints.Select(r => r.ToStopPointDto()));
+    }
+
+    
     //**********************************************************************************
     //UPDATE-Methods
     //**********************************************************************************

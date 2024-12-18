@@ -139,7 +139,18 @@ public class StopPointDao (IConnectionFactory connectionFactory): IStopPointDao
             new QueryParameter("@id", id)
         ) == 1;
     }
-    
+
+    public async Task<IEnumerable<StopPoint>> GetStopPointByCoordinates(double longitude, double latitude, double radius)
+    {
+        return await template.QueryAsync(
+            "SELECT id, name, latitude, longitude FROM stoppoint WHERE 6371000 * 2 * ASIN(SQRT(POWER(SIN(RADIANS(latitude - @latitude) / 2), 2) + COS(RADIANS(@latitude)) * COS(RADIANS(latitude)) * POWER(SIN(RADIANS(longitude - @longitude) / 2), 2))) <= @radius;",
+            StopPointDao.MapRowToStopPoint,
+            new QueryParameter("@latitude", latitude),
+            new QueryParameter("@longitude", longitude),
+            new QueryParameter("@radius", radius)
+        );
+    }
+
     //......................................................................
 
    

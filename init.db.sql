@@ -1,11 +1,10 @@
 ﻿-- Check if the database objects exist before creating them
 DO $$
     BEGIN
-        
+        CREATE EXTENSION postgis;
         -- Create enumeration for holiday type
-       -- CREATE TYPE holiday_type AS ENUM ('BankHoliday', 'SchoolVacation', 'NationalHoliday', 'ReligiousHoliday', 'Other');
-        
-        
+        -- CREATE TYPE holiday_type AS ENUM ('BankHoliday', 'SchoolVacation', 'NationalHoliday', 'ReligiousHoliday', 'Other');
+
         -- Create holiday table if it does not exist
         CREATE TABLE IF NOT EXISTS holiday (
             id SERIAL PRIMARY KEY,           -- Unique identifier for each holiday

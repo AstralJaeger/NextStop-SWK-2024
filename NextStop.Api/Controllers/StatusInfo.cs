@@ -22,6 +22,12 @@ public static class StatusInfo
         Detail = $"Holiday id ID '{holidayId}' already exists"
     };
 
+    public static object? InvalidStopPointIds() => new ProblemDetails
+    {
+        Title = "Invalid stoppoint ID",
+        Detail = $"A Stoppoint with an ID does not exist"
+    };
+
     public static object? InvalidStopPointId(int stopPointId) => new ProblemDetails
     {
         Title = "Invalid stoppoint ID",
@@ -32,6 +38,12 @@ public static class StatusInfo
     {
         Title = "Conflicting stoppoint IDs",
         Detail = $"Stoppoint with ID '{stopPointId}' already exists"
+    };
+
+    public static object? StopPointNotFound(double longitude, double latitude, double radius) => new ProblemDetails
+    {
+        Title = "No stoppoint found",
+        Detail = $"Stoppoint at '{longitude},{latitude}' within {radius}m not found"
     };
 
     public static object? InvalidStopPointShortName(string shortName) => new ProblemDetails

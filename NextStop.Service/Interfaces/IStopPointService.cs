@@ -63,6 +63,18 @@ public interface IStopPointService
     //......................................................................
 
     /// <summary>
+    /// Retrieves all stop points within the radius of a location.
+    /// </summary>
+    /// <param name="longitude">The longitude</param>
+    /// <param name="latitude">The latitude</param>
+    /// <param name="radius">The radius in meters</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation,
+    /// containing a collection of <see cref="StopPoint"/> objects.</returns>
+    public Task<IEnumerable<StopPoint>> GetStopPointByCoordinatesAsync(double longitude, double latitude, double radius);
+    
+    //......................................................................
+
+    /// <summary>
     /// Retrieves all routes associated with a specific stop point.
     /// </summary>
     /// <param name="stopPointId">The unique ID of the stop point.</param>

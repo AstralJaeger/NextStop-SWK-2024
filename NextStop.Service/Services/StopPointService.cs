@@ -122,6 +122,14 @@ public class StopPointService(IStopPointDao stopPointDao): IStopPointService
         });
     }
 
+    public async Task<IEnumerable<StopPoint>> GetStopPointByCoordinatesAsync(double longitude, double latitude, double radius)
+    {
+        return await await RunInLockAsync(() =>
+        {
+             return stopPointDao.GetStopPointByCoordinates(longitude, latitude, radius);
+        });
+    }
+
     //......................................................................
 
     /// <inheritdoc />
