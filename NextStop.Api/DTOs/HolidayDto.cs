@@ -30,7 +30,7 @@ public record HolidayDto
     /// <summary>
     /// Gets or sets the type of the holiday.
     /// </summary>
-    public HolidayType HolidayType { get; set; }
+    public HolidayType Type { get; set; }
 
 };
 

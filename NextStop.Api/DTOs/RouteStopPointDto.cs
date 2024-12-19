@@ -37,7 +37,7 @@ public record RouteStopPointDto
     /// </summary>
     [Required(ErrorMessage = "DepartureTime is required.")]
     [DataType(DataType.DateTime, ErrorMessage = "DepartureTime must be a valid date and time.")]
-    [DateGreaterThan("ArrivalTime", ErrorMessage = "DepartureTime must be later than ArrivalTime.")]
+    //[DateGreaterThan("ArrivalTime", ErrorMessage = "DepartureTime must be later than ArrivalTime.")]
     public DateTime DepartureTime { get; set; }
     
     /// <summary>
@@ -85,7 +85,7 @@ public record RouteStopPointForCreationDto
     /// </summary>
     [Required(ErrorMessage = "DepartureTime is required.")]
     [DataType(DataType.DateTime, ErrorMessage = "DepartureTime must be a valid date and time.")]
-    [DateGreaterThan("ArrivalTime", ErrorMessage = "DepartureTime must be later than ArrivalTime.")]
+    //[DateGreaterThan("ArrivalTime", ErrorMessage = "DepartureTime must be later than ArrivalTime.")]
     public required DateTime DepartureTime { get; set; }
     
     /// <summary>
