@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using NextStop.Api.DTOs;
 using NextStop.Api.Mappers;
 using NextStop.Domain;
@@ -36,9 +37,9 @@ public class HolidayController : ControllerBase
     /// <param name="holidayDto">The holiday data for creation.</param>
     /// <returns>The created holiday as a DTO with its unique ID.</returns>
     [HttpPost]
+    [Authorize(Roles = "admin")]
     [Produces("application/json", "text/plain")]
     public async Task<ActionResult<HolidayDto>> InsertHoliday(HolidayForCreationDto holidayDto)
-
     {
         if (!ModelState.IsValid)
         {
@@ -71,6 +72,7 @@ public class HolidayController : ControllerBase
     /// </summary>
     /// <returns>A collection of holidays as DTOs.</returns>
     [HttpGet]
+    [Authorize]
     public async Task<ActionResult> GetAllHolidays()
     {
         var result = await holidayService.GetAllHolidaysAsync();
