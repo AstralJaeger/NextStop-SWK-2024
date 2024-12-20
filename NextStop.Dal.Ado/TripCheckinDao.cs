@@ -29,7 +29,8 @@ public class TripCheckinDao(IConnectionFactory connectionFactory) : ITripCheckin
             id: (int)row["id"],
             tripId: (int)row["trip_Id"],
             stopPointId: (int)row["stop_point_Id"],
-            checkin: (DateTime)row["checkin_time"]
+            checkin: (DateTime)row["checkin_time"],
+            delay: (int)row["delay"]
         ); 
 
     //**********************************************************************************
@@ -39,11 +40,12 @@ public class TripCheckinDao(IConnectionFactory connectionFactory) : ITripCheckin
     public async Task<int> InsertTripCheckinAsync(TripCheckin tripCheckIn)
     {
         return await template.ExecuteAsync(
-            "insert into tripcheckin (id, trip_id, stop_point_id, checkin_time) values (@tripCheckinId, @tripId, @stopPointId, @checkin)",
+            "insert into tripcheckin (id, trip_id, stop_point_id, checkin_time, delay) values (@tripCheckinId, @tripId, @stopPointId, @checkin, @delay)",
             new QueryParameter("@tripCheckinId", tripCheckIn.Id),
             new QueryParameter("@tripId", tripCheckIn.TripId),
             new QueryParameter("@stopPointId", tripCheckIn.StopPointId),
-            new QueryParameter("@checkin", tripCheckIn.CheckIn));
+            new QueryParameter("@checkin", tripCheckIn.CheckIn),
+            new QueryParameter("@delay", tripCheckIn.Delay));
     }
 
     //**********************************************************************************
@@ -107,6 +109,32 @@ public class TripCheckinDao(IConnectionFactory connectionFactory) : ITripCheckin
     public async Task<double> GetAverageDelayForTripAsync(int tripId)
     {
         throw new NotImplementedException();
+    }
+    
+
+    //......................................................................
+
+    /// <inheritdoc />
+    public async Task<DateTime> GetArrivalTimeByRouteAndStopPointAsync(int routeId, int stopPointId)
+    {
+        return await template.QuerySingleAsync(
+            "SELECT arrival_time FROM routestoppoint WHERE route_id = @routeId AND stop_point_id = @stopPointId",
+            row => (DateTime)row["arrival_time"],
+            new QueryParameter("@routeId", routeId),
+            new QueryParameter("@stopPointId", stopPointId)
+        );
+    }
+    
+    //......................................................................
+
+    /// <inheritdoc />
+    public async Task<int> GetRouteIdByTripIdAsync(int tripId)
+    {
+        return await template.QuerySingleAsync(
+            "SELECT route_id FROM trip WHERE id = @tripId",
+            row => (int)row["route_id"],
+            new QueryParameter("@tripId", tripId)
+        );
     }
     
 

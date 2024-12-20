@@ -71,6 +71,15 @@ public class TripCheckInService(ITripCheckinDao tripCheckinDao) : ITripCheckInSe
 
         }
 
+        // Schritt 1: RouteID basierend auf TripID abrufen
+        var routeId = await tripCheckinDao.GetRouteIdByTripIdAsync(tripCheckin.TripId);
+
+        // Schritt 2: Geplante Ankunftszeit basierend auf RouteID und StopPointID abrufen
+        var plannedArrivalTime = await tripCheckinDao.GetArrivalTimeByRouteAndStopPointAsync(routeId, tripCheckin.StopPointId);
+
+        // Schritt 3: Verspätung in Minuten berechnen
+        tripCheckin.Delay = (int)(tripCheckin.CheckIn - plannedArrivalTime).TotalMinutes;
+        
         await DoInLockAsync(async () =>
         {
             try

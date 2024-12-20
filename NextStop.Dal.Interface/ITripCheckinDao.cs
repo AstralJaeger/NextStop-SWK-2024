@@ -65,7 +65,26 @@ public interface ITripCheckinDao
     Task<IEnumerable<TripCheckin>> GetTripCheckinsByCheckin(DateTime checkIn);
 
     //----------------------------------------------------------------------------------
+    
+    /// <summary>
+    /// Retrieves the planned arrival time for a specific stop point on a specific route.
+    /// </summary>
+    /// <param name="routeId">The ID of the route.</param>
+    /// <param name="stopPointId">The ID of the stop point.</param>
+    /// <returns>The planned arrival time as a <see cref="DateTime"/>.</returns>
+    /// <exception cref="InvalidOperationException">Thrown if no matching entry is found.</exception>
+    Task<DateTime> GetArrivalTimeByRouteAndStopPointAsync(int routeId, int stopPointId);
+    
+    //----------------------------------------------------------------------------------
 
+    /// <summary>
+    /// Retrieves the route ID associated with a specific trip ID.
+    /// </summary>
+    /// <param name="tripId">The ID of the trip.</param>
+    /// <returns>The route ID as an <see cref="int"/>.</returns>
+    /// <exception cref="InvalidOperationException">Thrown if no matching trip is found.</exception>
+    Task<int> GetRouteIdByTripIdAsync(int tripId);
+    
     //todo
     Task<double> GetAverageDelayForTripAsync(int tripId);
 }

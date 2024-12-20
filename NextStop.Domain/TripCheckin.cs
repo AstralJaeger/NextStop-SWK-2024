@@ -24,6 +24,11 @@ public class TripCheckin
     /// Gets or sets the check-in date and time.
     /// </summary>
     public DateTime CheckIn { get; set; }
+    
+    /// <summary>
+    /// Gets or sets the curren delay for the routestoppoint.
+    /// </summary>
+    public int Delay { get; set; }
 
     /// <summary>
     /// Navigation property for accessing the associated trip.
@@ -35,12 +40,13 @@ public class TripCheckin
     /// </summary>
     //public required StopPoint StopPoint { get; set; }
 
-    public TripCheckin(int id, int tripId, int stopPointId, DateTime checkin)
+    public TripCheckin(int id, int tripId, int stopPointId, DateTime checkin, int delay)
     {
         Id = id;
         TripId = tripId;
         StopPointId = stopPointId;
         CheckIn = checkin;
+        Delay = delay;
     }
     
     public TripCheckin() {}

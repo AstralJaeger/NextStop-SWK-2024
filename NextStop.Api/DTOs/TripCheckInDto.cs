@@ -32,7 +32,13 @@ public record TripCheckinDto
     [Required(ErrorMessage = "CheckIn time is required.")]
     [DataType(DataType.DateTime, ErrorMessage = "CheckIn must be a valid date and time.")]
     public required DateTime CheckIn { get; init; }
-
+    
+    /// <summary>
+    /// Gets or sets the delay.
+    /// </summary>
+    [Required(ErrorMessage = "Delay is required.")]
+    public int Delay { get; init; }
+    
     /// <summary>
     /// Converts the DTO into a <see cref="TripCheckin"/> domain object.
     /// </summary>
@@ -45,6 +51,7 @@ public record TripCheckinDto
             TripId = this.TripId,
             StopPointId = this.StopPointId,
             CheckIn = this.CheckIn,
+            Delay = this.Delay
         };
 
     }

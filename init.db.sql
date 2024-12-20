@@ -55,7 +55,8 @@ DO $$
             id SERIAL PRIMARY KEY,
             trip_id INTEGER REFERENCES trip(id),
             stop_point_id INTEGER REFERENCES stoppoint(id),
-            checkin_time TIMESTAMP NOT NULL
+            checkin_time TIMESTAMP NOT NULL,
+            delay INTEGER NOT NULL DEFAULT 0                                               
         );
 
 

@@ -122,7 +122,7 @@ public interface IRouteStopPointDao
     
     Task<IEnumerable<RouteStopPoint>> GetRoutesByStopPointIdAsync(int stopPointId);
 
-
+   
     //----------------------------------------------------------------------------------
 
     /// <summary>

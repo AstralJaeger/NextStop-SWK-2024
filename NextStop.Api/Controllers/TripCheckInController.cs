@@ -42,7 +42,7 @@ public class TripCheckInController: ControllerBase
     /// <param name="tripCheckinDto">The data transfer object for creating a trip check-in.</param>
     /// <returns>The created trip check-in as a DTO.</returns>
     [HttpPost]
-    [Authorize(Roles = "admin")]
+    //[Authorize(Roles = "admin")]
     [Produces("application/json", "text/plain")]
     public async Task<ActionResult<TripCheckinDto>> InsertTripChekin(TripCheckinDto tripCheckinDto)
 

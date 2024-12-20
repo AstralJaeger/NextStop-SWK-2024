@@ -74,4 +74,5 @@ public interface ITripCheckInService
     /// <param name="tripChekinId">The ID of the trip check-in to check.</param>
     /// <returns><c>true</c> if the trip check-in exists; otherwise, <c>false</c>.</returns>
     Task<bool> TripCheckinAlreadyExists(int tripChekinId);
+    
 }

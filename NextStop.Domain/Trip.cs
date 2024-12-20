@@ -19,7 +19,7 @@ public class Trip
     /// Gets or sets the identifier of the vehicle assigned to this trip.
     /// </summary>
     public int VehicleId { get; set; }
-
+    
     /// <summary>
     /// Navigation property for accessing the associated route.
     /// </summary>
