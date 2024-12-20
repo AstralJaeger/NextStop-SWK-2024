@@ -173,6 +173,44 @@ public class RouteStopPointController : ControllerBase
     }
 
     //......................................................................
+    
+    /// <summary>
+    /// Retrieves all route stop points that are valid on the specified days (binary-encoded format).
+    /// </summary>
+    /// <param name="validOn">
+    /// The binary-encoded integer representing the days of the week when the route stop point is valid.
+    /// For example:
+    /// <list type="bullet">
+    /// <item><description>1 (Sunday)</description></item>
+    /// <item><description>62 (Monday to Friday)</description></item>
+    /// <item><description>127 (Monday to Sunday)</description></item>
+    /// </list>
+    /// </param>
+    /// <returns>
+    /// An HTTP response containing a collection of <see cref="RouteStopPointDto"/> objects that match the specified validity days.
+    /// </returns>
+    /// <response code="200">Returns the list of route stop points valid on the specified days.</response>
+    /// <response code="400">If the input parameter is invalid.</response>
+    /// <response code="404">If no route stop points are found for the specified days.</response>
+    [HttpGet("by-validOn/{validOn:int}")]
+    public async Task<ActionResult> GetRouteStopPointsByValidOn(int validOn)
+    {
+        if (validOn < 1 || validOn > 127) // Validate the range of validOn (1-127 for days of the week)
+        {
+            return BadRequest("Invalid validOn value. It must be between 1 (Sunday) and 127 (Monday to Sunday).");
+        }
+
+        var result = await routeStopPointService.GetRouteStopPointByValidOnAsync(validOn);
+
+        if (result == null || !result.Any())
+        {
+            return NotFound($"No route stop points found for validOn value: {validOn}.");
+        }
+
+        return Ok(result.Select(r => r.ToRouteStopPointDto()));
+    }
+    
+    //......................................................................
 
     /// <summary>
     /// Retrieves route stop points by the name of their associated route.

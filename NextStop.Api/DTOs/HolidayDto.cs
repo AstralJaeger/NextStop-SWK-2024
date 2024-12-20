@@ -115,7 +115,7 @@ public record HolidayForUpdateDto
     /// Gets or sets the updated end date of the holiday.
     /// </summary>
     [Required(ErrorMessage = "EndDate is required.")]
-    [DateGreaterThan("StartDate", ErrorMessage = "EndDate must be later than StartDate.")]
+    //[DateGreaterThan("StartDate", ErrorMessage = "EndDate must be later than StartDate.")]
     public required DateTime EndDate { get; set; }
     
     /// <summary>

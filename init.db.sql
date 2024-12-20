@@ -39,7 +39,8 @@ DO $$
             stop_point_id INTEGER REFERENCES stoppoint(id),
             arrival_time TIMESTAMP NOT NULL,
             departure_time TIMESTAMP NOT NULL,
-            order_number INTEGER NOT NULL
+            order_number INTEGER NOT NULL,
+            valid_on INTEGER NOT NULL DEFAULT 127                                                  
         );
 
         -- Create trip table if it does not exist
@@ -57,7 +58,8 @@ DO $$
             checkin_time TIMESTAMP NOT NULL
         );
 
------------------------------------------------------------------------------------------------------------------
+
+        -----------------------------------------------------------------------------------------------------------------
         -- Dummy Data
 
         -- Insert sample data into holiday table

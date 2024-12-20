@@ -32,6 +32,7 @@ public class RouteStopPointDao(IConnectionFactory connectionFactory) :IRouteStop
             ArrivalTime = (DateTime)row["arrival_time"],
             DepartureTime = (DateTime)row["departure_time"],
             Order = (int)row["order_number"],
+            ValidOn = (int)row["valid_on"],
 
         };
 
@@ -42,13 +43,14 @@ public class RouteStopPointDao(IConnectionFactory connectionFactory) :IRouteStop
     public async Task InsertRouteStopPointAsync(RouteStopPoint routeStopPoint)
     {
         await template.ExecuteAsync(
-            "INSERT INTO routestoppoint (route_id, stop_point_id, arrival_time, departure_time, order_number) " +
-            "VALUES (@routeId, @stopPointId, @arrivalTime, @departureTime, @order)",
+            "INSERT INTO routestoppoint (route_id, stop_point_id, arrival_time, departure_time, order_number, valid_on) " +
+            "VALUES (@routeId, @stopPointId, @arrivalTime, @departureTime, @order, @validOn)",
             new QueryParameter("@routeId", routeStopPoint.RouteId),
             new QueryParameter("@stopPointId", routeStopPoint.StopPointId),
             new QueryParameter("@arrivalTime", routeStopPoint.ArrivalTime),
             new QueryParameter("@departureTime", routeStopPoint.DepartureTime),
-            new QueryParameter("@order", routeStopPoint.Order)
+            new QueryParameter("@order", routeStopPoint.Order),
+            new QueryParameter("@validOn", routeStopPoint.ValidOn)
         );
     }
 
@@ -77,6 +79,7 @@ public class RouteStopPointDao(IConnectionFactory connectionFactory) :IRouteStop
         );
     }
     
+   
     //......................................................................
 
     /// <inheritdoc />
@@ -89,6 +92,17 @@ public class RouteStopPointDao(IConnectionFactory connectionFactory) :IRouteStop
         );
     }
 
+    //......................................................................
+
+    /// <inheritdoc />
+    public async Task<IEnumerable<RouteStopPoint>> GetRouteStopPointByValidOnAsync(int validOn)
+    {
+        return await template.QueryAsync(
+            "SELECT * FROM routestoppoint WHERE valid_on = @validOn",
+            MapRowToRouteStopPoint,
+            new QueryParameter("@validOn", validOn)
+        );
+    }
     //......................................................................
 
     /// <inheritdoc />

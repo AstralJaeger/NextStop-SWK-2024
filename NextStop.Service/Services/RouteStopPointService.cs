@@ -145,6 +145,23 @@ public class RouteStopPointService(IRouteStopPointDao routeStopPointDao, IStopPo
             return routeStopPointDao.GetRouteStopPointsByDepartureTimeAsync(departureTime);
         });
     }
+    
+    //......................................................................
+
+    /// <inheritdoc />
+    public async Task<IEnumerable<RouteStopPoint>> GetRouteStopPointByValidOnAsync(int validOn)
+    {
+        if (validOn < 1 || validOn > 127)
+        {
+            throw new ArgumentOutOfRangeException(nameof(validOn), "ValidOn must be between 1 (Sunday) and 127 (Monday to Sunday).");
+        }
+        
+        return await await RunInLockAsync(() =>
+        {
+            return routeStopPointDao.GetRouteStopPointByValidOnAsync(validOn);
+        });
+        
+    }
 
     //......................................................................
 
@@ -187,6 +204,5 @@ public class RouteStopPointService(IRouteStopPointDao routeStopPointDao, IStopPo
         });
     }
 
-   
 
 }

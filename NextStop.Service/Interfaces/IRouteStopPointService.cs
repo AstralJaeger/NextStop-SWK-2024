@@ -78,6 +78,25 @@ public interface IRouteStopPointService
     //......................................................................
 
     /// <summary>
+    /// Retrieves all route stop points that are valid on the specified days (binary-encoded format).
+    /// </summary>
+    /// <param name="validOn">
+    /// The binary-encoded integer representing the days of the week when the route stop point is valid.
+    /// For example:
+    /// <list type="bullet">
+    /// <item><description>1 (Sunday)</description></item>
+    /// <item><description>62 (Monday to Friday)</description></item>
+    /// <item><description>127 (Monday to Sunday)</description></item>
+    /// </list>
+    /// </param>
+    /// <returns>
+    /// A collection of <see cref="RouteStopPoint"/> objects that match the specified validity days.
+    /// </returns>
+    Task<IEnumerable<RouteStopPoint>> GetRouteStopPointByValidOnAsync(int validOn);
+    
+    //......................................................................
+
+    /// <summary>
     /// Checks if a route stop point already exists in the system.
     /// </summary>
     /// <param name="routeStopPointDto">The ID of the route stop point to check.</param>
@@ -94,7 +113,9 @@ public interface IRouteStopPointService
     /// <returns><c>true</c> if the stop points belong to the same route; otherwise, <c>false</c>.</returns>
     Task<bool> IsSameRouteForRouteStopPoints(string startStopPointName, string endStopPointName);
     
+    
     //public Task<IEnumerable<RouteStopPoint>> GetRouteStopPointsByStopPointAsync(int stopPointId);
     // Task<IEnumerable<RouteStopPoint>> GetRouteBetweenStopPointsAsync(string startStopPointName, string endStopPointNam);
+
 
 }

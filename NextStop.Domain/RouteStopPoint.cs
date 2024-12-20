@@ -34,6 +34,8 @@ public class RouteStopPoint
     /// Gets or sets the order of the stop point within the route.
     /// </summary>
     public int Order { get; set; }
+    
+    public int ValidOn {get; set;}
 
     // /// <summary>
     // /// Navigation property for accessing the associated stop point.

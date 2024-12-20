@@ -47,6 +47,13 @@ public record RouteStopPointDto
     [Range(1, int.MaxValue, ErrorMessage = "Order must be a positive integer.")]
     public int Order { get; set; }
     
+    /// <summary>
+    /// Gets or sets validOn of the stop point.
+    /// </summary>
+    [Required(ErrorMessage = "ValidOn is required.")]
+    [Range(1, int.MaxValue, ErrorMessage = "ValidOn must be a positive integer.")]
+    public int ValidOn { get; set; }
+    
 }
 
 /// <summary>
@@ -94,6 +101,13 @@ public record RouteStopPointForCreationDto
     [Required(ErrorMessage = "Order is required.")]
     [Range(1, int.MaxValue, ErrorMessage = "Order must be a positive integer.")]
     public int Order { get; set; }
+    
+    /// <summary>
+    /// Gets or sets validOn of the stop point.
+    /// </summary>
+    [Required(ErrorMessage = "ValidOn is required.")]
+    [Range(1, int.MaxValue, ErrorMessage = "ValidOn must be a positive integer.")]
+    public int ValidOn { get; set; }
 
     /// <summary>
     /// Converts the DTO into a <see cref="RouteStopPoint"/> domain object.
@@ -107,7 +121,8 @@ public record RouteStopPointForCreationDto
             StopPointId = this.StopPointId,
             ArrivalTime = this.ArrivalTime,
             DepartureTime = this.DepartureTime,
-            Order = this.Order
+            Order = this.Order,
+            ValidOn = this.ValidOn
         };
     }
 }

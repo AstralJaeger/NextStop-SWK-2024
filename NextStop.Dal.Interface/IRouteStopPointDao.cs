@@ -56,6 +56,30 @@ public interface IRouteStopPointDao
     //----------------------------------------------------------------------------------
 
     /// <summary>
+    /// Retrieves all route stop points that are valid on the specified days (binary-encoded format).
+    /// </summary>
+    /// <param name="validOn">
+    /// The binary-encoded integer representing the days of the week when the route stop point is valid.
+    /// For example:
+    /// <list type="bullet">
+    /// <item><description>1 (Sunday)</description></item>
+    /// <item><description>62 (Monday to Friday)</description></item>
+    /// <item><description>127 (Monday to Sunday)</description></item>
+    /// </list>
+    /// </param>
+    /// <returns>
+    /// A collection of <see cref="RouteStopPoint"/> objects that match the specified validity days.
+    /// </returns>
+    /// <remarks>
+    /// This method queries the database for all route stop points where the `valid_on` column matches the provided value.
+    /// Use binary encoding to represent day combinations (e.g., 62 for Monday to Friday, 127 for all days).
+    /// </remarks>
+    Task<IEnumerable<RouteStopPoint>> GetRouteStopPointByValidOnAsync(int validOn);
+
+    
+    //----------------------------------------------------------------------------------
+
+    /// <summary>
     /// Asynchronously retrieves route stop points by its arrival time.
     /// </summary>
     /// <param name="arrivalTime">The arrival time of the stop point.</param>
