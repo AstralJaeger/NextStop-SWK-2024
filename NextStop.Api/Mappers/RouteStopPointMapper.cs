@@ -23,4 +23,7 @@ public static partial class RouteStopPointMapper
    /// <param name="routeStopPointDto">The <see cref="RouteStopPointDto"/> to map.</param>
    /// <returns>A <see cref="RouteStopPoint"/> object containing the mapped data.</returns>
    public static partial RouteStopPoint ToRouteStopPoint(this RouteStopPointDto routeStopPointDto);
+   
+   
+
 }

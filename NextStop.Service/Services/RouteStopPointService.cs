@@ -109,7 +109,7 @@ public class RouteStopPointService(IRouteStopPointDao routeStopPointDao, IStopPo
     /// <inheritdoc />
     public async Task<IEnumerable<RouteStopPoint>> GetRouteStopPointsByRouteIdAsync(int routeId)
     {
-        return await await RunInLockAsync(() => { return routeStopPointDao.GetStopPointsByRouteIdAsync(routeId); });
+        return await await RunInLockAsync(() => { return routeStopPointDao.GetRouteStopPointsByRouteIdAsync(routeId); });
     }
 
     //......................................................................

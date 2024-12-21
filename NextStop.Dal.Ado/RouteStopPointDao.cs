@@ -83,7 +83,7 @@ public class RouteStopPointDao(IConnectionFactory connectionFactory) :IRouteStop
     //......................................................................
 
     /// <inheritdoc />
-    public async Task<IEnumerable<RouteStopPoint>> GetStopPointsByRouteIdAsync(int routeId)
+    public async Task<IEnumerable<RouteStopPoint>> GetRouteStopPointsByRouteIdAsync(int routeId)
     {
         return await template.QueryAsync(
             "SELECT * FROM routestoppoint WHERE route_id = @routeId",

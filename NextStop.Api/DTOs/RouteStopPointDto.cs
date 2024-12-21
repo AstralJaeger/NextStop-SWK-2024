@@ -44,7 +44,7 @@ public record RouteStopPointDto
     /// Gets or sets the order number of the stop point on the route.
     /// </summary>
     [Required(ErrorMessage = "Order is required.")]
-    [Range(1, int.MaxValue, ErrorMessage = "Order must be a positive integer.")]
+    [Range(0, int.MaxValue, ErrorMessage = "Order must be a positive integer.")]
     public int Order { get; set; }
     
     /// <summary>
@@ -60,7 +60,7 @@ public record RouteStopPointDto
 /// DTO for creating a new route stop point.
 /// Includes methods for converting to a <see cref="RouteStopPoint"/> domain object.
 /// </summary>
-public record RouteStopPointForCreationDto
+public partial record RouteStopPointForCreationDto
 {
     /// <summary>
     /// Gets the unique ID of the route stop point to be created.
@@ -99,7 +99,7 @@ public record RouteStopPointForCreationDto
     /// Gets or sets the order number of the stop point on the route.
     /// </summary>
     [Required(ErrorMessage = "Order is required.")]
-    [Range(1, int.MaxValue, ErrorMessage = "Order must be a positive integer.")]
+    [Range(0, int.MaxValue, ErrorMessage = "Order must be a positive integer.")]
     public int Order { get; set; }
     
     /// <summary>

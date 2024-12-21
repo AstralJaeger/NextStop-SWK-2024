@@ -16,6 +16,7 @@ namespace NextStop.Api.Controllers;
 public class RouteStopPointController : ControllerBase
 {
     private readonly IRouteStopPointService routeStopPointService;
+    private readonly IRouteService routeService;
     
     //......................................................................
 
@@ -23,9 +24,10 @@ public class RouteStopPointController : ControllerBase
     /// Initializes a new instance of the <see cref="RouteStopPointController"/> class.
     /// </summary>
     /// <param name="routeStopPointService">The service for managing route stop points.</param>
-    public RouteStopPointController(IRouteStopPointService routeStopPointService)
+    public RouteStopPointController(IRouteStopPointService routeStopPointService, IRouteService routeService)
     {
         this.routeStopPointService = routeStopPointService ?? throw new ArgumentNullException(nameof(routeStopPointService));
+        this.routeService = routeService ?? throw new ArgumentNullException(nameof(routeService));
     }
 
     //**********************************************************************************
@@ -58,6 +60,51 @@ public class RouteStopPointController : ControllerBase
             actionName: nameof(GetRouteStopPointById), // Endpoint für die Rückgabe des Objekts
             routeValues: new { id = newRouteStopPoint.RouteId },
             value: newRouteStopPoint
+        );
+    }
+    
+    //......................................................................
+
+    
+    [HttpPost("create-with-stoppoints")]
+    [Produces("application/json", "text/plain")]
+    public async Task<ActionResult<RouteDto>> CreateRouteWithStopPoints(RouteWithStopPointsForCreationDto dto)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+
+        // 1. Route erstellen
+        var newRoute = dto.ToRoute();
+        await routeService.InsertRouteAsync(newRoute);
+        var createdRoute = await routeService.GetRouteByNameAsync(dto.Name);
+
+        if (createdRoute is null)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, "Failed to create route with stop points.");
+        }
+        
+        // 2. RouteStopPoints erstellen
+        var routeStopPoints = dto.ToRouteStopPoints(createdRoute.Id);
+
+        foreach (var stopPoint in routeStopPoints)
+        {
+            await routeStopPointService.InsertRouteStopPointAsync(stopPoint);
+        }
+
+        // 3. Anzahl der hinzugefügten StopPoints abrufen
+        var stopPointCount = (await routeStopPointService.GetRouteStopPointsByRouteIdAsync(createdRoute.Id)).Count();
+
+        return CreatedAtAction(
+            actionName: "GetRouteById",
+            controllerName: "Route",
+            routeValues: new { id = createdRoute.Id },
+            value: new
+            {
+                Route = newRoute.ToRouteDto(),
+                StopPointCount = stopPointCount
+            }
         );
     }
     
@@ -202,7 +249,7 @@ public class RouteStopPointController : ControllerBase
 
         var result = await routeStopPointService.GetRouteStopPointByValidOnAsync(validOn);
 
-        if (result == null || !result.Any())
+        if (result is null || !result.Any())
         {
             return NotFound($"No route stop points found for validOn value: {validOn}.");
         }

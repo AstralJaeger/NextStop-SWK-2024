@@ -36,11 +36,11 @@ public interface IRouteStopPointDao
     //----------------------------------------------------------------------------------
 
     /// <summary>
-    /// Asynchronously retrieves all stop points for a specific route.
+    /// Asynchronously retrieves all route stop points for a specific route.
     /// </summary>
     /// <param name="routeId">The ID of the route.</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation, containing a list of stop points for the specified route.</returns>
-    Task<IEnumerable<RouteStopPoint>> GetStopPointsByRouteIdAsync(int routeId);
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation, containing a list of route stop points for the specified route.</returns>
+    Task<IEnumerable<RouteStopPoint>> GetRouteStopPointsByRouteIdAsync(int routeId);
 
     //----------------------------------------------------------------------------------
 
