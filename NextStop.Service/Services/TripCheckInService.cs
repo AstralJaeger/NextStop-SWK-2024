@@ -89,7 +89,7 @@ public class TripCheckInService(ITripCheckinDao tripCheckinDao) : ITripCheckInSe
             catch (Exception e)
             {
                 Console.WriteLine($"Could not insert TripCheckin: {e.Message}");
-
+            
             }
         });
     }

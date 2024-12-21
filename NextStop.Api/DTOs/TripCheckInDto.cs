@@ -10,7 +10,7 @@ public record TripCheckinDto
     /// <summary>
     /// Gets the unique ID of the trip check-in.
     /// </summary>
-    public required int Id { get; init; }
+    public int Id { get; init; }
 
     /// <summary>
     /// Gets or sets the ID of the associated trip.
@@ -40,6 +40,12 @@ public record TripCheckinDto
     public int Delay { get; init; }
     
     /// <summary>
+    /// Gets or sets the ID of the associated route stop point.
+    /// </summary>
+    [Required(ErrorMessage = "Delay is required.")]
+    public int RouteStopPointId { get; set; }
+    
+    /// <summary>
     /// Converts the DTO into a <see cref="TripCheckin"/> domain object.
     /// </summary>
     /// <returns>A <see cref="TripCheckin"/> object representing the DTO data.</returns>
@@ -51,7 +57,8 @@ public record TripCheckinDto
             TripId = this.TripId,
             StopPointId = this.StopPointId,
             CheckIn = this.CheckIn,
-            Delay = this.Delay
+            Delay = this.Delay,
+            RouteStopPointId = this.RouteStopPointId
         };
 
     }

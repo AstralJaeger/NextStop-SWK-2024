@@ -30,7 +30,8 @@ public class TripCheckinDao(IConnectionFactory connectionFactory) : ITripCheckin
             tripId: (int)row["trip_Id"],
             stopPointId: (int)row["stop_point_Id"],
             checkin: (DateTime)row["checkin_time"],
-            delay: (int)row["delay"]
+            delay: (int)row["delay"],
+            routeStopPointId: (int)row["routestoppoint_id"]
         ); 
 
     //**********************************************************************************
@@ -39,13 +40,14 @@ public class TripCheckinDao(IConnectionFactory connectionFactory) : ITripCheckin
     /// <inheritdoc />
     public async Task<int> InsertTripCheckinAsync(TripCheckin tripCheckIn)
     {
+        Console.WriteLine("InsertTripCheckinAsync");
         return await template.ExecuteAsync(
-            "insert into tripcheckin (id, trip_id, stop_point_id, checkin_time, delay) values (@tripCheckinId, @tripId, @stopPointId, @checkin, @delay)",
-            new QueryParameter("@tripCheckinId", tripCheckIn.Id),
+            "insert into tripcheckin (trip_id, stop_point_id, checkin_time, delay, routestoppoint_id) values (@tripId, @stopPointId, @checkin, @delay, @routeStopPointId)",
             new QueryParameter("@tripId", tripCheckIn.TripId),
             new QueryParameter("@stopPointId", tripCheckIn.StopPointId),
             new QueryParameter("@checkin", tripCheckIn.CheckIn),
-            new QueryParameter("@delay", tripCheckIn.Delay));
+            new QueryParameter("@delay", tripCheckIn.Delay),
+            new QueryParameter("@routeStopPointId", tripCheckIn.RouteStopPointId));
     }
 
     //**********************************************************************************
