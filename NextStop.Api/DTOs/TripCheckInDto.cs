@@ -62,4 +62,6 @@ public record TripCheckinDto
         };
 
     }
+    
 }
+

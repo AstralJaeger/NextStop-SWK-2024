@@ -169,4 +169,29 @@ public class TripCheckInController: ControllerBase
         
         return Ok(result.Select(r => r.ToTripCheckinDto()));
     }
+    
+    
+    //......................................................................
+
+    /// <summary>
+    /// Retrieves delay statistics for a specific trip.
+    /// </summary>
+    /// <param name="tripId">The unique identifier of the trip.</param>
+    /// <returns>
+    /// Returns the delay statistics for the specified trip, including average delay, 
+    /// punctuality percentage, and distribution of delays in different time ranges.
+    /// </returns>
+    /// <response code="200">Returns the delay statistics for the specified trip.</response>
+    /// <response code="404">If no delay statistics are found for the specified trip ID.</response>
+    [Produces("application/json", "text/plain")]
+    [HttpGet("delay-statistics/{tripId:int}")]
+    public async Task<ActionResult<TripDelayStatistics>> GetTripDelayStatistics(int tripId)
+    {
+        var statistics = await tripCheckInService.GetTripDelayStatisticsAsync(tripId);
+        if (statistics is null)
+        {
+            return NotFound($"No delay statistics found for trip ID {tripId}");
+        }
+        return Ok(statistics);
+    }
 }

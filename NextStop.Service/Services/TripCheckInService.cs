@@ -1,4 +1,5 @@
-﻿using NextStop.Common;
+﻿using NextStop.Api.DTOs;
+using NextStop.Common;
 using NextStop.Dal.Ado;
 using NextStop.Domain;
 using NextStop.Service.Interfaces;
@@ -70,14 +71,9 @@ public class TripCheckInService(ITripCheckinDao tripCheckinDao) : ITripCheckInSe
             throw new InvalidOperationException($"TripCheckin with ID {tripCheckin.Id} already exists.");
 
         }
-
-        // Schritt 1: RouteID basierend auf TripID abrufen
-        var routeId = await tripCheckinDao.GetRouteIdByTripIdAsync(tripCheckin.TripId);
-
-        // Schritt 2: Geplante Ankunftszeit basierend auf RouteID und StopPointID abrufen
-        var plannedArrivalTime = await tripCheckinDao.GetArrivalTimeByRouteAndStopPointAsync(routeId, tripCheckin.StopPointId);
-
-        // Schritt 3: Verspätung in Minuten berechnen
+        
+        var plannedArrivalTime = await tripCheckinDao.GetArrivalTimeByRouteStopPointAsync(tripCheckin.RouteStopPointId);
+        
         tripCheckin.Delay = (int)(tripCheckin.CheckIn - plannedArrivalTime).TotalMinutes;
         
         await DoInLockAsync(async () =>
@@ -161,5 +157,13 @@ public class TripCheckInService(ITripCheckinDao tripCheckinDao) : ITripCheckInSe
         {
             return tripCheckinDao.GetTripCheckinsByStopPointIdAsync(stopPointId);
         });
+    }
+    
+    //......................................................................
+
+    /// <inheritdoc />
+    public async Task<TripDelayStatistics?> GetTripDelayStatisticsAsync(int tripId)
+    {
+        return await tripCheckinDao.GetTripDelayStatisticsAsync(tripId);
     }
 }

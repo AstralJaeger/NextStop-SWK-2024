@@ -1,5 +1,6 @@
 ﻿using NextStop.Common;
 using System.Data;
+using NextStop.Api.DTOs;
 using NextStop.Dal.Interface;
 using NextStop.Domain;
 
@@ -33,7 +34,25 @@ public class TripCheckinDao(IConnectionFactory connectionFactory) : ITripCheckin
             delay: (int)row["delay"],
             routeStopPointId: (int)row["routestoppoint_id"]
         ); 
+    
+    
+    //......................................................................
 
+  
+    private TripDelayStatistics MapRowToTripDelayStatistics(IDataRecord row)
+    {
+        return new TripDelayStatistics
+        {
+            TripId = row.GetInt32(row.GetOrdinal("TripId")),
+            AverageDelay = row.GetDouble(row.GetOrdinal("AverageDelay")),
+            TotalStopPoints = row.GetInt32(row.GetOrdinal("TotalStopPoints")),
+            OnTimePercentage = row.GetDouble(row.GetOrdinal("OnTimePercentage")),
+            SlightlyLatePercentage = row.GetDouble(row.GetOrdinal("SlightlyLatePercentage")),
+            LatePercentage = row.GetDouble(row.GetOrdinal("LatePercentage")),
+            VeryLatePercentage = row.GetDouble(row.GetOrdinal("VeryLatePercentage"))
+        };
+    }
+    
     //**********************************************************************************
     //**********************************************************************************
 
@@ -108,22 +127,38 @@ public class TripCheckinDao(IConnectionFactory connectionFactory) : ITripCheckin
     //......................................................................
 
     /// <inheritdoc />
-    public async Task<double> GetAverageDelayForTripAsync(int tripId)
+    public async Task<TripDelayStatistics?> GetTripDelayStatisticsAsync(int tripId)
     {
-        throw new NotImplementedException();
+        return await template.QuerySingleAsync(
+            @"SELECT
+            t.trip_id AS TripId,
+            COALESCE(AVG(t.delay), 0) AS AverageDelay,
+            COUNT(DISTINCT t.stop_point_id) AS TotalStopPoints,
+            COALESCE(SUM(CASE WHEN t.delay < 2 THEN 1 ELSE 0 END) * 100.0 / COUNT(DISTINCT t.stop_point_id), 0) AS OnTimePercentage,
+            COALESCE(SUM(CASE WHEN t.delay BETWEEN 2 AND 5 THEN 1 ELSE 0 END) * 100.0 / COUNT(DISTINCT t.stop_point_id), 0) AS SlightlyLatePercentage,
+            COALESCE(SUM(CASE WHEN t.delay BETWEEN 5 AND 10 THEN 1 ELSE 0 END) * 100.0 / COUNT(DISTINCT t.stop_point_id), 0) AS LatePercentage,
+            COALESCE(SUM(CASE WHEN t.delay > 10 THEN 1 ELSE 0 END) * 100.0 / COUNT(DISTINCT t.stop_point_id), 0) AS VeryLatePercentage
+        FROM
+            tripcheckin t
+        WHERE
+            t.trip_id = @tripId
+        GROUP BY
+            t.trip_id;",
+            MapRowToTripDelayStatistics,
+            new QueryParameter("@tripId", tripId)
+        );
     }
     
 
     //......................................................................
 
     /// <inheritdoc />
-    public async Task<DateTime> GetArrivalTimeByRouteAndStopPointAsync(int routeId, int stopPointId)
+    public async Task<DateTime> GetArrivalTimeByRouteStopPointAsync(int routeStopPointId)
     {
         return await template.QuerySingleAsync(
-            "SELECT arrival_time FROM routestoppoint WHERE route_id = @routeId AND stop_point_id = @stopPointId",
+            "SELECT arrival_time FROM routestoppoint WHERE id = @routeStopPointId",
             row => (DateTime)row["arrival_time"],
-            new QueryParameter("@routeId", routeId),
-            new QueryParameter("@stopPointId", stopPointId)
+            new QueryParameter("@routeStopPointId", routeStopPointId)
         );
     }
     

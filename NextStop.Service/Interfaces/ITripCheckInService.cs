@@ -1,4 +1,5 @@
-﻿using NextStop.Domain;
+﻿using NextStop.Api.DTOs;
+using NextStop.Domain;
 
 namespace NextStop.Service.Interfaces;
 
@@ -58,6 +59,7 @@ public interface ITripCheckInService
     /// <returns>A <see cref="Task"/> representing the asynchronous operation, containing
     /// a collection of <see cref="TripCheckin"/> objects for the specified stop point.</returns>
     public Task<IEnumerable<TripCheckin>> GetTripCheckinsByStopPointIdAsync(int stopPointId);
+    
     //......................................................................
 
     /// <summary>
@@ -68,6 +70,8 @@ public interface ITripCheckInService
     /// a collection of <see cref="TripCheckin"/> objects with the specified check-in time.</returns>
     public Task<IEnumerable<TripCheckin>> GetTripCheckinsByCheckin(DateTime checkIn);
 
+    //......................................................................
+
     /// <summary>
     /// Checks if a trip check-in with the specified ID already exists.
     /// </summary>
@@ -75,4 +79,30 @@ public interface ITripCheckInService
     /// <returns><c>true</c> if the trip check-in exists; otherwise, <c>false</c>.</returns>
     Task<bool> TripCheckinAlreadyExists(int tripChekinId);
     
+    
+    //......................................................................
+
+    /// <summary>
+    /// Retrieves detailed delay statistics for a specific trip.
+    /// </summary>
+    /// <param name="tripId">The unique identifier of the trip.</param>
+    /// <returns>
+    /// A task representing the asynchronous operation. The task result contains a 
+    /// <see cref="TripDelayStatistics"/> object with the following details:
+    /// - Average delay across all recorded check-ins.
+    /// - Total number of distinct stop points.
+    /// - Percentage of stop points that were on time, slightly late, late, or very late.
+    /// Returns <c>null</c> if no data is found for the specified trip.
+    /// </returns>
+    /// <remarks>
+    /// The delay is categorized as follows:
+    /// - On time: Delay is less than 2 minutes.
+    /// - Slightly late: Delay is between 2 and 5 minutes.
+    /// - Late: Delay is between 5 and 10 minutes.
+    /// - Very late: Delay exceeds 10 minutes.
+    ///
+    /// The percentages are calculated based on the total number of distinct stop points associated with the trip.
+    /// </remarks>
+ 
+    Task<TripDelayStatistics?> GetTripDelayStatisticsAsync(int tripId);
 }

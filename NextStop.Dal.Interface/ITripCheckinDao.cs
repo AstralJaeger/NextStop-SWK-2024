@@ -1,4 +1,5 @@
-﻿using NextStop.Domain;
+﻿using NextStop.Api.DTOs;
+using NextStop.Domain;
 
 namespace NextStop.Common;
 
@@ -65,15 +66,14 @@ public interface ITripCheckinDao
     Task<IEnumerable<TripCheckin>> GetTripCheckinsByCheckin(DateTime checkIn);
 
     //----------------------------------------------------------------------------------
-    
+
     /// <summary>
     /// Retrieves the planned arrival time for a specific stop point on a specific route.
     /// </summary>
-    /// <param name="routeId">The ID of the route.</param>
-    /// <param name="stopPointId">The ID of the stop point.</param>
+    /// <param name="routeStopPointId">The ID of the route stop point.</param>
     /// <returns>The planned arrival time as a <see cref="DateTime"/>.</returns>
     /// <exception cref="InvalidOperationException">Thrown if no matching entry is found.</exception>
-    Task<DateTime> GetArrivalTimeByRouteAndStopPointAsync(int routeId, int stopPointId);
+    Task<DateTime> GetArrivalTimeByRouteStopPointAsync(int routeStopPointId);
     
     //----------------------------------------------------------------------------------
 
@@ -85,6 +85,31 @@ public interface ITripCheckinDao
     /// <exception cref="InvalidOperationException">Thrown if no matching trip is found.</exception>
     Task<int> GetRouteIdByTripIdAsync(int tripId);
     
-    //todo
-    Task<double> GetAverageDelayForTripAsync(int tripId);
+    //----------------------------------------------------------------------------------
+
+    /// <summary>
+    /// Retrieves detailed delay statistics for a specific trip.
+    /// </summary>
+    /// <param name="tripId">The unique identifier of the trip.</param>
+    /// <returns>
+    /// A task representing the asynchronous operation. The task result contains a 
+    /// <see cref="TripDelayStatistics"/> object with the following details:
+    /// - Average delay across all recorded check-ins.
+    /// - Total number of distinct stop points.
+    /// - Percentage of stop points that were on time, slightly late, late, or very late.
+    /// Returns <c>null</c> if no data is found for the specified trip.
+    /// </returns>
+    /// <remarks>
+    /// The delay is categorized as follows:
+    /// - On time: Delay is less than 2 minutes.
+    /// - Slightly late: Delay is between 2 and 5 minutes.
+    /// - Late: Delay is between 5 and 10 minutes.
+    /// - Very late: Delay exceeds 10 minutes.
+    ///
+    /// The percentages are calculated based on the total number of distinct stop points associated with the trip.
+    /// </remarks>
+    /// <exception cref="ArgumentException">
+    /// Thrown if the provided <paramref name="tripId"/> is not valid.
+    /// </exception>
+    Task<TripDelayStatistics?> GetTripDelayStatisticsAsync(int tripId);
 }
