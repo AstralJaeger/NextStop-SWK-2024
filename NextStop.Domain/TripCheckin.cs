@@ -8,7 +8,7 @@ public class TripCheckin
     /// <summary>
     /// Gets or sets the unique identifier for the trip check-in.
     /// </summary>
-    public int Id { get; set; }
+    public int Id { get; set; } 
 
     /// <summary>
     /// Gets or sets the identifier of the associated trip.
@@ -23,17 +23,30 @@ public class TripCheckin
     /// <summary>
     /// Gets or sets the check-in date and time.
     /// </summary>
-    public DateTime Checkin { get; set; }
-
+    public DateTime CheckIn { get; set; }
+    
     /// <summary>
-    /// Navigation property for accessing the associated trip.
+    /// Gets or sets the curren delay for the routestoppoint.
     /// </summary>
-    public required Trip Trip { get; set; }
-
+    public int Delay { get; set; }
+    
     /// <summary>
-    /// Navigation property for accessing the associated stop point.
+    /// Gets or sets the identifier of the route stop point where the check-in occurs.
     /// </summary>
-    public required StopPoint StopPoint { get; set; }
+    public int RouteStopPointId { get; set; }
 
-    public override string ToString() => $"ID: {Id}, Trip: {TripId}, StopPoint: {StopPointId}, Checkin: {Checkin}";
+
+    public TripCheckin(int id, int tripId, int stopPointId, DateTime checkin, int delay, int routeStopPointId)
+    {
+        Id = id;
+        TripId = tripId;
+        StopPointId = stopPointId;
+        CheckIn = checkin;
+        Delay = delay;
+        RouteStopPointId = routeStopPointId;
+    }
+    
+    public TripCheckin() {}
+
+    public override string ToString() => $"ID: {Id}, Trip: {TripId}, StopPoint: {StopPointId}, Checkin: {CheckIn}";
 }

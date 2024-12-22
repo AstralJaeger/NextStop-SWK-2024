@@ -1,11 +1,10 @@
 ﻿-- Check if the database objects exist before creating them
 DO $$
     BEGIN
-        
+        CREATE EXTENSION postgis;
         -- Create enumeration for holiday type
         CREATE TYPE holiday_type AS ENUM ('BankHoliday', 'SchoolVacation', 'NationalHoliday', 'ReligiousHoliday', 'Other');
-        
-        
+
         -- Create holiday table if it does not exist
         CREATE TABLE IF NOT EXISTS holiday (
             id SERIAL PRIMARY KEY,           -- Unique identifier for each holiday
@@ -40,7 +39,8 @@ DO $$
             stop_point_id INTEGER REFERENCES stoppoint(id),
             arrival_time TIMESTAMP NOT NULL,
             departure_time TIMESTAMP NOT NULL,
-            order_number INTEGER NOT NULL
+            order_number INTEGER NOT NULL,
+            valid_on INTEGER NOT NULL DEFAULT 127                                                  
         );
 
         -- Create trip table if it does not exist
@@ -55,10 +55,13 @@ DO $$
             id SERIAL PRIMARY KEY,
             trip_id INTEGER REFERENCES trip(id),
             stop_point_id INTEGER REFERENCES stoppoint(id),
-            checkin_time TIMESTAMP NOT NULL
+            routestoppoint_id INTEGER REFERENCES routestoppoint(id),
+            checkin_time TIMESTAMP NOT NULL,
+            delay INTEGER NOT NULL DEFAULT 0                                               
         );
 
------------------------------------------------------------------------------------------------------------------
+
+        -----------------------------------------------------------------------------------------------------------------
         -- Dummy Data
 
         -- Insert sample data into holiday table
@@ -135,7 +138,7 @@ DO $$
             ('Dauphinestraße', 'DauS', 48.2527207,14.3149927),
             ('Rädlerweg', 'RaeW', 48.2509847,14.3121717),
             ('Auwiesen', 'AuW', 48.2483885,14.3088239),
-
+        
             -- Stoppoints for Line 2 (which have not been added yet)
             ('Saporoshjestraße', 'SaS', 48.2525703,14.3238078),
             ('Ebelsberg', 'EeB', 48.2457603,14.327724),

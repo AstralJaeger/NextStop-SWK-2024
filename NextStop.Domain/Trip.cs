@@ -8,7 +8,7 @@ public class Trip
     /// <summary>
     /// Gets or sets the unique identifier for the trip.
     /// </summary>
-    public int Id { get; set; }
+    public int Id { get; set; } //todo change to Guid
 
     /// <summary>
     /// Gets or sets the identifier of the route that this trip follows.
@@ -19,7 +19,7 @@ public class Trip
     /// Gets or sets the identifier of the vehicle assigned to this trip.
     /// </summary>
     public int VehicleId { get; set; }
-
+    
     /// <summary>
     /// Navigation property for accessing the associated route.
     /// </summary>
@@ -43,4 +43,6 @@ public class Trip
     public override string ToString() => $"Id: {Id}, RouteId: {RouteId}, VehicleId: {VehicleId}";
     
     public string getTripChechIns() => string.Join(", ", TripCheckins.Select(t => t.ToString()));
+
+
 }

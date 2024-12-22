@@ -1,32 +1,120 @@
-﻿using NextStop.Dal.Interface;
+﻿using System.Data;
+using NextStop.Common;
+using NextStop.Dal.Interface;
 using NextStop.Domain;
 
 namespace NextStop.Dal.Ado;
 
-public class RouteDao : IRouteDao
+/// <summary>
+/// Data Access Object for managing Route-related database operations.
+/// </summary>
+public class RouteDao(IConnectionFactory connectionFactory) : IRouteDao
 {
-    public Task InsertAsync(Route route)
+
+    /// <summary>
+    /// An instance of <see cref="AdoTemplate"/> used to simplify database operations,
+    /// such as executing queries, retrieving data, and mapping results to objects.
+    /// </summary>
+    private readonly AdoTemplate template = new AdoTemplate(connectionFactory);
+    
+    //......................................................................
+
+    /// <summary>
+    /// Maps a database row to a <see cref="Route"/> object.
+    /// </summary>
+    /// <param name="row">The database row to map.</param>
+    /// <returns>A <see cref="Route"/> object containing the mapped data.</returns>
+    public static Route MapRowToRoute(IDataRecord row)
+        => new Route
+        {
+            Id = (int)row["id"],
+            Name = (string)row["name"],
+            ValidFrom = (DateTime)row["valid_from"],
+            ValidTo = (DateTime)row["valid_to"],
+            ValidOn = (int)row["valid_on"],
+        };
+    
+    //**********************************************************************************
+    //**********************************************************************************
+
+    /// <inheritdoc />
+
+    public async Task<int> InsertRouteAsync(Route route)
     {
-        throw new NotImplementedException();
+        return await template.QueryScalarAsync<int>(
+            @"INSERT INTO route (name, valid_from, valid_to, valid_on) 
+          VALUES (@name, @valid_from, @valid_to, @valid_on) 
+          RETURNING id;",
+            new QueryParameter("@name", route.Name),
+            new QueryParameter("@valid_from", route.ValidFrom),
+            new QueryParameter("@valid_to", route.ValidTo),
+            new QueryParameter("@valid_on", route.ValidOn)
+        );
     }
 
-    public Task UpdateAsync(Route route)
+    //**********************************************************************************
+    //**********************************************************************************
+
+    /// <inheritdoc />
+    public async Task<IEnumerable<Route>> GetAllRoutesAsync()
     {
-        throw new NotImplementedException();
+        return await template.QueryAsync(
+            "SELECT * FROM route",
+            MapRowToRoute);
     }
 
-    public Task DeleteAsync(int id)
+    //......................................................................
+
+    /// <inheritdoc />
+    public async Task<Route?> GetRouteByIdAsync(int id)
     {
-        throw new NotImplementedException();
+        return await template.QuerySingleAsync(
+            "SELECT * FROM route WHERE id = @id",
+            MapRowToRoute,
+            new QueryParameter("@id", id));
     }
 
-    public Task<Route> GetByIdAsync(int id)
+    //......................................................................
+
+    /// <inheritdoc />
+    public async Task<Route?> GetRouteByNameAsync(string name)
     {
-        throw new NotImplementedException();
+        return await template.QuerySingleAsync(
+            "SELECT * FROM route WHERE name = @name",
+            MapRowToRoute,
+            new QueryParameter("@name", name));
     }
 
-    public Task<List<Route>> GetAllAsync()
+    //......................................................................
+
+    /// <inheritdoc />
+    public async Task<IEnumerable<Route>> GetRouteByValidFromAsync(DateTime validFrom)
     {
-        throw new NotImplementedException();
+        return await template.QueryAsync(
+            "SELECT * FROM route WHERE valid_from >= @validFrom", 
+            MapRowToRoute, new QueryParameter("@validFrom", validFrom));
+    }
+
+    //......................................................................
+
+    /// <inheritdoc />
+    public async Task<IEnumerable<Route>> GetRouteByValidToAsync(DateTime validTo)
+    {
+        return await template.QueryAsync(
+            "SELECT * FROM route WHERE valid_to <= @validTo",
+            MapRowToRoute, 
+            new QueryParameter("@validTo", validTo));
+    }
+    
+    //......................................................................
+    
+    /// <inheritdoc />
+    public async Task<IEnumerable<Route>> GetRouteByStopPointsAsync(StopPoint point, DateTime time)
+    {
+        return await template.QueryAsync<Route>(
+            "SELECT route.id, route.name, route.valid_from, route.valid_to, route.valid_on FROM routestoppoint JOIN route ON routestoppoint.route_id = route.id WHERE routestoppoint.stop_point_id = 1 AND departure_time < @time",
+            MapRowToRoute,
+            new QueryParameter("@rspId", point.Id),
+            new QueryParameter("@time", time));
     }
 }

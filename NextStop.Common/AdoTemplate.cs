@@ -96,4 +96,31 @@ public class AdoTemplate(IConnectionFactory connectionFactory)
         // Executes the command asynchronously and returns the number of rows affected
         return await command.ExecuteNonQueryAsync();
     }
+    
+    
+    /// <summary>
+    /// Executes a SQL query that returns a single scalar value, such as an auto-generated ID.
+    /// </summary>
+    /// <typeparam name="T">The type of the scalar value to be returned (e.g., int, string, etc.).</typeparam>
+    /// <param name="sql">The SQL command to be executed.</param>
+    /// <param name="parameters">An optional list of <see cref="QueryParameter"/> objects used as SQL parameters.</param>
+    /// <returns>A <see cref="Task{T}"/> representing the scalar value returned by the query.</returns>
+    public async Task<T> QueryScalarAsync<T>(string sql, params QueryParameter[] parameters)
+    {
+
+        await using DbConnection connection = await connectionFactory.CreateConnectionAsync();
+        
+        await using DbCommand command = connection.CreateCommand();
+        command.CommandText = sql;
+        AddParameters(command, parameters);
+
+        object? result = await command.ExecuteScalarAsync();
+
+        if (result == null || result == DBNull.Value)
+        {
+            throw new InvalidOperationException("The query did not return a valid scalar value.");
+        }
+
+        return (T)Convert.ChangeType(result, typeof(T));
+    }
 }

@@ -8,7 +8,7 @@ public class RouteStopPoint
     /// <summary>
     /// Gets or sets the unique identifier for the route-stop point connection.
     /// </summary>
-    public int Id { get; set; }
+    public int Id { get; set; } //todo change to Guid
 
     /// <summary>
     /// Gets or sets the identifier of the associated stop point.
@@ -34,16 +34,20 @@ public class RouteStopPoint
     /// Gets or sets the order of the stop point within the route.
     /// </summary>
     public int Order { get; set; }
+    
+    public int ValidOn {get; set;}
 
-    /// <summary>
-    /// Navigation property for accessing the associated stop point.
-    /// </summary>
-    public required StopPoint? StopPoint { get; set; }
-
-    /// <summary>
-    /// Navigation property for accessing the associated route.
-    /// </summary>
-    public required Route Route { get; set; }
+    // /// <summary>
+    // /// Navigation property for accessing the associated stop point.
+    // /// </summary>
+    // public required StopPoint? StopPoint { get; set; }
+    //
+    // /// <summary>
+    // /// Navigation property for accessing the associated route.
+    // /// </summary>
+    // public required Route Route { get; set; }
 
     public override string ToString() => $"ID: {Id}, StopPointId: {StopPointId}, RouteId: {RouteId}, Order {Order}, ArrivalTime: {ArrivalTime}, DepartureTime: {DepartureTime}";
+    
+    public RouteStopPoint() {}
 }
