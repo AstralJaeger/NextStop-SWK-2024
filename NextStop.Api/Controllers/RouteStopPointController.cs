@@ -65,7 +65,26 @@ public class RouteStopPointController : ControllerBase
     
     //......................................................................
 
-    
+    /// <summary>
+    /// Creates a new route along with its associated route stop points.
+    /// </summary>
+    /// <param name="dto">The data transfer object containing route details and a list of associated route stop points.</param>
+    /// <returns>
+    /// Returns a <see cref="RouteDto"/> object containing the details of the newly created route 
+    /// and the number of associated stop points.
+    /// </returns>
+    /// <remarks>
+    /// This endpoint performs the following steps:
+    /// 1. Creates a new route using the provided route details.
+    /// 2. Retrieves the created route using its unique name.
+    /// 3. Creates and associates stop points with the route.
+    /// 4. Returns the newly created route details along with the number of stop points added.
+    /// 
+    /// If the route creation or retrieval fails, an HTTP 500 error is returned.
+    /// </remarks>
+    /// <response code="201">Returns the created route details and the count of associated stop points.</response>
+    /// <response code="400">If the request data is invalid.</response>
+    /// <response code="500">If the route creation or retrieval fails.</response>
     [HttpPost("create-with-stoppoints")]
     [Produces("application/json", "text/plain")]
     public async Task<ActionResult<RouteDto>> CreateRouteWithStopPoints(RouteWithStopPointsForCreationDto dto)
@@ -80,6 +99,7 @@ public class RouteStopPointController : ControllerBase
         await routeService.InsertRouteAsync(newRoute);
         var createdRoute = await routeService.GetRouteByNameAsync(dto.Name);
 
+        
         if (createdRoute is null)
         {
             return StatusCode(StatusCodes.Status500InternalServerError, "Failed to create route with stop points.");
