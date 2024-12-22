@@ -215,12 +215,19 @@ public class RouteStopPointDao(IConnectionFactory connectionFactory) :IRouteStop
     }
     
     //......................................................................
-
-    //todo 
+    
     /// <inheritdoc />
-    public Task<int> GetCurrentDelayForRouteStopPoint(int routeStopPointId)
+    public async Task<int> GetCurrentDelayForRouteStopPoint(int routeStopPointId)
     {
-        throw new NotImplementedException();
+        return await template.QuerySingleAsync<int>(
+            @"SELECT COALESCE(delay, 0) 
+          FROM tripcheckin 
+          WHERE routestoppoint_id = @routeStopPointId
+          ORDER BY checkin_time DESC
+          LIMIT 1;",
+            row => row.GetInt32(0),
+            new QueryParameter("@routeStopPointId", routeStopPointId)
+        );
     }
     
 
@@ -257,14 +264,6 @@ public class RouteStopPointDao(IConnectionFactory connectionFactory) :IRouteStop
             new QueryParameter("@id", id)
         );
     }
-
     
-    //todo
-        //GetCurrentDelayForRouteStopPoint
-        //GetArrivalTimeForRouteStopPointAsync
-        //GetConnectingStopPointAsync
-        //GetRouteBetweenStopPointsAsync
-        //GetRoutesByStopPointIdAsync
-        //IsSameRouteForRouteStopPointsAsync
     
 }

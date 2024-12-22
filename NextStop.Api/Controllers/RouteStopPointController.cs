@@ -326,6 +326,22 @@ public class RouteStopPointController : ControllerBase
         }
     }
     
+    //......................................................................
+    
+    /// <summary>
+    /// Retrieves the current delay for a specific route stop point.
+    /// </summary>
+    /// <param name="routeStopPointId">The unique identifier of the route stop point.</param>
+    /// <returns>
+    /// An <see cref="ActionResult{int}"/> representing the HTTP response.
+    /// The response contains the delay in minutes for the specified route stop point.
+    /// </returns>
+    [HttpGet("delay/{routeStopPointId:int}")]
+    public async Task<ActionResult<int>> GetCurrentDelay(int routeStopPointId)
+    {
+        var delay = await routeStopPointService.GetCurrentDelayForRouteStopPointAsync(routeStopPointId);
+        return Ok(delay);
+    }
     
     
 }

@@ -114,6 +114,18 @@ public interface IRouteStopPointService
     Task<bool> IsSameRouteForRouteStopPoints(string startStopPointName, string endStopPointName);
     
     
+    //......................................................................
+
+    /// <summary>
+    /// Retrieves the current delay for a specific route stop point.
+    /// </summary>
+    /// <param name="routeStopPointId">The unique identifier of the route stop point.</param>
+    /// <returns>
+    /// A <see cref="Task{int}"/> representing the asynchronous operation. 
+    /// The result contains the current delay in minutes for the specified route stop point.
+    /// </returns>
+    Task<int> GetCurrentDelayForRouteStopPointAsync(int routeStopPointId);
+
     //public Task<IEnumerable<RouteStopPoint>> GetRouteStopPointsByStopPointAsync(int stopPointId);
     // Task<IEnumerable<RouteStopPoint>> GetRouteBetweenStopPointsAsync(string startStopPointName, string endStopPointNam);
 

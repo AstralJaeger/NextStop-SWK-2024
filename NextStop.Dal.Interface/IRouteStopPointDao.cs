@@ -119,7 +119,14 @@ public interface IRouteStopPointDao
     
     //----------------------------------------------------------------------------------
 
-    
+    /// <summary>
+    /// Retrieves all route stop points associated with a specific stop point ID.
+    /// </summary>
+    /// <param name="stopPointId">The unique identifier of the stop point.</param>
+    /// <returns>
+    /// A <see cref="Task{IEnumerable{RouteStopPoint}}"/> representing the asynchronous operation.
+    /// The result contains a collection of <see cref="RouteStopPoint"/> objects associated with the specified stop point ID.
+    /// </returns>
     Task<IEnumerable<RouteStopPoint>> GetRoutesByStopPointIdAsync(int stopPointId);
 
    
@@ -131,13 +138,13 @@ public interface IRouteStopPointDao
     /// <param name="routeStopPointId">The ID of the RouteStopPoint.</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation,
     /// containing the current delay in minutes for the specified RouteStopPoint.</returns>
-
     Task<int> GetCurrentDelayForRouteStopPoint(int routeStopPointId);
     
-    //Task<IEnumerable<RouteStopPoint>> GetRouteBetweenStopPointsAsync(int startStopPointId, int endStopPointId);
+   
 
     //----------------------------------------------------------------------------------
 
     //Task<RouteStopPoint?> GetConnectingStopPointAsync()
+    //Task<IEnumerable<RouteStopPoint>> GetRouteBetweenStopPointsAsync(int startStopPointId, int endStopPointId);
 
 }

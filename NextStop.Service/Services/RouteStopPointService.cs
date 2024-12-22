@@ -203,6 +203,17 @@ public class RouteStopPointService(IRouteStopPointDao routeStopPointDao, IStopPo
                 routeStopPointDao.IsSameRouteForRouteStopPoints(startStopPoint.Id, endStopPoint.Id));
         });
     }
+    
+    
+    //......................................................................
 
+    /// <inheritdoc />
+    public async Task<int> GetCurrentDelayForRouteStopPointAsync(int routeStopPointId)
+    {
+        return await await RunInLockAsync(() =>
+        {
+            return routeStopPointDao.GetCurrentDelayForRouteStopPoint(routeStopPointId);
+        });
+    }
 
 }
