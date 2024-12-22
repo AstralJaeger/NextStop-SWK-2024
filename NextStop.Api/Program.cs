@@ -1,23 +1,14 @@
-using System.Reflection;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using Grafana.OpenTelemetry;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using NextStop.Api;
 using NextStop.Common;
 using NextStop.Dal.Ado;
 using NextStop.Dal.Interface;
 using NextStop.Service;
 using NextStop.Service.Interfaces;
 using NextStop.Service.Services;
-using OpenTelemetry.Logs;
-using OpenTelemetry.Metrics;
-using OpenTelemetry.Resources;
-using OpenTelemetry.Trace;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -45,6 +36,8 @@ builder.Services.AddScoped<ITripCheckinDao, TripCheckinDao>();
 builder.Services.AddScoped<ITripService, TripService>();
 builder.Services.AddScoped<ITripDao, TripDao>();
 
+builder.Services.AddScoped<IRoutingService, RoutingService>();
+
 builder.Services.AddControllers(options => options.ReturnHttpNotAcceptable = true)
     .AddJsonOptions(options =>
         {
@@ -56,23 +49,6 @@ builder.Services.AddControllers(options => options.ReturnHttpNotAcceptable = tru
             // Serialisiert Enums als Strings (z. B. `Rating.A` wird zu "A").
         })
     .AddXmlDataContractSerializerFormatters();
-
-builder.Services.AddOpenTelemetry()
-    .WithTracing(configure =>
-    {
-        configure.UseGrafana()
-            .AddConsoleExporter();
-    })
-    .WithMetrics(configure =>
-    {
-        configure.UseGrafana()
-            .AddConsoleExporter();
-    });
-builder.Logging.AddOpenTelemetry(options =>
-{
-    options.UseGrafana()
-        .AddConsoleExporter();
-});
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

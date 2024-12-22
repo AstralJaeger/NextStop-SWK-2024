@@ -9,12 +9,10 @@ static class Program
 {
     static async Task Main(string[] args)
     {
-        IConfiguration configuration = ConfigurationUtil.GetConfiguration();
-        IConnectionFactory connectionFactory =
-            DefaultConnectionFactory.FromConfiguration(configuration,
-                "PersonDbConnection", "ProviderName");
-        
-        
-        
+        Console.WriteLine("Hello World!");
+        // IConfiguration configuration = ConfigurationUtil.GetConfiguration();
+        // IConnectionFactory connectionFactory =
+        //     DefaultConnectionFactory.FromConfiguration(configuration,
+        //         "PersonDbConnection", "ProviderName");
     }
 }

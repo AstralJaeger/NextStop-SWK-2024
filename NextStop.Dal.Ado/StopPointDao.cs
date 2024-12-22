@@ -69,7 +69,6 @@ public class StopPointDao (IConnectionFactory connectionFactory): IStopPointDao
             "select * from stoppoint where id=@spId", 
             MapRowToStopPoint, 
             new QueryParameter("@spId", id));
-
     }
     //......................................................................
 

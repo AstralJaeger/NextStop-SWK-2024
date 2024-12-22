@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using NextStop.Domain;
 
 namespace NextStop.Api.Controllers;
 
@@ -40,6 +41,12 @@ public static class StatusInfo
         Detail = $"Stoppoint with ID '{stopPointId}' already exists"
     };
 
+    public static object? StopPointIDNotFound(string target, int stopPointId) => new ProblemDetails
+    {
+        Title = "No stoppoint found",
+        Detail = $"Stoppoint for {target} with ID '{stopPointId}' not found"
+    };
+    
     public static object? StopPointNotFound(double longitude, double latitude, double radius) => new ProblemDetails
     {
         Title = "No stoppoint found",
@@ -141,5 +148,11 @@ public static class StatusInfo
     {
         Title = "Conflicting tripCheckin IDs", 
         Detail = $"TripCheckin with ID '{tripCheckinId}' already exists"
+    };
+
+    public static object? NoConnectionFound(int startPoint, int destinationPoint, DateTime time) => new ProblemDetails
+    {
+        Title = "No connection found",
+        Detail = $"No connection found between {startPoint} and {destinationPoint} at {time}"
     };
 }

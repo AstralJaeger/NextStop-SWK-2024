@@ -32,7 +32,7 @@ public class RouteDao(IConnectionFactory connectionFactory) : IRouteDao
             ValidFrom = (DateTime)row["valid_from"],
             ValidTo = (DateTime)row["valid_to"],
             ValidOn = (int)row["valid_on"],
-            };
+        };
     
     //**********************************************************************************
     //**********************************************************************************
@@ -106,4 +106,15 @@ public class RouteDao(IConnectionFactory connectionFactory) : IRouteDao
             new QueryParameter("@validTo", validTo));
     }
     
+    //......................................................................
+    
+    /// <inheritdoc />
+    public async Task<IEnumerable<Route>> GetRouteByStopPointsAsync(StopPoint point, DateTime time)
+    {
+        return await template.QueryAsync<Route>(
+            "SELECT route.id, route.name, route.valid_from, route.valid_to, route.valid_on FROM routestoppoint JOIN route ON routestoppoint.route_id = route.id WHERE routestoppoint.stop_point_id = 1 AND departure_time < @time",
+            MapRowToRoute,
+            new QueryParameter("@rspId", point.Id),
+            new QueryParameter("@time", time));
+    }
 }

@@ -3,7 +3,7 @@ DO $$
     BEGIN
         CREATE EXTENSION postgis;
         -- Create enumeration for holiday type
-        -- CREATE TYPE holiday_type AS ENUM ('BankHoliday', 'SchoolVacation', 'NationalHoliday', 'ReligiousHoliday', 'Other');
+        CREATE TYPE holiday_type AS ENUM ('BankHoliday', 'SchoolVacation', 'NationalHoliday', 'ReligiousHoliday', 'Other');
 
         -- Create holiday table if it does not exist
         CREATE TABLE IF NOT EXISTS holiday (
@@ -138,7 +138,7 @@ DO $$
             ('Dauphinestraße', 'DauS', 48.2527207,14.3149927),
             ('Rädlerweg', 'RaeW', 48.2509847,14.3121717),
             ('Auwiesen', 'AuW', 48.2483885,14.3088239),
-
+        
             -- Stoppoints for Line 2 (which have not been added yet)
             ('Saporoshjestraße', 'SaS', 48.2525703,14.3238078),
             ('Ebelsberg', 'EeB', 48.2457603,14.327724),

@@ -69,6 +69,14 @@ public interface IRouteDao
     /// </returns>
     Task<IEnumerable<Route>> GetRouteByValidToAsync(DateTime validTo);
     
-    
-    //Task<Task<IEnumerable<Route>>> GetRoutesByValidityDayAsync(int validityDay);
+    //----------------------------------------------------------------------------------
+
+    /// <summary>
+    /// Asynchronously retrieves routes that are valid until a specific date.
+    /// </summary>
+    /// <param name="validTo">The ending date for validity.</param>
+    /// <returns>
+    /// A <see cref="Task{TResult}"/> representing the asynchronous operation, containing a collection of routes valid until the specified date.
+    /// </returns>
+    public Task<IEnumerable<Route>> GetRouteByStopPointsAsync(StopPoint point, DateTime time);
 }
