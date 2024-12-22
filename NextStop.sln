@@ -16,6 +16,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NextStop.Service", "NextSto
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NextStop.Api", "NextStop.Api\NextStop.Api.csproj", "{A8116033-AAA7-4D1A-BFF4-58B5D93BCFD0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestDataGenerator", "TestDataGenerator\TestDataGenerator.csproj", "{6F3E639C-FD16-4A48-8617-3FAD8FF33430}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Routing", "Routing\Routing.csproj", "{0ECC5534-BEA3-4BB2-AA9E-B3C98CD9BAF9}"
 EndProject
 Global
