@@ -9,10 +9,13 @@ public interface IRouteDao
 {
     
     /// <summary>
-    /// Asynchronously inserts a new route into the database.
+    ///  Inserts a new route into the database and retrieves the generated unique identifier (ID).
     /// </summary>
     /// <param name="route">The route object to insert.</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>
+    /// A <see cref="Task{int}"/> representing the asynchronous operation, returning the unique identifier (ID) 
+    /// of the newly created route.
+    /// </returns>
     Task<int> InsertRouteAsync(Route route);
     
     //**********************************************************************************

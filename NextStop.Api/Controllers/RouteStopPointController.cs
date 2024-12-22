@@ -93,37 +93,34 @@ public class RouteStopPointController : ControllerBase
         {
             return BadRequest(ModelState);
         }
-
-        // 1. Route erstellen
+        
         var newRoute = dto.ToRoute();
-        await routeService.InsertRouteAsync(newRoute);
-        var createdRoute = await routeService.GetRouteByNameAsync(dto.Name);
+        var routeId = await routeService.InsertRouteAsync(newRoute);
 
         
-        if (createdRoute is null)
+        if (routeId == 0)
         {
-            return StatusCode(StatusCodes.Status500InternalServerError, "Failed to create route with stop points.");
+            return StatusCode(StatusCodes.Status500InternalServerError, "Failed to create route.");
         }
         
-        // 2. RouteStopPoints erstellen
-        var routeStopPoints = dto.ToRouteStopPoints(createdRoute.Id);
+        var routeStopPoints = dto.ToRouteStopPoints(routeId);
 
         foreach (var stopPoint in routeStopPoints)
         {
             await routeStopPointService.InsertRouteStopPointAsync(stopPoint);
         }
-
-        // 3. Anzahl der hinzugefügten StopPoints abrufen
-        var stopPointCount = (await routeStopPointService.GetRouteStopPointsByRouteIdAsync(createdRoute.Id)).Count();
+        
+        var stopPointCount = (await routeStopPointService.GetRouteStopPointsByRouteIdAsync(routeId)).Count();
 
         return CreatedAtAction(
             actionName: "GetRouteById",
             controllerName: "Route",
-            routeValues: new { id = createdRoute.Id },
+            routeValues: new { id = routeId },
             value: new
             {
                 Route = newRoute.ToRouteDto(),
-                StopPointCount = stopPointCount
+                StopPointCount = stopPointCount,
+                newRouteId = routeId
             }
         );
     }

@@ -38,14 +38,18 @@ public class RouteDao(IConnectionFactory connectionFactory) : IRouteDao
     //**********************************************************************************
 
     /// <inheritdoc />
+
     public async Task<int> InsertRouteAsync(Route route)
     {
-        return await template.ExecuteAsync(
-            "INSERT INTO route (name, valid_from, valid_to, valid_on) VALUES (@name, @valid_from, @valid_to, @valid_on)",
+        return await template.QueryScalarAsync<int>(
+            @"INSERT INTO route (name, valid_from, valid_to, valid_on) 
+          VALUES (@name, @valid_from, @valid_to, @valid_on) 
+          RETURNING id;",
             new QueryParameter("@name", route.Name),
             new QueryParameter("@valid_from", route.ValidFrom),
             new QueryParameter("@valid_to", route.ValidTo),
-            new QueryParameter("@valid_on", route.ValidOn));
+            new QueryParameter("@valid_on", route.ValidOn)
+        );
     }
 
     //**********************************************************************************

@@ -39,7 +39,7 @@ public class RouteController : ControllerBase
     /// <returns>The created route as a DTO.</returns>
     [HttpPost]
     [Produces("application/json", "text/plain")]
-    public async Task<ActionResult> InsertRoute(RouteForCreationDto routeDto)
+    public async Task<ActionResult<RouteDto>> InsertRoute(RouteForCreationDto routeDto)
     {
         if (!ModelState.IsValid)
         {
@@ -52,7 +52,9 @@ public class RouteController : ControllerBase
         }
             
         var newRoute = routeDto.ToRoute();
-        await routeService.InsertRouteAsync(newRoute);
+        var generatedId = await routeService.InsertRouteAsync(newRoute);
+        newRoute.Id = generatedId;
+        
         return CreatedAtAction(
             actionName: nameof(GetRouteById), 
             routeValues: new { id = newRoute.Id }, 

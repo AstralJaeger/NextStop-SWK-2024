@@ -13,11 +13,14 @@ public interface IRouteService
     //**********************************************************************************
 
     /// <summary>
-    /// Inserts a new route into the system.
+    ///  Inserts a new route into the database and retrieves the generated unique identifier (ID).
     /// </summary>
     /// <param name="route">The <see cref="Route"/> object to insert.</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    Task InsertRouteAsync(Route route);
+    /// <returns>
+    /// A <see cref="Task{int}"/> representing the asynchronous operation, returning the unique identifier (ID) 
+    /// of the newly created route.
+    /// </returns>
+    Task<int> InsertRouteAsync(Route route);
     
     //**********************************************************************************
     // READ-Methods

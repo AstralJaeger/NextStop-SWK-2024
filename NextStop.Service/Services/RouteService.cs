@@ -56,26 +56,46 @@ public class RouteService(IRouteDao routeDao) : IRouteService
         }
     }
     
+    //......................................................................
+    
+    /// <summary>
+    /// Executes an asynchronous integer-returning function in a thread-safe manner.
+    /// </summary>
+    /// <param name="func">The asynchronous function that returns an integer result.</param>
+    /// <returns>The result of the asynchronous function.</returns>
+    private static async Task<int> RunInsertInLockAsync(Func<Task<int>> func)
+    {
+        await semaphore.WaitAsync();
+        try
+        {
+            return await func(); // Die asynchrone Methode korrekt aufrufen und das Ergebnis zurückgeben
+        }
+        finally
+        {
+            semaphore.Release();
+        }
+    }
     
     //**********************************************************************************
     // CREATE-Methods
     //**********************************************************************************
 
     /// <inheritdoc />
-    public async Task InsertRouteAsync(Route route)
+    public async Task<int> InsertRouteAsync(Route route)
     {
         ArgumentNullException.ThrowIfNull(route);
 
 
-        await DoInLockAsync(async () =>
+        return await RunInsertInLockAsync(async () =>
         {
             try
             {
-                await routeDao.InsertRouteAsync(route);
+                return await routeDao.InsertRouteAsync(route);
             }
             catch (Exception e)
             {
                 Console.WriteLine($"Could not insert route: {e.Message}");
+                throw;
             }
         });
     }
