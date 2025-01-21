@@ -13,5 +13,6 @@
 
     <ItemGroup>
       <ProjectReference Include="..\NextStop.Dal.Ado\NextStop.Dal.Ado.csproj" />
+      <ProjectReference Include="..\NextStop.Routing\NextStop.Routing.csproj" />
     </ItemGroup>
 </Project>

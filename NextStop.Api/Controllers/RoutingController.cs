@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using NextStop.Api.Mappers;
 using NextStop.Dal.Interface;
-using NextStop.Service.Services;
 using Routing;
 
 namespace NextStop.Api.Controllers;
