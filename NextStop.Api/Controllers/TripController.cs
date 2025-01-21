@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using NextStop.Api.DTOs;
 using NextStop.Api.Mappers;
 using NextStop.Domain;
@@ -40,6 +41,7 @@ public class TripController: ControllerBase
     /// <returns>The created trip as a DTO.</returns>
     [HttpPost]
     [Produces("application/json", "text/plain")]
+    [Authorize(Roles = "admin")]
     public async Task<ActionResult<TripDto>> InsertTrip(TripDto tripDto)
     {
         if (!ModelState.IsValid)
@@ -133,6 +135,4 @@ public class TripController: ControllerBase
 
         return Ok(result.Select(r => r.ToTripDto()));
     }
-    
-
 }

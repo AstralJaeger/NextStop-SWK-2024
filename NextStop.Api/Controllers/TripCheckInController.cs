@@ -42,8 +42,8 @@ public class TripCheckInController: ControllerBase
     /// <param name="tripCheckinDto">The data transfer object for creating a trip check-in.</param>
     /// <returns>The created trip check-in as a DTO.</returns>
     [HttpPost]
-    //[Authorize(Roles = "admin")]
     [Produces("application/json", "text/plain")]
+    [Authorize(Roles = "admin")]
     public async Task<ActionResult<TripCheckinDto>> InsertTripChekin(TripCheckinDto tripCheckinDto)
 
     {
@@ -78,6 +78,7 @@ public class TripCheckInController: ControllerBase
     /// </summary>
     /// <returns>A collection of all trip check-ins as DTOs.</returns>
     [HttpGet]
+    [Authorize(Roles = "admin")]
     public async Task<ActionResult> GetAllTripCheckIns()
     {
         var result = await tripCheckInService.GetAllTripCheckinsAsync();
@@ -92,6 +93,7 @@ public class TripCheckInController: ControllerBase
     /// <param name="id">The unique ID of the trip check-in.</param>
     /// <returns>The trip check-in as a DTO, or a 404 status if not found.</returns>
     [HttpGet("by-id/{id:int}")]
+    [Authorize(Roles = "admin")]
     public async Task<ActionResult> GetTripCheckInById(int id)
     {
         var result = await tripCheckInService.GetTripCheckinByIdAsync(id);
@@ -111,6 +113,7 @@ public class TripCheckInController: ControllerBase
     /// <param name="tripId">The ID of the trip.</param>
     /// <returns>A collection of trip check-ins as DTOs, or a 404 status if no check-ins are found.</returns>
     [HttpGet("by-tripId/{tripId:int}")]
+    [Authorize(Roles = "admin")]
     public async Task<ActionResult> GetTripChecksInsByTripId(int tripId)
     {
         var result = await tripCheckInService.GetTripCheckinsByTripIdAsync(tripId);
@@ -130,6 +133,7 @@ public class TripCheckInController: ControllerBase
     /// <param name="stopPointId">The ID of the stop point.</param>
     /// <returns>A collection of trip check-ins as DTOs, or a 404 status if no check-ins are found.</returns>
     [HttpGet("by-stopPointId/{stopPointId:int}")]
+    [Authorize(Roles = "admin")]
     public async Task<ActionResult> GetTripCheckInsByStopPointId(int stopPointId)
     {
         var result = await tripCheckInService.GetTripCheckinsByStopPointIdAsync(stopPointId);
@@ -149,6 +153,7 @@ public class TripCheckInController: ControllerBase
     /// <param name="checkin">The check-in date to filter by.</param>
     /// <returns>A collection of trip check-ins as DTOs, or a 404 status if no check-ins are found.</returns>
     [HttpGet("by-checkin/{checkin}")]
+    [Authorize(Roles = "admin")]
     public async Task<ActionResult> GetTripCheckInsByCheckin(string checkin)
     {
         if (!DateTime.TryParseExact(checkin,

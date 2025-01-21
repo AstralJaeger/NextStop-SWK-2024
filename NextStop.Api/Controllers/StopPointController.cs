@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using NextStop.Api.DTOs;
 using NextStop.Api.Mappers;
 using NextStop.Domain;
@@ -38,6 +39,7 @@ public class StopPointController: ControllerBase
     /// <param name="stopPointDto">The data for creating a new stop point.</param>
     /// <returns>The created stop point as a DTO.</returns>
     [HttpPost]
+    [Authorize(Roles = "admin")]
     [Produces("application/json", "text/plain")]
     public async Task<ActionResult<StopPointDto>> InsertStopPoint(StopPointForCreationDto stopPointDto)
     {
@@ -75,7 +77,7 @@ public class StopPointController: ControllerBase
     }
 
     //......................................................................
-
+    
     /// <summary>
     /// Retrieves a stop point by its unique ID.
     /// </summary>
@@ -181,7 +183,7 @@ public class StopPointController: ControllerBase
     /// <param name="longitude">The longitude of the location.</param>
     /// <param name="radius">The latitude of the location.</param>
     /// <returns>A collection of routes as DTOs, or a 404 status if no routes are found.</returns>
-    [HttpGet("by-coordinates")]
+    [HttpGet("by-coordinates/")]
     public async Task<ActionResult> GetStopPointByCoordinate([FromQuery] double longitude, [FromQuery] double latitude, [FromQuery] double radius)
     {
         if (latitude < -90 || latitude > 90 || longitude < -180 || longitude > 180)
@@ -189,21 +191,38 @@ public class StopPointController: ControllerBase
             return BadRequest("Invalid latitude or longitude values.");
         }
 
-        if (radius < 100 && radius > 10000)
+        if (radius < 100 && radius > 10_000)
         {
-            return BadRequest("Radius must be between 100 and 1000 meters");
+            return BadRequest("Radius must be between 100 and 10_000 meters");
         }
         
-        var stoppoints = await stopPointService.GetStopPointByCoordinatesAsync(longitude, latitude, radius);
+        var stoppoints = await stopPointService.GetStopPointByCoordinatesAsync(latitude, longitude, radius);
 
         if (!stoppoints.Any())
         {
-            return NotFound(StatusInfo.StopPointNotFound(longitude, latitude, radius));
+            return NotFound(StatusInfo.StopPointNotFound(latitude, longitude, radius));
         }
 
         return Ok(stoppoints.Select(r => r.ToStopPointDto()));
     }
 
+    /// <summary>
+    /// Retrieves all stoppoints near the location.
+    /// </summary>
+    /// <param name="q">The query string</param>
+    /// <returns>A collection of stoppoint's as DTOs, or a 404 status if no stoppoints are found.</returns>
+    [HttpGet("by-query/")]
+    public async Task<ActionResult> GetStopPointByCoordinate([FromQuery] string q)
+    {
+        var stoppoints = await stopPointService.QueryStopPointAsync(q);
+
+        if (!stoppoints.Any())
+        {
+            return NotFound(StatusInfo.StopPointNoResults(q));
+        }
+
+        return Ok(stoppoints.Select(r => r.ToStopPointDto()));
+    }
     
     //**********************************************************************************
     //UPDATE-Methods
@@ -216,6 +235,7 @@ public class StopPointController: ControllerBase
     /// <param name="stopPointDto">The data for updating the stop point.</param>
     /// <returns>A 204 No Content response if successful, or a 404 status if the stop point is not found.</returns>
     [HttpPut("update/{stopPointId:int}")]
+    [Authorize(Roles = "admin")]
     public async Task<ActionResult> UpdateStopPoint(int stopPointId, StopPointForUpdateDto stopPointDto)
     {
         var existingStopPoint = await stopPointService.GetStopPointByIdAsync(stopPointId);
@@ -241,6 +261,7 @@ public class StopPointController: ControllerBase
     /// <param name="id">The unique ID of the stop point to delete.</param>
     /// <returns>A 204 No Content response if successful, or a 404 status if the stop point is not found.</returns>
     [HttpDelete("delete/{id:int}")]
+    [Authorize(Roles = "admin")]
     public async Task<ActionResult> DeleteStopPoint(int id)
     {
         if (await stopPointService.DeleteStopPointAsync(id))

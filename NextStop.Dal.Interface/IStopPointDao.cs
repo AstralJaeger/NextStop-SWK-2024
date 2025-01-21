@@ -86,6 +86,22 @@ public interface IStopPointDao
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     Task<bool> DeleteStopPointAsync(int id);
 
+    //**********************************************************************************
+    //**********************************************************************************
+    
+    /// <summary>
+    /// Asynchronously queries all stoppoints with in the radius of the 
+    /// </summary>
+    /// <param name="latitude">the latitude</param>
+    /// <param name="longitude">the longitude</param>
+    /// <param name="radius">the radius in meters</param>
+    /// <returns></returns>
+    Task<IEnumerable<StopPoint>> GetStopPointByCoordinates(double latitude, double longitude, double radius);
 
-    Task<IEnumerable<StopPoint>> GetStopPointByCoordinates(double longitude, double latitude, double radius);
+    /// <summary>
+    /// Asynchronously queries all stoppoints that matches with the query
+    /// </summary>
+    /// <param name="query">the query string</param>
+    /// <returns></returns>
+    Task<IEnumerable<StopPoint>> QueryStopPointAsync(string query);
 }

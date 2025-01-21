@@ -114,9 +114,9 @@ builder.Services.AddSwaggerGen(c =>
 
 var app = builder.Build();
 app.UseHttpsRedirection();
+app.UseCors(allowSpecificOriginPolicy);
 app.UseAuthentication();
 app.UseAuthorization();
-app.UseCors(allowSpecificOriginPolicy);
 app.MapControllers();
 
 // Configure the HTTP request pipeline.

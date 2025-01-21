@@ -138,11 +138,15 @@ public class StopPointDao (IConnectionFactory connectionFactory): IStopPointDao
             new QueryParameter("@id", id)
         ) == 1;
     }
+    
+    //**********************************************************************************
+    //**********************************************************************************
 
-    public async Task<IEnumerable<StopPoint>> GetStopPointByCoordinates(double longitude, double latitude, double radius)
+    /// <inheritdoc />
+    public async Task<IEnumerable<StopPoint>> GetStopPointByCoordinates(double latitude, double longitude, double radius)
     {
         return await template.QueryAsync(
-            "SELECT id, name, latitude, longitude FROM stoppoint WHERE 6371000 * 2 * ASIN(SQRT(POWER(SIN(RADIANS(latitude - @latitude) / 2), 2) + COS(RADIANS(@latitude)) * COS(RADIANS(latitude)) * POWER(SIN(RADIANS(longitude - @longitude) / 2), 2))) <= @radius;",
+            "SELECT id, name, short_name, latitude, longitude, ST_Distance(geom, ST_SetSRID(ST_MakePoint(@longitude, @latitude), 4326)) AS distance FROM stoppoint WHERE ST_DWithin(geom, ST_SetSRID(ST_MakePoint(@longitude, @latitude), 4326), @radius) ORDER BY distance ASC",
             StopPointDao.MapRowToStopPoint,
             new QueryParameter("@latitude", latitude),
             new QueryParameter("@longitude", longitude),
@@ -151,6 +155,13 @@ public class StopPointDao (IConnectionFactory connectionFactory): IStopPointDao
     }
 
     //......................................................................
-
-   
+    
+    public async Task<IEnumerable<StopPoint>> QueryStopPointAsync(string query)
+    {
+        return await template.QueryAsync(
+            "SELECT id, name, short_name, latitude, longitude FROM stoppoint WHERE tsv_name @@ to_tsquery('english', @query || ':*')",
+                StopPointDao.MapRowToStopPoint,
+                new QueryParameter("@query", query)
+            );
+    }
 }

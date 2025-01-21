@@ -85,6 +85,16 @@ public interface IStopPointService
     //......................................................................
 
     /// <summary>
+    /// Retrieves all stoppoints matching the query.
+    /// </summary>
+    /// <param name="stopPointId">The unique ID of the stop point.</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation,
+    /// containing a collection of <see cref="Route"/> objects.</returns>
+    public Task<IEnumerable<StopPoint>> QueryStopPointAsync(string query);
+    
+    //......................................................................
+
+    /// <summary>
     /// Checks if a stop point already exists in the system.
     /// </summary>
     /// <param name="id">The unique ID of the stop point to check.</param>

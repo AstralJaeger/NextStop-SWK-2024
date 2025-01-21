@@ -1,10 +1,15 @@
 ﻿-- Check if the database objects exist before creating them
 DO $$
     BEGIN
-        CREATE EXTENSION postgis;
-        -- Create enumeration for holiday type
-        CREATE TYPE holiday_type AS ENUM ('BankHoliday', 'SchoolVacation', 'NationalHoliday', 'ReligiousHoliday', 'Other');
 
+        -- Ensure PostGIS extension is enabled
+        CREATE EXTENSION IF NOT EXISTS postgis;
+        
+        -- Create enumeration for holiday type
+        IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'holiday_type') THEN
+            CREATE TYPE holiday_type AS ENUM ('BankHoliday', 'SchoolVacation', 'NationalHoliday', 'ReligiousHoliday', 'Other');
+        END IF;
+        
         -- Create holiday table if it does not exist
         CREATE TABLE IF NOT EXISTS holiday (
             id SERIAL PRIMARY KEY,           -- Unique identifier for each holiday
@@ -25,13 +30,21 @@ DO $$
 
         -- Create stoppoint table if it does not exist
         CREATE TABLE IF NOT EXISTS stoppoint (
-            id SERIAL PRIMARY KEY,
-            name VARCHAR(255) NOT NULL,
-            short_name VARCHAR(100) NOT NULL,
-            latitude FLOAT NOT NULL,
-            longitude FLOAT NOT NULL
+             id SERIAL PRIMARY KEY,
+             name VARCHAR(255) NOT NULL,
+             short_name VARCHAR(100) NOT NULL,
+             latitude DOUBLE PRECISION NOT NULL ,
+             longitude DOUBLE PRECISION NOT NULL,
+             tsv_name tsvector GENERATED ALWAYS AS (to_tsvector('pg_catalog.german', name)) STORED, -- Full-text search vector for name https://dev.to/nightbird07/full-text-search-in-postgresql-a-comprehensive-guide-3kcn
+             geom geography(Point, 4326) GENERATED ALWAYS AS (ST_SetSRID(ST_MakePoint(longitude, latitude), 4326)) STORED -- PostGIS geometry column for spatial queries
         );
 
+        -- Create an index on the tsv_name column for full-text search
+        CREATE INDEX stoppoint_tsv_name_idx ON stoppoint USING gin(tsv_name);
+
+        -- Create a spatial index on the geom column for GIS queries
+        CREATE INDEX stoppoint_geom_idx ON stoppoint USING gist(geom);
+        
         -- Create routestoppoint table if it does not exist
         CREATE TABLE IF NOT EXISTS routestoppoint (
             id SERIAL PRIMARY KEY,
@@ -80,7 +93,7 @@ DO $$
             ('Sommerferien', '2025-07-05', '2025-08-07', 'SchoolVacation')
         ON CONFLICT DO NOTHING;
 
--- Insert sample data into route table
+        -- Insert sample data into route table
         INSERT INTO route (name, valid_from, valid_to, valid_on) VALUES
             ('Linie 1-1', '2024-01-01', '2024-12-31', 62),
             ('Linie 1-2', '2024-01-01', '2024-12-31', 62),
@@ -99,7 +112,7 @@ DO $$
             -- ('Red', '2024-08-08', '2025-11-05', 85)     -- 85 (0b1010101) für Mo, Mi, Fr, So
         ON CONFLICT DO NOTHING;
 
--- Insert sample data into stoppoint table
+        -- Insert sample data into stoppoint table
         INSERT INTO stoppoint (name, short_name, latitude, longitude) VALUES
             -- Stop Points for Line 1
             ('JKU | Universität', 'JKU', 48.3339902, 14.3204371),
@@ -176,10 +189,10 @@ DO $$
             ('Schloss Traun', 'SoT', 48.2187594,14.23882),
             
             -- Rail replacement service station
-            ('Sonnensteinstraße', 'SoS', 48.3124057,14.2839539);
-        -- ON CONFLICT DO NOTHING;
+            ('Sonnensteinstraße', 'SoS', 48.3124057,14.2839539)
+        ON CONFLICT DO NOTHING;
 
--- Insert sample data into routestoppoint table
+        -- Insert sample data into routestoppoint table
         INSERT INTO routestoppoint (route_id, stop_point_id, arrival_time, departure_time, order_number) VALUES
             -- Line 1-1
             (1, 1, '2024-01-01 05:21:00', '2024-01-01 05:21:00', 1), -- JKU | Universität
@@ -342,24 +355,22 @@ DO $$
             (4, 46, '2024-01-01 05:23:00', '2024-01-01 05:23:00', 2), -- solarCity-Zentrum
             (4, 47, '2024-01-01 05:21:00', '2024-01-01 05:21:00', 1) -- solarCity
                                                                                                               
---             (1, 1, '2024-01-01 08:00:00', '2024-01-01 08:05:00', 1),
---             (1, 2, '2024-01-01 08:15:00', '2024-01-01 08:20:00', 2),
---             (2, 3, '2024-03-01 09:00:00', '2024-03-01 09:05:00', 1),
---             (2, 4, '2024-03-01 09:15:00', '2024-03-01 09:20:00', 2)
+            --             (1, 1, '2024-01-01 08:00:00', '2024-01-01 08:05:00', 1),
+            --             (1, 2, '2024-01-01 08:15:00', '2024-01-01 08:20:00', 2),
+            --             (2, 3, '2024-03-01 09:00:00', '2024-03-01 09:05:00', 1),
+            --             (2, 4, '2024-03-01 09:15:00', '2024-03-01 09:20:00', 2)
         ON CONFLICT DO NOTHING;
 
--- Insert sample data into trip table
+        -- Insert sample data into trip table
         INSERT INTO trip (route_id, vehicle_id) VALUES
             (1, 101),
             (2, 102)
         ON CONFLICT DO NOTHING;
 
--- Insert sample data into tripcheckin table
+        -- Insert sample data into tripcheckin table
         INSERT INTO tripcheckin (trip_id, stop_point_id, checkin_time) VALUES
             (1, 1, '2024-01-01 08:03:00'),
             (1, 2, '2024-01-01 08:13:00'),
             (2, 3, '2024-03-01 09:02:00')
         ON CONFLICT DO NOTHING;
-
-
     END $$;

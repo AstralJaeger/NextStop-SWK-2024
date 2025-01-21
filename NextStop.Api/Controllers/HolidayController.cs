@@ -72,7 +72,6 @@ public class HolidayController : ControllerBase
     /// </summary>
     /// <returns>A collection of holidays as DTOs.</returns>
     [HttpGet]
-    [Authorize]
     public async Task<ActionResult> GetAllHolidays()
     {
         var result = await holidayService.GetAllHolidaysAsync();
@@ -149,6 +148,7 @@ public class HolidayController : ControllerBase
     /// <param name="holidayDto">The updated holiday data.</param>
     /// <returns>A 204 No Content status if the update was successful, or a 404 status if
     /// the holiday was not found.</returns>
+    [Authorize(Roles = "admin")]
     [HttpPut("update/{holidayId:int}")]
     public async Task<ActionResult> UpdateHoliday(int holidayId, HolidayForUpdateDto holidayDto)
     {
@@ -175,6 +175,7 @@ public class HolidayController : ControllerBase
     /// <param name="id">The ID of the holiday to delete.</param>
     /// <returns>A 204 No Content status if the deletion was successful, or a 404 status
     /// if the holiday was not found.</returns>
+    [Authorize(Roles = "admin")]
     [HttpDelete("delete/{id:int}")]
     public async Task<ActionResult> DeleteHoliday(int id)
     {

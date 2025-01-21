@@ -1,4 +1,5 @@
 ﻿using System.Globalization;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NextStop.Api.DTOs;
 using NextStop.Api.Mappers;
@@ -12,7 +13,6 @@ namespace NextStop.Api.Controllers;
 /// </summary>
 [ApiController]
 [Route("api/[controller]")]
-
 public class RouteController : ControllerBase
 {
     private readonly IRouteService routeService;
@@ -38,6 +38,7 @@ public class RouteController : ControllerBase
     /// <param name="routeDto">The route data for creation.</param>
     /// <returns>The created route as a DTO.</returns>
     [HttpPost]
+    [Authorize(Roles = "admin")]
     [Produces("application/json", "text/plain")]
     public async Task<ActionResult<RouteDto>> InsertRoute(RouteForCreationDto routeDto)
     {
@@ -167,6 +168,4 @@ public class RouteController : ControllerBase
         return Ok(result.Select(r => r.ToRouteDto()));
     }
     
-
-
 }

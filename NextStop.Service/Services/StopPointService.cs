@@ -122,14 +122,25 @@ public class StopPointService(IStopPointDao stopPointDao): IStopPointService
         });
     }
 
-    public async Task<IEnumerable<StopPoint>> GetStopPointByCoordinatesAsync(double longitude, double latitude, double radius)
+    public async Task<IEnumerable<StopPoint>> GetStopPointByCoordinatesAsync(double latitude, double longitude, double radius)
     {
         return await await RunInLockAsync(() =>
         {
-             return stopPointDao.GetStopPointByCoordinates(longitude, latitude, radius);
+             return stopPointDao.GetStopPointByCoordinates(latitude, longitude, radius);
         });
     }
-
+    
+    //......................................................................
+    
+    /// <inheritdoc />
+    public async Task<IEnumerable<StopPoint>> QueryStopPointAsync(string query)
+    {
+        return await await RunInLockAsync(() =>
+        {
+            return stopPointDao.QueryStopPointAsync(query);
+        });
+    }
+    
     //......................................................................
 
     /// <inheritdoc />

@@ -1,4 +1,5 @@
 ﻿using System.Globalization;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NextStop.Api.DTOs;
 using NextStop.Api.Mappers;
@@ -40,6 +41,7 @@ public class RouteStopPointController : ControllerBase
     /// <param name="routeStopPointDto">The data for creating a new route stop point.</param>
     /// <returns>The created route stop point.</returns>
     [HttpPost]
+    [Authorize(Roles = "admin")]
     [Produces("application/json", "text/plain")]
     public async Task<ActionResult> InsertRouteStopPoint(RouteStopPointForCreationDto routeStopPointDto)
     {

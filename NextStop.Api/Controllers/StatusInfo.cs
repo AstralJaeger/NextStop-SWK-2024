@@ -41,6 +41,12 @@ public static class StatusInfo
         Detail = $"Stoppoint with ID '{stopPointId}' already exists"
     };
 
+    public static object? StopPointNoResults(string query) => new ProblemDetails
+    {
+        Title = "No stoppoint found for query",
+        Detail = $"No StopPoint found for query '{query}'"
+    };
+    
     public static object? StopPointIDNotFound(string target, int stopPointId) => new ProblemDetails
     {
         Title = "No stoppoint found",
